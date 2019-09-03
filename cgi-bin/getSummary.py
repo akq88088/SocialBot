@@ -1,4 +1,5 @@
-#!D:/Anaconda3/python.exe
+#!D:/Python/Python36/python.exe
+#!D:/Python3.4.3/python.exe
 #coding=utf-8
 
 import cgi, cgitb
@@ -23,4 +24,3 @@ algoritm_dic = {"textsim": TextSummary.TextSim_TextSum(process),
 
 Summary = algoritm_dic[algorithm]
 print(" ".join(Summary.summary(text, compression_ratio=percentage)))
-
