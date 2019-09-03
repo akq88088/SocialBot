@@ -103,5 +103,11 @@ if __name__ == '__main__':
 
     process = TextProcessor.TextProcessor()
 
+    Summary = TextSim_TextSum(process)
+    # print(' '.join(Summary.summary(text)))
+
+    Summary = TextRank_TextSum(process)
+    # print(' '.join(Summary.summary(text)))
+
     Summary = TRMap_TextSum(process)
-    print(' '.join(Summary.summary(text, compression_ratio=0.4)))
+    # print(' '.join(Summary.summary(text)))
