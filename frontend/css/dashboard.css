@@ -1,0 +1,28 @@
+#model_select{
+	width: 60%;
+}
+
+#analyze{
+	color: #fff;
+	width: 120px;
+	background-color: #74acc5;
+}
+
+#report{
+	color: #fff;
+	background-color: #3a8b7e;
+}
+
+.btn-group > .btn{
+	background-color: #fff;
+}
+
+.btn.active{
+	color: #fff;
+	background-color: #e6b0be !important;
+	box-shadow: none;
+}
+
+#QA label{
+	color: #e49d38;
+}

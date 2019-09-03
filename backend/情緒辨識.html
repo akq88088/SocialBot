@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8"/>
+	<title>語料應用與分析工具</title>
+	<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../frontend/css/global.css">
+
+	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<style>
+		header{
+			font-family:"標楷體";
+		}
+		body{
+			font-family:"微軟正黑體";
+			margin:10px;
+		}
+		main{
+			font-family:"微軟正黑體";
+			margin:10px;
+		}
+		h1{
+			font-size:20px;
+		}
+		div.container
+		{
+			width:100%;
+			border-radius:15px;
+		}
+		div.box
+		{
+			box-sizing:border-box;
+			-moz-box-sizing:border-box; /* Firefox */
+			width:50%;
+			float:left;
+		}
+		#logout{
+			font-family:"微軟正黑體";
+			font-size: 16px;
+			font-weight: 500;
+			font-style: normal;
+			font-stretch: normal;
+			line-height: normal;
+			letter-spacing: normal;
+			color: #f1f1f1;
+			margin:-5px 10px;
+		}
+	</style>
+</head>
+<body>
+
+	<header id="header">
+		<div class="jumbotron text-center" style="margin-bottom:10;background-color:#FFAA33;color:white;">
+			<h1>語料應用與分析工具</h1>
+			<ul id="logout" class="nav navbar-nav navbar-right">
+			<li><a href="登入畫面.html">登出</a></li>
+		</div>
+	</header>
+	
+	<nav class="navbar navbar-default" style="background-color:#FFAA33;border-style:none;border-radius:15px;">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>                        
+				</button>
+				<a class="navbar-brand">選單</a>
+			</div>
+			<div class="collapse navbar-collapse" id="myNavbar">
+				<ul class="nav navbar-nav">
+					<li><a href="文章摘要.html">文章摘要</a></li>
+					<li><a href="出題問答.html">出題問答</a></li>
+					<li><a href="命名實體.html">命名實體</a></li>
+					<li><a href="情緒辨識.html">情緒辨識</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	
+	
+	<main id="main">
+		<h1>匯入資料</h1>
+		<div class="well">
+			<p><label for="inputfile">上傳資料檔案</label>
+				<input type="file" id="inputfile"></p>
+			<p class="text-right">
+				<button type="button" class="btn btn-primary">開始訓練</button></p>
+		</div>
+	
+		<h1>情緒辨識</h1>
+		<div class="alert alert-light container radius-border red-block ">
+			<div class="container">
+				<div class="box">
+					<p>字詞情緒標記</p>
+					<table class="table">
+						<thead>
+							<tr>
+								<th><span class="glyphicon glyphicon-font"></span> 字詞</th>
+								<th><span class="glyphicon glyphicon-list"></span> 情緒</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>小山羊</td>
+								<td>無表情</td>
+							</tr>
+							<tr>
+								<td>高興</td>
+								<td>喜歡</td>
+							</tr>
+						</tbody>
+					</table>
+					<button type="button" class="btn btn-default btn-sm">
+						<span class="glyphicon glyphicon-plus"></span> New
+					</button>
+				</div>
+				<div class="box">
+					<p>句子情緒辨別</p>
+					<table class="table">
+						<thead>
+							<tr>
+								<th><span class="glyphicon glyphicon-font"></span> 句子</th>
+								<th><span class="glyphicon glyphicon-list"></span> 情緒</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>小山羊高興地跑來跑去</td>
+								<td>小山羊到河邊喝水</td>
+							</tr>
+							<tr>
+								<td>高興</td>
+								<td>無表情</td>
+							</tr>
+						</tbody>
+					</table>
+					<button type="button" class="btn btn-default btn-sm">
+						<span class="glyphicon glyphicon-plus"></span> New
+					</button>
+				</div>
+			</div>
+		</div>
+	</main>
+</body>
+</html>

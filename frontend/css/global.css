@@ -1,0 +1,128 @@
+body {
+	background-color: #f1f1f1;
+}
+
+textarea{
+	resize:none;
+}
+
+h5,h6{
+	font-weight: 600;
+	color: #4a4a4a;
+}
+
+textarea::placeholder {
+  color: #ccc !important;
+}
+
+textarea::-webkit-scrollbar {
+	width: 0.5rem;
+	margin-right: 1rem;
+}
+textarea::-webkit-scrollbar-track {
+	-webkit-border-radius: 1rem;
+	-moz-border-radius:1rem;
+	border-radius: 1rem;
+	margin:1rem;
+}
+textarea::-webkit-scrollbar-thumb {
+	-webkit-border-radius: 1rem;
+	-moz-border-radius:1rem;
+	border-radius: 1rem;
+	background: #ccc;
+}
+
+.header{
+	background-color: #e49d38;
+	color: #fff;
+	font-weight: 600;
+	padding: 1rem 2rem;
+	cursor: default;
+	z-index: 100;
+}
+
+#title > h5{
+	color: #fff;
+}
+
+[role=button]{
+	cursor: pointer;
+}
+
+.alert{
+	padding: 2rem 5rem;
+}
+
+.radius-border{
+    -webkit-border-radius: 1.5rem;
+    -moz-border-radius: 1.5rem;
+    border-radius: 1.5rem;
+}
+
+
+.ta-r{
+	text-align: right;
+}
+.ta-c{
+	text-align: center;
+}
+
+
+.btm-mg-1{
+	margin-bottom: 1rem; 
+}
+
+.btm-mg{
+	margin-bottom: 2rem; 
+}
+
+.blue-block{
+	-webkit-box-shadow: 0rem -0.8rem 0 0.2rem #74acc5;
+	-moz-box-shadow: 0 -0.8rem 0 0.2rem #74acc5;
+}
+.red-block{
+	-webkit-box-shadow: 0 -0.8rem 0 0.2rem #e6b0be;
+	-moz-box-shadow: 0 -0.8rem 0 0.2rem #e6b0be;
+}
+.orange-block{
+	-webkit-box-shadow: 0 -0.8rem 0 0.2rem #e49d38;
+	-moz-box-shadow: 0 -0.8rem 0 0.2rem #e49d38;
+}
+
+.green-block{
+	-webkit-box-shadow: 0 -0.8rem 0 0.2rem #3a8b7e;
+	-moz-box-shadow: 0 -0.8rem 0 0.2rem #3a8b7e;
+}
+
+.blue-border{
+	border: 0.1rem solid #74acc5;
+}
+
+.red-border{
+	border: 0.1rem solid #e6b0be;
+}
+
+.green-border{
+	border: 0.1rem solid #3a8b7e;
+}
+
+.blue-border:focus{
+	border: 0.1rem solid #74acd5;
+	-webkit-box-shadow: 0 0 0.2rem 0.1rem #74acd5;
+    -moz-box-shadow: 0 0 0.2rem 0.1rem #74acd5;
+}
+	
+.red-border:focus{
+	border: 0.1rem solid #f6b0de;
+    -webkit-box-shadow: 0 0 0.2rem 0.1rem #f6b0be;
+    -moz-box-shadow: 0 0 0.2rem 0.1rem #f6b0be;
+}
+
+.green-border:focus{
+    -webkit-box-shadow: 0 0 0.2rem 0.1rem #3a8bae;
+    -moz-box-shadow: 0 0 0.2rem 0.1rem #3a8bae;
+}
+
+.none-border{
+	border: none;
+}

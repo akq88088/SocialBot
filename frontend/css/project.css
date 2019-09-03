@@ -1,0 +1,50 @@
+.c-project{
+	background-color: #fff;
+	width: 250px;
+	height: 150px;
+	padding: 10px 20px;
+}
+
+#add_project_btn{
+	line-height:40px;
+	width: 50px;
+	height: 50px;
+	background-color: #e49d38;
+	color: #fff;
+	font-size: 3rem;
+	margin: 40px 80px;
+	border-radius: 20rem;
+}
+
+.c-project:active{
+	-webkit-box-shadow: 0 0 0.5rem 0.2rem #a0a0a0 inset;
+	-moz-box-shadow: 0 0 0.5rem 0.1rem #a0a0a0 inset: ;
+}
+
+
+/* ---------------------------------------------------
+    SIDEBAR STYLE
+----------------------------------------------------- */
+
+#sidebar {
+    background: #fff;
+    color: #fff;
+    padding: 1rem 0 0 0;
+}
+
+.worker{
+	background-color: #fff;
+	color: #4a4a4a;
+	font-weight: 600;
+	padding: 1rem 1rem;
+	margin: 0 2rem 1rem 2rem;
+	display: block;
+	border-radius: 2rem;
+	cursor: default;
+}
+
+.worker.active{
+	background-color: #e49d38;
+	color: #fff;
+	border-radius: 2rem;
+}
