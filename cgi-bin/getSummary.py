@@ -1,3 +1,4 @@
+#!C:/Users/mcu/AppData/Local/Programs/Python/Python36/python.exe
 #!D:/Python/Python36/python.exe
 #!D:/Python3.4.3/python.exe
 #coding=utf-8
