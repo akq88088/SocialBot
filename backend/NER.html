@@ -19,7 +19,7 @@
 	<!-- Bootstrap JS -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" crossorigin="anonymous"></script>
 	<!-- Customer JS -->
-	<script src="./frontend/global.js" crossorigin="anonymous"></script>	
+	<script src="../frontend/js/global.js" crossorigin="anonymous"></script>	
 	<script src="./js/NER.js" crossorigin="anonymous"></script>
 
 	<title>語料專案</title>
@@ -29,25 +29,26 @@
 	<!-- header -->
 	<div class="container-fluid header">
 		<div class="row">
-			<div class="col-md-4 offset-md-4 ta-c" id="title"><h5>語 料 應 用 與 分 析 工 具</h5></div>
+			<div class="col-md-1 ta-c" id="back" role="button">< 返回</div>
+			<div class="col-md-4 offset-md-3 ta-c" id="title"><h5>語 料 應 用 與 分 析 工 具</h5></div>
 			<div class="col-md-2 offset-md-1 ta-c">account@gmail.com</div>
 			<div class="col-md-1 ta-c" id="logout" role="button">登出</div>
-		</div>
+		</div>	
 	</div>
 	
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-lg-2" id="sidebar">
-				<div class="worker ta-c">
+				<div class="worker ta-c active" id='summary'>
 					文章摘要
 				</div>
-				<div class="worker ta-c">
+				<div class="worker ta-c" id='QA'>
 					出題問答
 				</div>
-				<div class="worker ta-c active">
+				<div class="worker ta-c" id='NER'>
 					命名實體
 				</div>
-				<div class="worker ta-c">
+				<div class="worker ta-c" id='emotion_recognition'>
 					情緒辨識
 				</div>
 			</div>
