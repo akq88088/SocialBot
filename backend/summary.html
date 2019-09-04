@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" crossorigin="anonymous">
+	<!-- CustomScrollbar CSS -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+	<!-- Customer CSS -->
+	<link rel="stylesheet" href="../frontend/css/global.css">
+	<link rel="stylesheet" href="../frontend/css/project.css">
+	<link rel="stylesheet" href="css/button.css">
+	<!-- JQuery -->
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" crossorigin="anonymous"></script>
+	<script src="http://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+	<!-- Bootstrap JS -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" crossorigin="anonymous"></script>
+	<!-- Customer JS -->
+	<script src="./js/global.js" crossorigin="anonymous"></script>	
+	<script src="./js/project.js" crossorigin="anonymous"></script>
+
+	<title>語料專案</title>
+</head>
+<body>
+
+	<!-- header -->
+	<div class="container-fluid header">
+		<div class="row">
+			<div class="col-md-4 offset-md-4 ta-c" id="title"><h5>語 料 應 用 與 分 析 工 具</h5></div>
+			<div class="col-md-2 offset-md-1 ta-c">account@gmail.com</div>
+			<div class="col-md-1 ta-c" id="logout" role="button">登出</div>
+		</div>
+	</div>
+	
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-lg-2" id="sidebar">
+				<div class="worker ta-c active">
+					文章摘要
+				</div>
+				<div class="worker ta-c">
+					出題問答
+				</div>
+				<div class="worker ta-c">
+					命名實體
+				</div>
+				<div class="worker ta-c">
+					情緒辨識
+				</div>
+			</div>
+			<div class="col-lg-10">
+				<div class="container">
+					<h6 class="my-4">匯 入 資 料</h6>
+					<div class="row">
+						<div class="col-lg-12 btm-mg-1">
+							<div class="radius-border project blue-block">
+								<p>選擇分析模型</p>
+								<button type="button" class="btn radius-border blue-button">萃取式模型</button>
+								<button type="button" class="btn radius-border blue-button">生成式模型</button>
+								<br><br>
+								<p><label for="inputfile">上傳檔案</label></p>
+								<p><input type="file" id="inputfile"></p>
+								<div class="col-md-2 offset-md-10">
+									<button class="btn radius-border" id="submit">開始訓練</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="container">
+					<h6 class="my-4">文 本 摘 要</h6>
+					<div class="row">
+						<div class="col-lg-12 btm-mg-1">
+							<div class="radius-border project red-block">
+								<p>摘要比例</p>
+								<div class="btn-group" data-toggle="buttons">
+									<label class="btn radius-border red-button">
+										<input type="radio" name="options" id="option1">25%
+									</label>
+									<label class="btn radius-border red-button">
+										<input type="radio" name="options" id="option2">50%
+									</label>
+									<label class="btn radius-border red-button">
+										<input type="radio" name="options" id="option3">75%
+									</label>
+								</div>	
+								<p class="text-center">
+									<button type="button" class="btn radius-border red-button">儲存</button>
+									<button type="button" class="btn radius-border red-button">取消</button></p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

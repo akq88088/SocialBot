@@ -1,0 +1,17 @@
+#submit{
+	color: #fff;
+	width: 120px;
+	background-color: #74acc5;
+}
+
+.blue-button{
+	width: 120px;
+	background-color: #fff;
+	border: 0.1rem solid #74acc5;
+	font-size: 0.9rem;
+}
+
+.red-button{
+	background-color: #fff;
+	border: 0.1rem solid #e6b0be;
+}

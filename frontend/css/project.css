@@ -5,6 +5,11 @@
 	padding: 10px 20px;
 }
 
+.project{
+	background-color: #fff;
+	padding: 10px 20px;
+}
+
 #add_project_btn{
 	line-height:40px;
 	width: 50px;

@@ -32,6 +32,12 @@ textarea::-webkit-scrollbar-thumb {
 	background: #ccc;
 }
 
+p{
+	font-weight: 550;
+	color: #4a4a4a;
+	font-size: 0.85rem;
+}
+
 .header{
 	background-color: #e49d38;
 	color: #fff;
@@ -94,6 +100,16 @@ textarea::-webkit-scrollbar-thumb {
 	-moz-box-shadow: 0 -0.8rem 0 0.2rem #3a8b7e;
 }
 
+.yellow-block{
+	-webkit-box-shadow: 0 -0.8rem 0 0.2rem #e8e248;
+	-moz-box-shadow: 0 -0.8rem 0 0.2rem #e8e248;
+}
+
+.darkblue-block{
+	-webkit-box-shadow: 0 -0.8rem 0 0.2rem #1c538c;
+	-moz-box-shadow: 0 -0.8rem 0 0.2rem #1c538c;
+}
+
 .blue-border{
 	border: 0.1rem solid #74acc5;
 }
@@ -125,4 +141,21 @@ textarea::-webkit-scrollbar-thumb {
 
 .none-border{
 	border: none;
+}
+
+.c-time{
+	color: #7b746;
+	font-weight: 500;
+	font-size: 0.5rem;
+}
+
+.project-name{
+	color: #7b746;
+	font-size: 1rem;
+}
+
+.model{
+	color: #e49d38;
+	font-weight: 500;
+	font-size: 0.85rem;
 }
