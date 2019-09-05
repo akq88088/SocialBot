@@ -54,7 +54,7 @@ $(document).ready(function(){
 			$("#summary").val("計算摘要中...");
 		},
 		success: function(text){
-			console.log(text);
+			// console.log(text);
 			$("#summary").val(text);
 		},
 		complete:function(){
@@ -81,15 +81,17 @@ $(document).ready(function(){
 		beforeSend:function(){
 		},
 		success: function(text){
+			$('#sentimentBar').remove();
+			$('#sentimentResult').append('<canvas id="sentimentBar"></canvas>');
 			text = text.replace(/'/g,'"');
-			console.log(text);
+			// console.log(text);
 			var senRatio = JSON.parse(text);
 			var labels=[],data=[];
 			Object.keys(senRatio).forEach(function(key) {
 				labels.push(key);
 				data.push(senRatio[key]);
 			});
-			console.log(senRatio);
+			// console.log(senRatio);
 			var barData = {
 				"labels": labels,
 				"datasets": [{
@@ -107,23 +109,21 @@ $(document).ready(function(){
 				var $img = $("<img/>").attr("id", lab).attr("src", "../img/" + lab + ".png");
 				$("#pics").append($img);
 			}
-			var originalBarController = Chart.controllers.bar;
-			Chart.controllers.bar = Chart.controllers.bar.extend({
-				draw: function() {
-					originalBarController.prototype.draw.call(this, arguments);
-					drawFlags(this);
-				}
-			});
+			var originalDraw = Chart.controllers.bar.prototype.draw;
+			Chart.controllers.bar.prototype.draw = function(ease) {
+				originalDraw.call(this, ease);
+				drawFlags(this);
+			};
 			function drawFlags(t) {
 				var chartInstance = t.chart;
 				var dataset = chartInstance.config.data.datasets[0];
 				var meta = chartInstance.controller.getDatasetMeta(0);
-				var y0 = chartInstance.scales.y0.top + chartInstance.scales.y0.height;
+				var x0 = chartInstance.scales.x0.left;
 				ctx.save();
 				meta.data.forEach(function(bar, index) {
 					var lab = bar._model.label;
 					var img = document.getElementById(lab);
-					ctx.drawImage(img, bar._model.y - 10, x0 - 6, 20, 12);
+					ctx.drawImage(img, 0, bar._model.y - 6, 20, 12);
 					ctx.stroke();
 				});
 				ctx.restore();
@@ -145,38 +145,14 @@ $(document).ready(function(){
 								"beginAtZero": true
 							}
 						}]
+					},
+					"layout":{
+						"padding":{
+							"left":20
+						}
 					}
 				}
 			});
-			// sentimentBar = new Chart(document.getElementById("sentimentBar"), {
-				// "type": "horizontalBar",
-				// "data": {
-					// "labels": labels,
-					// "datasets": [{
-						// "data": data,
-						// "fill": false,
-						// "backgroundColor": ["rgba(255, 99, 132, 0.2)", "rgba(255, 159, 64, 0.2)",
-							// "rgba(255, 205, 86, 0.2)", "rgba(75, 192, 192, 0.2)", "rgba(54, 162, 235, 0.2)",
-							// "rgba(153, 102, 255, 0.2)", "rgba(201, 203, 207, 0.2)"
-						// ],
-						// "borderColor": ["rgb(255, 99, 132)", "rgb(255, 159, 64)", "rgb(255, 205, 86)",
-							// "rgb(75, 192, 192)", "rgb(54, 162, 235)", "rgb(153, 102, 255)", "rgb(201, 203, 207)"
-						// ],
-						// "borderWidth": 1
-					// }]
-				// },
-				// "options": {
-					// "scales": {
-						// "xAxes": [{
-							// "ticks": {
-								// "display": false,
-								// "beginAtZero": true
-							// }
-						// }]
-					// }
-				// }
-			// });
-			
 		},
 		complete:function(){
 		}
