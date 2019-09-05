@@ -2,7 +2,8 @@
 $(document).ready(function(){
 	// $('#TextSum_and_SA').hide();
 	// $('#QA').hide();
-	var currentAjax = null;
+	var sum_currAjax = null;
+	var sent_currAjax = null;
 	$('#analyze').on('click', function(){
 		var text = $('#paste_text').val();
 		var algorithm = $('.btn-group > button.active')[0].id;
@@ -37,10 +38,15 @@ $(document).ready(function(){
 
 	//**********Function**********//
 
-	var getSummary = function(text, algorithm, percentage){
-		stopAjax(currentAjax);
+	function stopAjax(ajax){  
+	    //如果ajax未完成，則中止該ajax  
+	    if(ajax) {ajax.abort();}  
+	}  
 
-		currentAjax = $.ajax({
+	var getSummary = function(text, algorithm, percentage){
+		stopAjax(sum_currAjax);
+
+		sum_currAjax = $.ajax({
 			method: "POST",
 			url: "../cgi-bin/getSummary.py",
 			async: true, //非同步化
@@ -61,15 +67,10 @@ $(document).ready(function(){
 		});
 	}
 
-	function stopAjax(ajax){  
-	    //如果ajax未完成，則中止該ajax  
-	    if(ajax) {ajax.abort();}  
-	}  
-
 	var getSentiment = function(text, algorithm, percentage){
-		stopAjax(currentAjax);
+		stopAjax(sent_currAjax);
 
-		currentAjax = $.ajax({
+		sent_currAjax = $.ajax({
 			method: "POST",
 			url: "../cgi-bin/getSentiment.py",
 			async: true, //同步化
