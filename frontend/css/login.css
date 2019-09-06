@@ -1,0 +1,61 @@
+body{
+	background-color: #e49d38;
+	position: absolute;
+	width: 100%;
+	min-height: 100%;
+}
+h4{
+	color: #fff;
+	font-weight: 900;
+}
+.container{
+	min-width: 700px;
+	min-height: 100% !important;
+	text-align: center;
+}
+#title{
+	min-height: 50%;
+}
+
+#panel{
+	min-width: 400px;
+	background-color: #fff;
+	padding: 5% 20%;
+}
+
+#Facebook{
+	color: #fff;
+	background-color: #3b5998;
+}
+
+#Google{
+	color: #fff;
+	background-color: #ea4335;
+}
+
+#Signup,#Signin{
+	color: #fff;
+	font-weight: 600;
+	background-color: #e49d38;
+}
+
+.row,.form-control{
+	margin: 2rem 0;
+}
+
+.form-group{
+	margin-bottom: 0;
+}
+
+.bottom-clear{
+	margin-bottom: 0;
+}
+
+.btn{
+	padding: 0.2rem;
+}
+
+input::placeholder {
+	color: #555 !important;
+	font-weight: 700 !important;
+}
