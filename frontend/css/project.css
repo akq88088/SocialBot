@@ -1,6 +1,9 @@
+body{
+	min-height: 100%;
+}
 .c-project{
 	background-color: #fff;
-	width: 250px;
+	width: 190px;
 	height: 150px;
 	padding: 10px 20px;
 }
@@ -17,8 +20,13 @@
 	background-color: #e49d38;
 	color: #fff;
 	font-size: 3rem;
-	margin: 40px 80px;
+	margin: 40px 55px;
 	border-radius: 20rem;
+}
+
+#content{
+	min-height: 600px;
+	min-width: 1000px;
 }
 
 .c-project:active{
@@ -32,6 +40,8 @@
 ----------------------------------------------------- */
 
 #sidebar {
+	min-height: 100%;
+	min-width: 200px;
     background: #fff;
     color: #fff;
     padding: 1rem 0 0 0;

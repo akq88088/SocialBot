@@ -39,6 +39,7 @@ p{
 }
 
 .header{
+	min-width: 1000px;
 	background-color: #e49d38;
 	color: #fff;
 	font-weight: 600;
@@ -57,6 +58,7 @@ p{
 
 .alert{
 	padding: 2rem 5rem;
+	min-width: 900px;
 }
 
 .radius-border{
