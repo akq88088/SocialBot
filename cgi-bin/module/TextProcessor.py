@@ -79,3 +79,34 @@ class TextProcessor():
 
         return segments_new
 
+    def seg_tag(self, text, use_stopwords=True):
+        nlp = BosonNLP('Xrzs7xvr.26748.xUoREj5Sgifi')
+        if type(text) == str:
+            text = [text]
+        
+        corpus_len = len(text)
+        word, tag = [], []
+        for idx in range(corpus_len//100 + 1):
+            curr_idx = idx*100
+            result = nlp.tag(text[curr_idx: min(curr_idx+100, corpus_len)])
+            for seg in result:
+                word.append(seg['word'])
+                tag.append(seg['tag'])
+
+        if use_stopwords:
+            stop_words = self._read_stopwords()
+        else: stop_words = set()
+
+        seg= []
+        t_new = []
+        for w, t in zip(word,tag):
+            temp_s, temp_t = [],[]
+            for w_in, t_in in zip(w,t):
+                if w_in not in stop_words:
+                    temp_s.append(w_in)
+                    temp_t.append(t_in)
+            seg.append(temp_s)
+            t_new.append(temp_t)
+
+        return seg, t_new
+
