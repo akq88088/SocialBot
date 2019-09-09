@@ -5,8 +5,8 @@ from keras.layers import Dense
 from keras.models import Sequential
 from keras.models import load_model
 from keras.utils import to_categorical
-from module_k.mmsegTest import Tokenizer
-mmseg = Tokenizer('module_k/data/userDict.txt')
+from module.mmsegTest import Tokenizer
+mmseg = Tokenizer('module/data_kenlee/userDict.txt')
 
 def isChinese(cks):
 	import re

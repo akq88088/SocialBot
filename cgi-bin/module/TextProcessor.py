@@ -8,7 +8,7 @@ class TextProcessor():
     def __init__(self):
         pass
     
-    def _read_stopwords(self, path='./module/stop_words.txt'):
+    def _read_stopwords(self, path='./module/data_alex/stop_words.txt'):
         stop_words = set()
         with open(path, 'r', encoding='utf8') as f:
             [stop_words.add(line.strip()) for line in f.readlines()]

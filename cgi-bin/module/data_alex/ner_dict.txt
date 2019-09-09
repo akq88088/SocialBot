@@ -1,0 +1,1 @@
+{'PAD':0,'event':5,'obj':2,'per':1,'place':4,'time':3,'x':6}

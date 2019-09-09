@@ -2,9 +2,9 @@
 import json,re
 import numpy as np
 from keras.models import load_model
-from module_k.trainVecModel import Dictionary
-from module_k.mmsegTest import Tokenizer
-mmseg = Tokenizer('module_k/data/userDict.txt')
+from module.trainVecModel import Dictionary
+from module.mmsegTest import Tokenizer
+mmseg = Tokenizer('module/data_kenlee/userDict.txt')
 
 class PredictModel():
 	def __init__(self,folder):

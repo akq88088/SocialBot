@@ -1,10 +1,10 @@
 #!D:/Python/Python36/python.exe
+#!D:/Anaconda3/python.exe
 #!C:/Users/mcu/AppData/Local/Programs/Python/Python36/python.exe
-#!D:/Python3.4.3/python.exe
 #coding=utf-8
 
 import cgi, cgitb
-from module_k.PredictModel import PredictModel
+from module.PredictModel import PredictModel
 import codecs, sys, os
 sys.stdout = codecs.getwriter('utf8')(sys.stdout.buffer)
 
@@ -14,5 +14,5 @@ print("")
 parameter = cgi.FieldStorage()
 text = parameter.getvalue('text')
 cwd = os.getcwd()
-pdm = PredictModel(cwd+"/module_k/data")
+pdm = PredictModel(cwd+"/module/data_kenlee")
 print(pdm.predict(text))
