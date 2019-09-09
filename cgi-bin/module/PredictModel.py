@@ -4,7 +4,7 @@ import numpy as np
 from keras.models import load_model
 from module.trainVecModel import Dictionary
 from module.mmsegTest import Tokenizer
-mmseg = Tokenizer('module/data/userDict.txt')
+mmseg = Tokenizer('module/data_kenlee/userDict.txt')
 
 class PredictModel():
 	def __init__(self,folder):

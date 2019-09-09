@@ -8,7 +8,7 @@ from keras.models import load_model
 from keras.utils import to_categorical
 from module.trainVecModel import VectorModel,Dictionary
 from module.mmsegTest import Tokenizer
-mmseg = Tokenizer('module/data/userDict.txt')
+mmseg = Tokenizer('module/data_kenlee/userDict.txt')
 
 class DataSet():
 	def __init__(self,folder):

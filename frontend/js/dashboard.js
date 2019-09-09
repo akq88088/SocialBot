@@ -68,6 +68,28 @@ $(document).ready(function(){
 		});
 	}
 
+	var test = function(text){
+
+		$.ajax({
+			method: "POST",
+			url: "path",
+			async: true, //非同步化
+			// dataType:"json",
+			data: {
+				// data
+			},
+			beforeSend:function(){
+				// 送出前要做什麼
+			},
+			success: function(text){
+				// 成功回傳後要做甚麼
+			},
+			complete:function(){
+				// 全部執行完要做什麼
+			}
+		});
+	}
+
 	var getSentiment = function(text, algorithm, percentage){
 		stopAjax(sent_currAjax);
 
@@ -159,4 +181,7 @@ $(document).ready(function(){
 			}
 		});
 	}
+
+
+
 });
