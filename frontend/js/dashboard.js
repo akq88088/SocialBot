@@ -61,6 +61,7 @@ $(document).ready(function(){
 			},
 			success: function(text){
 				$("#summary").val(text);
+				console.log('summary done!');
 			},
 			complete:function(){
 			}
@@ -84,7 +85,7 @@ $(document).ready(function(){
 				$('#sentimentBar').remove();
 				$('#sentimentResult').append('<canvas id="sentimentBar"></canvas>');
 				text = text.replace(/'/g,'"');
-				// console.log(text);
+				console.log(text);
 				var senRatio = JSON.parse(text);
 				var labels=[],data=[];
 				Object.keys(senRatio).forEach(function(key) {
