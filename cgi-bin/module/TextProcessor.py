@@ -8,7 +8,7 @@ class TextProcessor():
     def __init__(self):
         pass
     
-    def _read_stopwords(self, path='./module/data_alex/stop_words.txt'):
+    def _read_stopwords(self, path='./data_alex/stop_words.txt'):
         stop_words = set()
         with open(path, 'r', encoding='utf8') as f:
             [stop_words.add(line.strip()) for line in f.readlines()]
@@ -32,7 +32,7 @@ class TextProcessor():
         return sentences
     
     def _boson_seg(self, text):
-        nlp = BosonNLP('g8lQg9Mv.25818.fAbbwt6TYhh8')
+        nlp = BosonNLP('qiVsBy45.26744.9-U4aaXH2yEs')
         if type(text) == str:
             text = [text]
         
@@ -80,7 +80,12 @@ class TextProcessor():
         return segments_new
 
     def seg_tag(self, text, use_stopwords=True):
-        nlp = BosonNLP('Xrzs7xvr.26748.xUoREj5Sgifi')
+        pos_set = ['n', 'nr1', 'nrf', 'nr', 'ns',
+                    't','s','f',
+                    'v', 'vshi', 'vyou', 'vn',
+                    'a','b','z','r','m','q','d','p','c','u','o','y','h','k','nx','w']
+
+        nlp = BosonNLP('qiVsBy45.26744.9-U4aaXH2yEs')
         if type(text) == str:
             text = [text]
         
@@ -104,6 +109,8 @@ class TextProcessor():
             for w_in, t_in in zip(w,t):
                 if w_in not in stop_words:
                     temp_s.append(w_in)
+                    if t_in not in pos_set:
+                        t_in = t_in[0]
                     temp_t.append(t_in)
             seg.append(temp_s)
             t_new.append(temp_t)

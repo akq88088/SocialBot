@@ -13,4 +13,6 @@ $(document).ready(function(){
 	$('.c-project').on('click', function(){
 		window.location.href = 'dashboard.html';
 	});
+
+	
 });
