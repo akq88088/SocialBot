@@ -4,7 +4,6 @@
 
 import cgi, cgitb
 from module import TextSummary
-from module import TextProcessor
 import codecs, sys 
 sys.stdout = codecs.getwriter('utf8')(sys.stdout.buffer)
 
@@ -16,11 +15,9 @@ algorithm = parameter.getvalue('algorithm')
 percentage = float(parameter.getvalue('percentage'))
 text = parameter.getvalue('text')
 
-process = TextProcessor.TextProcessor()
-
-algoritm_dic = {"textsim": TextSummary.TextSim_TextSum(process),
-				"textrank": TextSummary.TextRank_TextSum(process),
-				"textmap": TextSummary.TRMap_TextSum(process)}
+algoritm_dic = {"textsim": TextSummary.TextSim_TextSum(),
+				"textrank": TextSummary.TextRank_TextSum(),
+				"textmap": TextSummary.TRMap_TextSum()}
 
 Summary = algoritm_dic[algorithm]
 print(" ".join(Summary.summary(text, compression_ratio=percentage)))

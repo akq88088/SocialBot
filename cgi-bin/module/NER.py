@@ -4,29 +4,35 @@ from keras.layers import Dense, LSTM, InputLayer, Bidirectional, TimeDistributed
 from keras.optimizers import Adam
 from keras.models import load_model
 from keras.preprocessing.sequence import pad_sequences
-# from module.TextProcessor import TextProcessor
-import TextProcessor
 import csv
+import os
 import numpy as np
 import json
+try:
+    import TextProcessor
+except:
+    from module import TextProcessor
+
+cwd = os.path.dirname(__file__)
 
 class NER():
-    def __init__(self, model_path='./data_alex/ner_model.h5', posDict_path='./data_alex/pos_dict.txt', nerDict_path='./data_alex/ner_dict.txt'):
+    def __init__(self, model_path = cwd+'/data_alex/ner_model.h5',
+                    posDict_path = cwd+'/data_alex/pos_dict.txt',
+                    nerDict_path = cwd+'/data_alex/ner_dict.txt'):
         try:
             self.model = load_model(model_path)
         except:
             self.model = None
-        self.data = None
         
-        with open(posDict_path) as f:
-            self.pos_dict = json.load(f)
-        
-        with open(nerDict_path) as f:
-            self.ner_dict = json.load(f)
+        with open(posDict_path) as f: self.pos_dict = json.load(f)
+        with open(nerDict_path) as f: self.ner_dict = json.load(f)
 
+        self.TextProcessor = TextProcessor.TextProcessor()
         self.transformer = data_trans()
         self.maxlen = 30
 
+    def print_path(self):
+        return cwd2
     def build_model(self, input_len, input_dim, output_dim, embed_units, lstm_units):
         model = Sequential()
         model.add(InputLayer(input_shape=(input_len, )))
@@ -47,16 +53,15 @@ class NER():
         self.model.save(path)
 
     def predict(self, data):
-        processor = TextProcessor.TextProcessor()
-        sentence = processor.sentence_break(data, split_char='!?。！？,，')
+        sentence = self.TextProcessor.sentence_break(data, split_char='!?。！？,，')
 
         if not self.model:
-            model = _load_model('data_alex/ner_model.h5')
+            model = _load_model(cwd+'/data_alex/ner_model.h5')
 
         segment = []
         result = []
         for sent in sentence:
-            words, tags = processor.seg_tag(sent, use_stopwords=False)
+            words, tags = self.TextProcessor.seg_tag(sent, use_stopwords=False)
             words = words[0]
 
             sent_len = len(words)
@@ -117,36 +122,10 @@ class data_trans():
         
         return X_ner
 
-
 if __name__ == '__main__':
-    # maxlen = 30
-    NER = NER()
-    # data = NER.transformer._load_data_csv('./data_alex/seg2000_prepare2.csv')
-    # pos, ner = [],[]
-    # for row in data:
-    #     temp_pos, temp_ner = [],[]
-    #     for words in row:
-    #         tags = words.split("%2F")
-    #         temp_pos.append(tags[1].strip())
-    #         temp_ner.append(tags[2].strip())
-    #     pos.append(temp_pos)
-    #     ner.append(temp_ner)
+    text = '小狗，小狗跟我來，我們比一比，看誰跑得快？'
 
-    # pos = NER.transformer.to_int(pos, NER.pos_dict) 
-    # ner = NER.transformer.to_int(ner, NER.ner_dict)
-
-    # pos_X = NER.transformer.padding(pos, maxlen=maxlen, padding='pre')
-    # ner_X = NER.transformer.padding(ner, maxlen=maxlen, padding='pre')
-    # ner_onehot = NER.transformer.to_onehot(ner_X, NER.ner_dict)
-    # ner_onehot = np.array(ner_onehot)
-
-    # input_len = maxlen
-    # input_dim = 29
-    # output_dim = 7
-    # embed_units = 32
-    # lstm_units = 64
-    # NER.build_model(input_len, input_dim, output_dim, embed_units, lstm_units)
-    # NER.train(pos_X, ner_onehot, batch_size=10, epochs=5, validation_split=0.2)
-    # NER.save_model('data_alex/ner_model.h5')
-
-    print(NER.predict('小方喜歡同學，同學也喜歡小方。'))
+    ner = NER()
+    segment, text_ner = ner.predict(text)
+    print(segment)
+    print(text_ner)

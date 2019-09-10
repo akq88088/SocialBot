@@ -1,14 +1,16 @@
 # coding: utf-8
-
 import re
+import os
 import jieba
 from bosonnlp import BosonNLP
+
+cwd = os.path.dirname(__file__)
 
 class TextProcessor():
     def __init__(self):
         pass
     
-    def _read_stopwords(self, path='./data_alex/stop_words.txt'):
+    def _read_stopwords(self, path=cwd+'/data_alex/stop_words.txt'):
         stop_words = set()
         with open(path, 'r', encoding='utf8') as f:
             [stop_words.add(line.strip()) for line in f.readlines()]

@@ -12,6 +12,7 @@ $(document).ready(function(){
 		$('#TextSum_and_SA').show();
 		$('#QA').show();
 
+		// getNER(text);
 		getSummary(text, algorithm, percentage);
 		getSentiment(text);
 	});
@@ -67,6 +68,29 @@ $(document).ready(function(){
 			}
 		});
 	}
+
+	// var getNER = function(text){
+	// 	// stopAjax(sum_currAjax);
+
+	// 	ner_currAjax = $.ajax({
+	// 		method: "POST",
+	// 		url: "../cgi-bin/test_NER.py",
+	// 		async: true, //非同步化
+	// 		// dataType:"json",
+	// 		data: {
+	// 			"text" : text,
+	// 		},
+	// 		beforeSend:function(){
+	// 			$("#summary").val("計算摘要中...");
+	// 		},
+	// 		success: function(text){
+	// 			$("#summary").val(text);
+	// 			console.log('summary done!');
+	// 		},
+	// 		complete:function(){
+	// 		}
+	// 	});
+	// }
 
 	var test = function(text){
 
