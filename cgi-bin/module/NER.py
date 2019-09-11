@@ -59,6 +59,7 @@ class NER():
             model = _load_model(cwd+'/data_alex/ner_model.h5')
 
         segment = []
+        part_of_speach = []
         result = []
         for sent in sentence:
             words, tags = self.TextProcessor.seg_tag(sent, use_stopwords=False)
@@ -76,9 +77,10 @@ class NER():
             ner = self.transformer.to_ner(ner, self.ner_dict)
             
             segment.extend(words)
+            part_of_speach.extend(tags[0])
             result.extend(ner)
 
-        return segment, result
+        return segment, part_of_speach, result 
 
 class data_trans():
     def __init__(self):
@@ -126,6 +128,7 @@ if __name__ == '__main__':
     text = '小狗，小狗跟我來，我們比一比，看誰跑得快？'
 
     ner = NER()
-    segment, text_ner = ner.predict(text)
+    segment, pos, text_ner = ner.predict(text)
     print(segment)
+    print(pos)
     print(text_ner)
