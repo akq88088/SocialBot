@@ -2,6 +2,7 @@
 $(document).ready(function(){
 	// $('#TextSum_and_SA').hide();
 	// $('#QA').hide();
+	const textUploader = document.querySelector('#upload_text');
 	var sum_currAjax = null;
 	var sent_currAjax = null;
 	$('#analyze').on('click', function(){
@@ -15,6 +16,17 @@ $(document).ready(function(){
 		// getNER(text);
 		getSummary(text, algorithm, percentage);
 		getSentiment(text);
+	});
+	
+	textUploader.addEventListener('change', function(e) {
+		console.log(e.target.files); // get file object
+		var reader = new FileReader();
+		reader.onload = function(){
+			var content = reader.result;
+			console.log(content);
+			$('#paste_text').val(content);
+		};
+		content = reader.readAsText(e.target.files[0]);
 	});
 
 
@@ -114,7 +126,7 @@ $(document).ready(function(){
 		});
 	}
 
-	var getSentiment = function(text, algorithm, percentage){
+	var getSentiment = function(text){
 		stopAjax(sent_currAjax);
 
 		sent_currAjax = $.ajax({
@@ -131,7 +143,7 @@ $(document).ready(function(){
 				$('#sentimentBar').remove();
 				$('#sentimentResult').append('<canvas id="sentimentBar"></canvas>');
 				text = text.replace(/'/g,'"');
-				console.log(text);
+				// console.log(text);
 				var senRatio = JSON.parse(text);
 				var labels=[],data=[];
 				Object.keys(senRatio).forEach(function(key) {
@@ -148,6 +160,25 @@ $(document).ready(function(){
 						"borderColor": ["rgb(255, 99, 132)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)", "rgb(54, 162, 235)"],
 						"borderWidth": 1
 					}]
+				};
+				var options = {
+					"legend": {
+						"display": false
+					},
+					"scales": {
+						"xAxes": [{
+							"id": "x0",
+							"ticks": {
+								"display": false,
+								"beginAtZero": true
+							}
+						}]
+					},
+					"layout":{
+						"padding":{
+							"left":20
+						}
+					}
 				};
 				Chart.defaults.global.legend.display = false;
 				Chart.defaults.scale.gridLines.display = false;
@@ -175,37 +206,17 @@ $(document).ready(function(){
 					});
 					ctx.restore();
 				}
-
 				var ctx = document.getElementById("sentimentBar").getContext("2d");
 				var myBar = new Chart(ctx, {
 					"type": "horizontalBar",
 					"data": barData,
-					"options": {
-						"legend": {
-							"display": false
-						},
-						"scales": {
-							"xAxes": [{
-								"id": "x0",
-								"ticks": {
-									"display": false,
-									"beginAtZero": true
-								}
-							}]
-						},
-						"layout":{
-							"padding":{
-								"left":20
-							}
-						}
-					}
+					"options": options
 				});
 			},
 			complete:function(){
 			}
 		});
 	}
-
 
 
 });
