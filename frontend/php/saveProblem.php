@@ -19,6 +19,8 @@
 	$dbpass = "mcuiii";
 	$db = "socialbot";
 	$conn = new mysqli($dbhost, $dbuser, $dbpass, $db) or die("Connect failed: %s\n". $conn -> error);
+	$sql = "SET NAMES 'utf8'";
+	$result = mysqli_query($conn, $sql);
 	
 	$sql = "INSERT INTO problem(name,description,type,screenshot_path) VALUES('".$name."','".$text."','".$type."','".$img_path."')";
 	// $sql = "SELECT * FROM member";
