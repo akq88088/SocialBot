@@ -1,8 +1,8 @@
 <?php
 	header("Content-Type: text/html;charset=utf-8"); 
 	session_start();
-	// $name = $_SESSION['name'];
-	$name = '中文';
+	$member_id = $_SESSION['member_id'];
+	// $member_id = '中文';
 	$text = $_POST['text'];
 	$type = $_POST['type'];
 	if($_POST['img']){
@@ -24,7 +24,7 @@
 	$sql = "SET NAMES 'utf8'";
 	$result = mysqli_query($conn, $sql);
 	
-	$sql = "INSERT INTO problem(name,description,type,screenshot_path) VALUES('".$name."','".$text."','".$type."','".$img_path."')";
+	$sql = "INSERT INTO problem(name,description,type,screenshot_path) VALUES('".$member_id."','".$text."','".$type."','".$img_path."')";
 	// $sql = "SELECT * FROM member";
 	echo $sql;
 	$result = mysqli_query($conn, $sql);
