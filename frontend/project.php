@@ -1,5 +1,9 @@
+<?php
+	//啟動session
+	session_start();
+?>
 <!DOCTYPE html>
-<html lang="zh-Hant-TW">
+<html lang="zh">
 <head>
 	<meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,22 +25,58 @@
 	<!-- Customer JS -->
 	<script src="./js/global.js" crossorigin="anonymous"></script>	
 	<script src="./js/project.js" crossorigin="anonymous"></script>
+	
+	<script>
+		function toLogout() {
+			window.location.replace("Logout.php")
+		}
+	</script>
 
 	<title>語料專案</title>
 </head>
 <body>
+	 <?php
+		require_once("dbtools.inc.php");
+		
+		//使用 isset()方法，判別有沒有此變數可以使用，以及為已經登入
+		if(isset($_SESSION['is_login']) && $_SESSION['is_login'] == TRUE):
+
+		$email = $_SESSION['email'];
+		$link = create_connection();
+		$sql = "SELECT * FROM `member` INNER JOIN `project` ON `member_id` = `ID`";
+		$result = execute_sql($link, "socialbot", $sql);		
+		
+		//表格內容
+		echo "<table border='1' align='center'><tr align='center'>";
+		while ($field = $result->fetch_field())   // 顯示欄位名稱
+			//echo "<td>" . $field->name . "</td>";
+		echo "</tr>";
+		$j=0;
+		while ($row = $result->fetch_row())
+		{
+				for ($i = 0; $i < $result->field_count; $i++)
+				{
+					//echo "<td>" . $row[$i] . "</td>";
+					$a[$j][$i] = $row[$i];					
+				}
+				echo "</tr>";
+				$j++;
+		}
+		echo "</table>";
+	?>
+	
 	<!-- header -->
 	<div class="container-fluid header">
 		<div class="row">
-			<div class="col-4 offset-4 ta-c" id="title"><h5>語 料 應 用 與 分 析 工 具</h5></div>
-			<div class="col-2 offset-1 ta-c">account@gmail.com</div>
-			<div class="col-1 ta-c" id="logout" role="button">登出</div>
+			<div class="col-md-4 offset-md-4 ta-c" id="title"><h5>語 料 應 用 與 分 析 工 具</h5></div>
+			<div class="col-md-2 offset-md-1 ta-c"><?php echo $email;?></div>
+			<div class="col-md-1 ta-c" id="logout" role="button" onclick="toLogout();">登出</div>
 		</div>
 	</div>
 	
 	<div class="container-fluid">
-		<div class="row" id="content">
-			<div class="col-2" id="sidebar">
+		<div class="row">
+			<div class="col-lg-2" id="sidebar">
 				<div class="worker ta-c active">
 					語料應用
 				</div>
@@ -44,7 +84,7 @@
 					資料訓練後台
 				</div>
 			</div>
-			<div class="col-9">
+			<div class="col-lg-10">
 				<div class="container">
 					<h6 class="my-4">新 增 專 案</h6>
 					<div class="row">
@@ -60,9 +100,16 @@
 					<div class="row">
 						<div class="col-lg-3 btm-mg-1">
 							<div class="radius-border c-project">
-								<div class="c-time">2019-09-02</div>
-								<div class="project-name">大自然的故事</div>
-								<div class="model">國小讀本</div>
+								<div class="c-time"><?php echo $a[0][13];?></div>
+								<div class="project-name"><?php echo $a[0][7];?></div>
+								<div class="model"><?php echo $a[0][8];?></div>
+							</div>
+						</div>
+						<div class="col-lg-3 btm-mg-1">
+							<div class="radius-border c-project">
+								<div class="c-time"><?php echo $a[1][13];?></div>
+								<div class="project-name"><?php echo $a[1][7];?></div>
+								<div class="model"><?php echo $a[1][8];?></div>
 							</div>
 						</div>
 						<div class="col-lg-3 btm-mg-1">
@@ -128,11 +175,16 @@
 								<div class="model">國小讀本</div>
 							</div>
 						</div>
-
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+	
+	<?php
+		else:
+			header('location: login.php');
+		endif;
+	?>
 </body>
 </html>
