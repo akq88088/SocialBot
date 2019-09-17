@@ -42,9 +42,12 @@
 		if(isset($_SESSION['is_login']) && $_SESSION['is_login'] == TRUE):
 
 		$email = $_SESSION['email'];
+		$email_1 = hash('md5',$email);
 		$link = create_connection();
-		$sql = "SELECT * FROM `member` INNER JOIN `project` ON `member_id` = `owner`";
+		$sql = "SELECT * FROM `project` where `owner` = '$email_1'";
+		$sql_1 = "SELECT `authority` FROM `member` where `member_id` = '$email_1'";
 		$result = execute_sql($link, "socialbot", $sql);
+		$result_1 = execute_sql($link, "socialbot", $sql_1);
 		
 		//表格內容
 		echo "<table border='1' align='center'><tr align='center'>";
@@ -58,9 +61,29 @@
 				{
 					//echo "<td>" . $row[$i] . "</td>";
 					$a[$j][$i] = $row[$i];
+					if($row[5]==1)
+						$authority = 1;
+					if($row[5]==0)
+						$authority = 0;
 				}
 				echo "</tr>";
 				$j++;
+		}
+		echo "</table>";
+		
+		//表格內容
+		echo "<table border='1' align='center'><tr align='center'>";
+		while ($field = $result_1->fetch_field())   // 顯示欄位名稱
+			//echo "<td>" . $field->name . "</td>";
+		echo "</tr>";
+		while ($row_1 = $result_1->fetch_row())
+		{
+				for ($i = 0; $i < $result_1->field_count; $i++)
+				{
+					$authority = $row_1[$i];
+				}
+				echo "</tr>";
+				
 		}
 		echo "</table>";
 	?>
@@ -77,12 +100,20 @@
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-lg-2" id="sidebar">
+			<?php 
+				if($authority == 1) { ?>
 				<div class="worker ta-c active">
 					語料應用
 				</div>
 				<div class="worker ta-c">
 					資料訓練後台
 				</div>
+			<?php } else {?>
+				<div class="worker ta-c active">
+					語料應用
+				</div>
+			<?php } ?>
+			
 			</div>
 			<div class="col-lg-10">
 				<div class="container">
@@ -101,9 +132,9 @@
 						<?php while($j--){?>
 							<div class="col-lg-3 btm-mg-1">
 								<div class="radius-border c-project">
-									<div class="c-time"><?php echo $a[$j][13];?></div>
-									<div class="project-name"><?php echo $a[$j][7];?></div>
-									<div class="model"><?php echo $a[$j][8];?></div>
+									<div class="c-time"><?php echo $a[$j][8];?></div>
+									<div class="project-name"><?php echo $a[$j][2];?></div>
+									<div class="model"><?php echo $a[$j][3];?></div>
 								</div>
 							</div>
 						<?php }?>
