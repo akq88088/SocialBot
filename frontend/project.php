@@ -98,27 +98,15 @@
 				<div class="container">
 					<h6 class="my-4">最 近 存 取 專 案</h6>
 					<div class="row">
-						<div class="col-lg-3 btm-mg-1">
-							<div class="radius-border c-project">
-								<div class="c-time"><?php echo $a[0][13];?></div>
-								<div class="project-name"><?php echo $a[0][7];?></div>
-								<div class="model"><?php echo $a[0][8];?></div>
+						<?php while($j--){?>
+							<div class="col-lg-3 btm-mg-1">
+								<div class="radius-border c-project">
+									<div class="c-time"><?php echo $a[$j][13];?></div>
+									<div class="project-name"><?php echo $a[$j][7];?></div>
+									<div class="model"><?php echo $a[$j][8];?></div>
+								</div>
 							</div>
-						</div>
-						<div class="col-lg-3 btm-mg-1">
-							<div class="radius-border c-project">
-								<div class="c-time"><?php echo $a[1][13];?></div>
-								<div class="project-name"><?php echo $a[1][7];?></div>
-								<div class="model"><?php echo $a[1][8];?></div>
-							</div>
-						</div>
-						<!--<div class="col-lg-3 btm-mg-1">
-							<div class="radius-border c-project">
-								<div class="c-time">2019-09-02</div>
-								<div class="project-name">大自然的故事</div>
-								<div class="model">國小讀本</div>
-							</div>
-						</div>-->
+						<?php }?>
 					</div>
 				</div>
 			</div>
