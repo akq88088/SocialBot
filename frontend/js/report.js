@@ -8,6 +8,14 @@ $(document).ready(function(){
 	$('#submit').on('click', function(){
 		text = $('#paste_text').val();
 		type = $('#model_select').val();
+		console.log(type);
+		if(!text){
+			alert('請描述問題');
+			return;
+		}else if(!type){
+			alert('請選擇問題類型');
+			return;
+		}
 		if(img){
 			reportData = {"text":text,"img":img,"type":type};
 		}else{
@@ -23,6 +31,7 @@ $(document).ready(function(){
 			success:function(data){
 				alert("成功");
 				console.log(data);
+				window.location.href = 'dashboard.php';
 			}
 		});
 	});
