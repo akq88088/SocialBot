@@ -39,8 +39,10 @@
 	//否則將資料寫入Cookie，然後導向到會員專區網頁
 	else
 	{
+		$row=mysqli_fetch_assoc($result);
 		//比對登入的帳號
 		$_SESSION['email'] = $email;
+		$_SESSION['member_id'] = $row['member_id'];
 		
 		//將session加入一個已經登入的紀錄
 		$_SESSION['is_login'] = true;

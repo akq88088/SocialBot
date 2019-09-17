@@ -43,8 +43,8 @@
 
 		$email = $_SESSION['email'];
 		$link = create_connection();
-		$sql = "SELECT * FROM `member` INNER JOIN `project` ON `member_id` = `ID`";
-		$result = execute_sql($link, "socialbot", $sql);		
+		$sql = "SELECT * FROM `member` INNER JOIN `project` ON `member_id` = `owner`";
+		$result = execute_sql($link, "socialbot", $sql);
 		
 		//表格內容
 		echo "<table border='1' align='center'><tr align='center'>";
@@ -57,7 +57,7 @@
 				for ($i = 0; $i < $result->field_count; $i++)
 				{
 					//echo "<td>" . $row[$i] . "</td>";
-					$a[$j][$i] = $row[$i];					
+					$a[$j][$i] = $row[$i];
 				}
 				echo "</tr>";
 				$j++;
@@ -112,69 +112,13 @@
 								<div class="model"><?php echo $a[1][8];?></div>
 							</div>
 						</div>
-						<div class="col-lg-3 btm-mg-1">
+						<!--<div class="col-lg-3 btm-mg-1">
 							<div class="radius-border c-project">
 								<div class="c-time">2019-09-02</div>
 								<div class="project-name">大自然的故事</div>
 								<div class="model">國小讀本</div>
 							</div>
-						</div>
-						<div class="col-lg-3 btm-mg-1">
-							<div class="radius-border c-project">
-								<div class="c-time">2019-09-02</div>
-								<div class="project-name">大自然的故事</div>
-								<div class="model">國小讀本</div>
-							</div>
-						</div>
-						<div class="col-lg-3 btm-mg-1">
-							<div class="radius-border c-project">
-								<div class="c-time">2019-09-02</div>
-								<div class="project-name">大自然的故事</div>
-								<div class="model">國小讀本</div>
-							</div>
-						</div>
-						<div class="col-lg-3 btm-mg-1">
-							<div class="radius-border c-project">
-								<div class="c-time">2019-09-02</div>
-								<div class="project-name">大自然的故事</div>
-								<div class="model">國小讀本</div>
-							</div>
-						</div>
-						<div class="col-lg-3 btm-mg-1">
-							<div class="radius-border c-project">
-								<div class="c-time">2019-09-02</div>
-								<div class="project-name">大自然的故事</div>
-								<div class="model">國小讀本</div>
-							</div>
-						</div>
-						<div class="col-lg-3 btm-mg-1">
-							<div class="radius-border c-project">
-								<div class="c-time">2019-09-02</div>
-								<div class="project-name">大自然的故事</div>
-								<div class="model">國小讀本</div>
-							</div>
-						</div>
-						<div class="col-lg-3 btm-mg-1">
-							<div class="radius-border c-project">
-								<div class="c-time">2019-09-02</div>
-								<div class="project-name">大自然的故事</div>
-								<div class="model">國小讀本</div>
-							</div>
-						</div>
-						<div class="col-lg-3 btm-mg-1">
-							<div class="radius-border c-project">
-								<div class="c-time">2019-09-02</div>
-								<div class="project-name">大自然的故事</div>
-								<div class="model">國小讀本</div>
-							</div>
-						</div>
-						<div class="col-lg-3 btm-mg-1">
-							<div class="radius-border c-project">
-								<div class="c-time">2019-09-02</div>
-								<div class="project-name">大自然的故事</div>
-								<div class="model">國小讀本</div>
-							</div>
-						</div>
+						</div>-->
 					</div>
 				</div>
 			</div>

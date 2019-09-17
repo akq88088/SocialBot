@@ -45,7 +45,7 @@ $(document).ready(function(){
 	// 問題回報
 	$('#report').on('click', function(){
 		history.replaceState(null, "report page", window.location.href);
-		window.location.href = 'report.html';
+		window.location.href = 'report.php';
 	});
 
 
