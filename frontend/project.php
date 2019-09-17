@@ -58,14 +58,7 @@
 		while ($row = $result->fetch_row())
 		{
 				for ($i = 0; $i < $result->field_count; $i++)
-				{
-					//echo "<td>" . $row[$i] . "</td>";
 					$a[$j][$i] = $row[$i];
-					if($row[5]==1)
-						$authority = 1;
-					if($row[5]==0)
-						$authority = 0;
-				}
 				echo "</tr>";
 				$j++;
 		}
@@ -79,11 +72,8 @@
 		while ($row_1 = $result_1->fetch_row())
 		{
 				for ($i = 0; $i < $result_1->field_count; $i++)
-				{
 					$authority = $row_1[$i];
-				}
 				echo "</tr>";
-				
 		}
 		echo "</table>";
 	?>
