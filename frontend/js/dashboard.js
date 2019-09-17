@@ -21,12 +21,13 @@ $(document).ready(function(){
 	textUploader.addEventListener('change', function(e) {
 		console.log(e.target.files); // get file object
 		var reader = new FileReader();
+
 		reader.onload = function(){
 			var content = reader.result;
-			console.log(content);
 			$('#paste_text').val(content);
 		};
-		content = reader.readAsText(e.target.files[0]);
+
+		reader.readAsText(e.target.files[0]);
 	});
 
 
