@@ -157,12 +157,13 @@ $(document).ready(function(){
 					"datasets": [{
 						"data": data,
 						"fill": false,
-						"backgroundColor": ["rgba(255, 99, 132, 0.2)", "rgba(255, 159, 64, 0.5)", "rgba(255, 205, 86, 0.5)", "rgba(75, 192, 192, 0.5)", "rgba(54, 162, 235, 0.5)"],
-						"borderColor": ["rgb(255, 99, 132)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)", "rgb(54, 162, 235)"],
-						"borderWidth": 1
+						"backgroundColor": ["rgba(255, 99, 71, 0.5)", "rgba(228, 157, 56, 0.5)", "rgba(0, 71, 171, 0.5)", "rgba(232, 226, 72, 0.5)", "rgba(58, 139, 126, 0.5)", "rgba(116, 172, 197, 0.5)"],
+						"borderWidth": 0
 					}]
 				};
 				var options = {
+					"responsive": true,
+					"maintainAspectRatio": false,
 					"legend": {
 						"display": false
 					},
@@ -173,11 +174,15 @@ $(document).ready(function(){
 								"display": false,
 								"beginAtZero": true
 							}
+						}],
+						"yAxes": [{
+							"scaleFontSize": 18,
+							"barPercentage": 0.4
 						}]
 					},
 					"layout":{
 						"padding":{
-							"left":20
+							"left":28
 						}
 					}
 				};
@@ -202,7 +207,7 @@ $(document).ready(function(){
 					meta.data.forEach(function(bar, index) {
 						var lab = bar._model.label;
 						var img = document.getElementById(lab);
-						ctx.drawImage(img, 0, bar._model.y - 6, 20, 12);
+						ctx.drawImage(img, 0, bar._model.y - 12, 30, 20);
 						ctx.stroke();
 					});
 					ctx.restore();

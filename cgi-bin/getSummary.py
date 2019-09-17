@@ -1,5 +1,5 @@
-#!D:/Python/Python36/python.exe
 #!C:/Users/mcu/AppData/Local/Programs/Python/Python36/python.exe
+#!D:/Python/Python36/python.exe
 #!D:/Anaconda3/python.exe
 #coding=utf-8
 
