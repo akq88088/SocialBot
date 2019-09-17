@@ -43,7 +43,7 @@
 		
 		/* 將資料寫入資料庫 */
 		$sql = "INSERT INTO `member` (member_id, email, password, name)
-			VALUES (FLOOR(rand() * 1000000000),'$email','".md5($password)."', '$name')";
+			VALUES ('".hash('md5',$email)."','$email','".md5($password)."', '$name')";
 	
 		$result = execute_sql($link, "socialbot", $sql);
 	

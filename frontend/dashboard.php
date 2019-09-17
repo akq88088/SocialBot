@@ -22,6 +22,9 @@
 	<!-- Bootstrap JS -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" crossorigin="anonymous"></script>
 	
+	<!-- Chart JS -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
+	
 	<!-- Customer JS -->
 	<script src="./js/global.js" crossorigin="anonymous"></script>	
 	<script src="./js/dashboard.js" crossorigin="anonymous"></script>
@@ -100,7 +103,7 @@
 						
 						<p>上傳檔案</p>
 						<div class="form-group">
-							<input type="file" class="form-control-file" id="upload_text">
+							<input type="file" class="form-control-file" id="upload_text" accept=".txt">
 						</div>
 						
 						<div class="row">
@@ -148,8 +151,10 @@
 							</textarea>
 						</div>
 					</div>
-					<div class='col-lg-6 btm-mg'>
-						<img src="../img/情緒圖.png" alt="情緒">
+					<div id="sentimentResult" class='col-lg-6 btm-mg'>
+						<canvas id="sentimentBar">
+						</canvas>
+						<div id="pics"></div>
 					</div>
 				</div>
 			</div>

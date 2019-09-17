@@ -41,7 +41,7 @@
 		if(isset($_SESSION['is_login']) && $_SESSION['is_login'] == TRUE):
 
 		$email = $_SESSION['email'];
-		echo $member_id;
+		$member_id = $_SESSION['member_id'];
 		$link = create_connection();
 		$sql = "SELECT * FROM `project` WHERE ID ='$member_id'";
 		$result = execute_sql($link, "membership", $sql);
@@ -88,7 +88,7 @@
 
 						<p>上傳截圖</p>
 						<div class="form-group">
-							<input type="file" class="form-control-file" id="upload_img">
+							<input type="file" class="form-control-file" id="upload_img" accept=".png,.jpg">
 						</div>
 					</div>
 				</div>

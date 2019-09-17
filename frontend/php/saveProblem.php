@@ -5,14 +5,16 @@
 	$name = '中文';
 	$text = $_POST['text'];
 	$type = $_POST['type'];
-	$img = $_POST['img'];
-	
-	$img_path = tempnam('Screenshot','');
-	unlink($img_path);
-	$img_path = str_replace('.tmp','.png',$img_path);
-	$img_path = str_replace('\\','/',$img_path);
-	file_put_contents($img_path, file_get_contents($img));
-	
+	if($_POST['img']){
+		$img = $_POST['img'];
+		$img_path = tempnam('Screenshot','');
+		unlink($img_path);
+		$img_path = str_replace('.tmp','.png',$img_path);
+		$img_path = str_replace('\\','/',$img_path);
+		file_put_contents($img_path, file_get_contents($img));
+	}else{
+		$img_path = 'no img';
+	}
 	
 	$dbhost = "120.125.85.96";
 	$dbuser = "socialbot";
