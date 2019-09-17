@@ -24,7 +24,7 @@
 	$sql = "SET NAMES 'utf8'";
 	$result = mysqli_query($conn, $sql);
 	
-	$sql = "INSERT INTO problem(member_id,description,type,screenshot_path) VALUES('".$member_id."','".$text."','".$type."','".$img_path."')";
+	$sql = "INSERT INTO problem(name,description,type,screenshot_path) VALUES('".$member_id."','".$text."','".$type."','".$img_path."')";
 	// $sql = "SELECT * FROM member";
 	echo $sql;
 	$result = mysqli_query($conn, $sql);
