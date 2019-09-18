@@ -34,7 +34,7 @@
 		//將session加入一個失敗的紀錄
 		$_SESSION['is_login'] = false;
 		
-		header("location:login_false.php");
+		// header("location:login_false.php");
 	}
 	//否則將資料寫入Cookie，然後導向到會員專區網頁
 	else

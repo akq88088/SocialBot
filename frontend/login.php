@@ -59,23 +59,24 @@
 							Google
 						</div>
 					</div>
-					<div class="form-group">
-						<input type="text" class="form-control radius-border" placeholder="Email" name="Email"></input>
-						<input type="text" class="form-control radius-border" placeholder="密碼" name="Passswd"></input>
-					</div>
-					<div class="row">
-						<div class="col-8 offset-4">
-							<div class="row bottom-clear">
-								<div class="col-5 btn ta-c radius-border" id="Signup">
-									註冊		
-								</div>
-								<div class="col-1"></div>
-								<div class="col-5 btn ta-c radius-border" id="Signin">
-									登入
+					<form action="checkpassword.php" method="post">
+						<div class="form-group">
+							<input type="email" class="form-control radius-border" placeholder="Email" name="email"></input>
+							<input type="password" class="form-control radius-border" placeholder="密碼" name="password"></input>
+						</div>
+						<div class="row">
+							<div class="col-8 offset-4">
+								<div class="row bottom-clear">
+									<div class="col-5 btn ta-c radius-border" id="Signup">
+										註冊	
+									</div>
+									<div class="col-1"></div>
+									<input type="submit" class="col-5 btn ta-c radius-border" id="Signin" value="登入">
+									</div>
 								</div>
 							</div>
 						</div>
-					</div>
+					</form>
 				</div>
 			</div>
 			
