@@ -15,7 +15,8 @@ $(document).ready(function(){
 
 		// getNER(text);
 		getSummary(text, algorithm, percentage);
-		getSentiment(text);
+		//getSentiment(text);
+		//getQA_test(text);
 	});
 	
 	textUploader.addEventListener('change', function(e) {
@@ -223,6 +224,92 @@ $(document).ready(function(){
 			}
 		});
 	}
+	var getQA_test = function(text){
 
+		$.ajax({
+			method: "POST",
+			url: "../cgi-bin/QA_test.py",
+			async: true, //非同步化
+			// dataType:"json",
+			data: {
+				"text":text
+				// data
+			},
+			beforeSend:function(){
+				//$("#summary").val("出題中...");
+			},
+			success: function(data){
+				console.log('ner success');
+				var que_ans_dict = JSON.parse(data);
+				console.log(que_ans_dict["0"]);
+				var que_ans_row = "";
+				var iRun = 0;
+				var que_ans_div = [];
+				var que_ans_dict_len = que_ans_dict.length;
+				var temp = [];
+				Object.keys(que_ans_dict).forEach(function(key) {
+					que = que_ans_dict[key][0];
+					ans = que_ans_dict[key][1];
+					temp.push(que);
+					temp.push(ans);
+				//for (var i in que_ans_dict){
+					if((iRun + 1) % 2 == 0 || iRun == que_ans_dict_len - 1){
+						console.log("s---")
+						console.log(iRun.toString());
+						console.log(temp[0]);
+						console.log(temp[1]);
+						console.log(temp[2]);
+						console.log(temp[3]);
+						console.log("e---");
+						if(temp.length == 4){
+						que_ans_row = (que_ans_row + "\
+						<div class='row'>\
+						<div class='col-md-6 btm-mg'>\
+						<label>問題 : </label>\
+						<span>" + temp[0] + "</span>\
+						<br>\
+						<label>答案 : </label>\
+						<span>" + temp[1] + "</span>\
+						</div>\
+						<div class='col-md-6 btm-mg'>\
+						<label>問題 : </label>\
+						<span>" + temp[2] + "</span>\
+						<br>\
+						<label>答案 : </label>\
+						<span>" + temp[3] + "</span>\
+						</div>\
+						</div>"
+						)
+						}
+						else if(temp.length == 2){
+						que_ans_row = (que_ans_row + "\
+						<div class='row'>\
+						<div class='col-md-6 btm-mg'>\
+						<label>問題 : </label>\
+						<span>" + temp[0] + "</span>\
+						<br>\
+						<label>答案 : </label>\
+						<span>" + temp[1] + "</span>\
+						</div>\
+						</div>"
+						)
+						}
+						else{
+
+						}
+						temp = [];
+					}
+					iRun = iRun + 1;
+				});
+				var node = document.getElementsByClassName("alert alert-light radius-border orange-block")[0]
+				node.innerHTML = que_ans_row;
+				// 成功回傳後要做甚麼
+			},
+			complete:function(){
+				// 全部執行完要做什麼
+				console.log('ner finish')
+			}
+		});
+	}
 
 });
