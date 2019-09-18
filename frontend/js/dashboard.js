@@ -9,7 +9,9 @@ $(document).ready(function(){
 		var text = $('#paste_text').val();
 		var algorithm = $('.btn-group > button.active')[0].id;
 		var percentage = $('.btn-group > button.active')[1].getAttribute("percentage");
-
+		if(!text){
+			alert('請輸入欲分析之內容');
+		}
 		$('#TextSum_and_SA').show();
 		$('#QA').show();
 
