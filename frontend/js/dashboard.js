@@ -243,26 +243,17 @@ $(document).ready(function(){
 			success: function(data){
 				console.log('ner success');
 				var que_ans_dict = JSON.parse(data);
-				console.log(que_ans_dict["0"]);
 				var que_ans_row = "";
 				var iRun = 0;
 				var que_ans_div = [];
-				var que_ans_dict_len = que_ans_dict.length;
+				var que_ans_dict_len = Object.keys(que_ans_dict).length;
 				var temp = [];
 				Object.keys(que_ans_dict).forEach(function(key) {
 					que = que_ans_dict[key][0];
 					ans = que_ans_dict[key][1];
 					temp.push(que);
 					temp.push(ans);
-				//for (var i in que_ans_dict){
-					if((iRun + 1) % 2 == 0 || iRun == que_ans_dict_len - 1){
-						console.log("s---")
-						console.log(iRun.toString());
-						console.log(temp[0]);
-						console.log(temp[1]);
-						console.log(temp[2]);
-						console.log(temp[3]);
-						console.log("e---");
+					if((iRun + 1) % 2 == 0 || iRun == (que_ans_dict_len - 1)){
 						if(temp.length == 4){
 						que_ans_row = (que_ans_row + "\
 						<div class='row'>\
@@ -297,7 +288,6 @@ $(document).ready(function(){
 						)
 						}
 						else{
-
 						}
 						temp = [];
 					}
