@@ -60,8 +60,8 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<input type="text" class="form-control radius-border" placeholder="Email"></input>
-						<input type="text" class="form-control radius-border" placeholder="密碼"></input>
+						<input type="text" class="form-control radius-border" placeholder="Email" name="Email"></input>
+						<input type="text" class="form-control radius-border" placeholder="密碼" name="Passswd"></input>
 					</div>
 					<div class="row">
 						<div class="col-8 offset-4">
