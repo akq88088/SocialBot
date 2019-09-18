@@ -17,8 +17,8 @@ $(document).ready(function(){
 
 		// getNER(text);
 		getSummary(text, algorithm, percentage);
-		//getSentiment(text);
-		//getQA_test(text);
+		getSentiment(text);
+		getQA_test(text);
 	});
 	
 	textUploader.addEventListener('change', function(e) {
