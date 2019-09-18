@@ -1,5 +1,9 @@
+<?php
+	//啟動session
+	session_start();
+?>
 <!DOCTYPE html>
-<html lang="zh-Hant-TW">
+<html lang="zh">
 <head>
 	<meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,17 +28,35 @@
 	<!-- Customer JS -->
 	<script src="./js/global.js" crossorigin="anonymous"></script>	
 	<script src="./js/dashboard.js" crossorigin="anonymous"></script>
+	
+	<script>
+		function toLogout() {
+			window.location.replace("Logout.php")
+		}
+	</script>
 
 	<title>語料專案</title>
 </head>
 <body>
+	<?php
+		require_once("dbtools.inc.php");
+		
+		//使用 isset()方法，判別有沒有此變數可以使用，以及為已經登入
+		if(isset($_SESSION['is_login']) && $_SESSION['is_login'] == TRUE):
+
+		$email = $_SESSION['email'];
+		$link = create_connection();
+		$sql = "SELECT `project-name` FROM `member` INNER JOIN `project` WHERE `member_id` = `ID`";
+		$result = execute_sql($link, "socialbot", $sql);	
+	?>
+	
 	<!-- header -->
 	<div class="container-fluid header">
 		<div class="row">
-			<div class="col-1 ta-c" id="back" role="button">< 返回</div>
-			<div class="col-4 offset-3 ta-c" id="title"><h5>語 料 應 用 與 分 析 工 具</h5></div>
-			<div class="col-2 offset-1 ta-c">account@gmail.com</div>
-			<div class="col-1 ta-c" id="logout" role="button">登出</div>
+			<div class="col-md-1 ta-c" id="back" role="button">< 返回</div>
+			<div class="col-md-4 offset-md-3 ta-c" id="title"><h5>語 料 應 用 與 分 析 工 具</h5></div>
+			<div class="col-md-2 offset-md-1 ta-c"><?php echo $email;?></div>
+			<div class="col-md-1 ta-c" id="logout" role="button" onclick="toLogout();">登出</div>
 		</div>	
 	</div>
 
@@ -81,7 +103,7 @@
 						
 						<p>上傳檔案</p>
 						<div class="form-group">
-							<input type="file" class="form-control-file" id="upload_text" accept=".txt,.docx">
+							<input type="file" class="form-control-file" id="upload_text" accept=".txt">
 						</div>
 						
 						<div class="row">
@@ -180,10 +202,13 @@
 				</div>
 			</div>
 		</div>
-
-
-
 	</div>
+	
+	<?php
+		else:
+			header('location: login.php');
+		endif;
+	?>
 	
 </body>
 </html>

@@ -5,10 +5,10 @@ $(document).ready(function(){
 	});
 
 	$('#add_project').on('click', function(){
-		window.location.href = 'dashboard.html';
+		window.location.href = 'dashboard.php';
 	});
 
 	$('.c-project').on('click', function(){
-		window.location.href = 'dashboard.html';
+		window.location.href = 'dashboard.php';
 	});
 });
