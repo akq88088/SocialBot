@@ -88,7 +88,7 @@
 	</div>
 	
 	<div class="container-fluid">
-		<div class="row">
+		<div class="row" id="content">
 			<div class="col-lg-2" id="sidebar">
 			<?php 
 				if($authority == 1) { ?>
