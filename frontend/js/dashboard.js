@@ -242,6 +242,7 @@ $(document).ready(function(){
 			},
 			success: function(data){
 				console.log('ner success');
+				console.log(data);
 				var que_ans_dict = JSON.parse(data);
 				var que_ans_row = "";
 				var iRun = 0;
