@@ -7,19 +7,20 @@ from module.mmsegTest import Tokenizer
 mmseg = Tokenizer('module/data_kenlee/userDict.txt')
 
 class PredictModel():
-	def __init__(self,folder):
+	def __init__(self,folder,member_id="member_id",project_id="project_id"):
 		self.folder = folder
+		self.projectPath = folder+'/'+member_id+'/'+project_id
 		self.dic = Dictionary(folder)
 		self.intToSen = {}
 		self.loadModel()
 		
 	def loadModel(self):
 		# print('載入分類模型')
-		self.model = load_model(self.folder+'/sentimentPredict.h5')
-		with open(self.folder+'/sentimentWord.json', encoding='utf8') as file:
+		self.model = load_model(self.projectPath+'/sentimentPredict.h5')
+		with open(self.projectPath+'/sentimentWord.json', encoding='utf8') as file:
 			fileTexts = ''.join(file.readlines())
 		self.sentimentWord = json.loads(fileTexts)
-		with open(self.folder+'/intToSen.json', encoding='utf8') as file:
+		with open(self.projectPath+'/intToSen.json', encoding='utf8') as file:
 			fileTexts = ''.join(file.readlines())
 		intToSen = json.loads(fileTexts)
 		for key in intToSen:
