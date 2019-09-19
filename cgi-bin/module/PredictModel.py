@@ -62,6 +62,23 @@ class PredictModel():
 	def predictDetail(self,content):
 		testX,testSen,testSenSeg = self.makeVector(content)
 		predictions = self.model.predict_classes(testX)
+		result = {"sentence":[],"predict":[],"senSeg":[]}
+		for i,pre in enumerate(predictions):
+			result["sentence"].append(testSen[i])
+			result["predict"].append(self.intToSen[pre])
+			temp = {"seg":[],"sen":[]}
+			for seg in mmseg.cut(testSen[i]):
+				temp["seg"].append(seg)
+				if seg in self.sentimentWord:
+					temp["sen"].append(self.sentimentWord[seg])
+				else:
+					temp["sen"].append("無表情")
+			result["senSeg"].append(temp)
+		return result
+		
+	def predictDetailInner(self,content):
+		testX,testSen,testSenSeg = self.makeVector(content)
+		predictions = self.model.predict_classes(testX)
 		for idx,rate in enumerate(self.model.predict(testX)):
 			print(testSen[idx],testSenSeg[idx])
 			print('預測情緒:',self.intToSen[predictions[idx]])
@@ -69,5 +86,5 @@ class PredictModel():
 				print('%s: %.4f%%'%(self.intToSen[i],r*100))
 		
 if __name__ == '__main__':
-	pdm = PredictModel('data')
+	pdm = PredictModel('data_kenlee')
 	print(pdm.predict('真是太開心了!'))
