@@ -209,6 +209,6 @@
 			header('location: login.php');
 		endif;
 	?>
-	
+	<input id="help_session" type="hidden" value="<?php echo $_SESSION["member_id"] ?>"></input>
 </body>
 </html>

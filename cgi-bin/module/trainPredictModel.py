@@ -11,9 +11,9 @@ from module.mmsegTest import Tokenizer
 mmseg = Tokenizer('module/data_kenlee/userDict.txt')
 
 class DataSet():
-	def __init__(self,folder):
+	def __init__(self,folder,member_id="member_id",project_id="project_id",data_name="SentenceLabel.csv"):
 		self.folder = folder
-		self.dataPath = folder+'/SentenceLabel.csv'
+		self.dataPath = folder+'/'+member_id+'/'+project_id+'/'+data_name
 		# self.stmPath = folder+'/sentimentWord.txt'
 		self.title = []
 		self.sentence = []
@@ -107,10 +107,11 @@ class DataSet():
 		return np.array(X),np.array(Y),sentenceSeg
 		
 class ClassifierModel():
-	def __init__(self,folder):
+	def __init__(self,folder,member_id="member_id",project_id="project_id",data_name="SentenceLabel.csv"):
 		self.folder = folder
+		self.projectPath = folder+'/'+member_id+'/'+project_id
 		self.DT = Dictionary(folder)
-		self.DS = DataSet(folder)
+		self.DS = DataSet(folder,member_id,project_id,data_name)
 		self.model = Sequential()
 		self.trainClsModel()
 	
@@ -127,11 +128,11 @@ class ClassifierModel():
 		intToSen = {}
 		for i,sen in enumerate(self.DS.title):
 			intToSen[int(i)] = sen
-		with open(self.folder+'/intToSen.json', 'w', encoding='utf8') as fp:
+		with open(self.projectPath+'/intToSen.json', 'w', encoding='utf8') as fp:
 			json.dump(intToSen, fp, ensure_ascii=False)
-		with open(self.folder+'/sentimentWord.json', 'w', encoding='utf8') as fp:
+		with open(self.projectPath+'/sentimentWord.json', 'w', encoding='utf8') as fp:
 			json.dump(self.DS.sentimentWord, fp, ensure_ascii=False)
-		self.model.save(self.folder+'/sentimentPredict.h5')
+		self.model.save(self.projectPath+'/sentimentPredict.h5')
 	
 	def evaluation(self):
 		intToSen = {0:'喜',1:'怒',2:'哀',3:'驚',4:'怕',5:'無'}

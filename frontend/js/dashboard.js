@@ -131,6 +131,7 @@ $(document).ready(function(){
 	}
 
 	var getSentiment = function(text){
+		var member_id = $('#help_session')[0].value;
 		stopAjax(sent_currAjax);
 
 		sent_currAjax = $.ajax({
@@ -139,7 +140,8 @@ $(document).ready(function(){
 			async: true, //同步化
 			// dataType:"json",
 			data: {
-				"text" : text
+				"text" : text,
+				"member_id" : member_id
 			},
 			beforeSend:function(){
 			},
@@ -242,6 +244,7 @@ $(document).ready(function(){
 			},
 			success: function(data){
 				console.log('ner success');
+				console.log(data);
 				var que_ans_dict = JSON.parse(data);
 				var que_ans_row = "";
 				var iRun = 0;
