@@ -125,10 +125,11 @@ class data_trans():
         return X_ner
 
 if __name__ == '__main__':
-    text = '小狗，小狗跟我來，我們比一比，看誰跑得快？'
+    text = '小明，小明跟我來，今天我們比一比，看誰的筆比較長？'
 
     ner = NER()
     segment, pos, text_ner = ner.predict(text)
-    print(segment)
-    print(pos)
-    print(text_ner)
+    print("原文:", text)
+    print("斷詞:", segment)
+    # print(pos)
+    print("實體辨識:", text_ner)
