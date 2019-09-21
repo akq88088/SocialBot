@@ -16,7 +16,7 @@ except:
 cwd = os.path.dirname(__file__)
 
 class NER():
-    def __init__(self, model_path = cwd+'/data_alex/ner_model.h5',
+    def __init__(self, maxlen=30, model_path = cwd+'/data_alex/ner_model.h5',
                     posDict_path = cwd+'/data_alex/pos_dict.txt',
                     nerDict_path = cwd+'/data_alex/ner_dict.txt'):
         try:
@@ -31,8 +31,6 @@ class NER():
         self.transformer = data_trans()
         self.maxlen = 30
 
-    def print_path(self):
-        return cwd2
     def build_model(self, input_len, input_dim, output_dim, embed_units, lstm_units):
         model = Sequential()
         model.add(InputLayer(input_shape=(input_len, )))
@@ -86,8 +84,8 @@ class data_trans():
     def __init__(self):
         pass
 
-    def _load_data_csv(self, path):
-        with open(path,'r',encoding='utf-8-sig') as f:
+    def load_data_csv(self, path):
+        with open(path,'r', encoding='utf-8-sig') as f:
             data = csv.reader(f)
             rows = [row for row in data]
         return rows
@@ -125,10 +123,32 @@ class data_trans():
         return X_ner
 
 if __name__ == '__main__':
+    ner = NER(maxlen=50, posDict_path='data_alex/pos_dict_jieba.txt')
+    dt =  data_trans()
+    data = dt.load_data_csv('data_alex/seg1533_prepare2.csv')
+    pos, tags = [], []
+    for seg in data:
+        temp_p, temp_t = [],[]
+        for element in seg:
+            temp = element.split('%2F')
+            temp_p.append(temp[1])
+            temp_t.append(temp[2])
+        pos.append(temp_p)
+        tags.append(temp_t)
+    pos = dt.to_int(pos,ner.pos_dict)
+    pos_pad = dt.padding(pos, maxlen=ner.maxlen, padding='pre')
+    tags = dt.to_int(tags, ner.ner_dict)
+    tags_pad = dt.padding(tags, maxlen=ner.maxlen, padding='pre')
+    tags_onehot = dt.to_onehot(tags_pad, ner.ner_dict)
+
+    ner.build_model(ner.maxlen, len(ner.pos_dict), len(ner.ner_dict), 64, 64)
+    ner.train(pos_pad, tags_onehot, batch_size=10, epochs=5, validation_split=0.2)
+
     text = '小明，小明跟我來，今天我們比一比，看誰的筆比較長？'
 
-    ner = NER()
     segment, pos, text_ner = ner.predict(text)
     print("原文:", text)
     print("斷詞:", segment)
     print("實體辨識:", text_ner)
+
+    ner.save_model('data_alex/ner_model_jieba.h5')
