@@ -2,6 +2,7 @@
 import re
 import os
 import jieba
+import jieba.posseg
 from bosonnlp import BosonNLP
 
 cwd = os.path.dirname(__file__)
@@ -36,33 +37,35 @@ class TextProcessor():
     def _boson_seg(self, text):
         nlp = BosonNLP('qiVsBy45.26744.9-U4aaXH2yEs')
         if type(text) == str:
-            result = nlp.tag(text)[0]
-            words, tags = result['word'], result['tag']
-        else:
-            corpus_len = len(text)
-            words, tags = [], []
-            for idx in range(corpus_len//100 + 1):
-                curr_idx = idx*100
-                result = nlp.tag(text[curr_idx: min(curr_idx+100, corpus_len)])
-                for seg in result:
-                    words.append(seg['word'])
-                    tags.append(seg['tag'])
+            # result = nlp.tag(text)[0]
+            # words, tags = result['word'], result['tag']
+            text = [text]
+        
+        corpus_len = len(text)
+        words, tags = [], []
+        for idx in range(corpus_len//100 + 1):
+            curr_idx = idx*100
+            result = nlp.tag(text[curr_idx: min(curr_idx+100, corpus_len)])
+            for seg in result:
+                words.append(seg['word'])
+                tags.append(seg['tag'])
         
         return words, tags
     
     def _jieba_seg(self, text):
         if type(text) == str:
-            posseg = [seg for seg in jieba.posseg.cut(text)]
-            words, tags = list(zip(*posseg))
-            words, tags = list(words), list(tags)
-        else:
-            words, tags = [], []
-            for s in text:
-                posseg = [seg for seg in jieba.posseg.cut(s)]
-                w, t = list(zip(*posseg))
-                w, t = list(w), list(t)
-                words.append(w)
-                tags.append(t)
+            # posseg = [seg for seg in jieba.posseg.cut(text)]
+            # words, tags = list(zip(*posseg))
+            # words, tags = list(words), list(tags)
+            text = [text]
+        
+        words, tags = [], []
+        for s in text:
+            posseg = [seg for seg in jieba.posseg.cut(s)]
+            w, t = list(zip(*posseg))
+            w, t = list(w), list(t)
+            words.append(w)
+            tags.append(t)
                 
         return words, tags
     
@@ -119,6 +122,6 @@ class TextProcessor():
 
 if __name__ == '__main__':
     tp = TextProcessor()
-    text = ['小明今天好可愛', '小明今天不可愛']
+    text = '小明喜歡小美'
     print(tp.seg_tag(text, seg_fn='jieba', use_stopwords=False))
     print(tp.seg_tag(text, use_stopwords=False))
