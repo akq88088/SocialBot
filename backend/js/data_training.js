@@ -4,11 +4,17 @@ $(document).ready(function(){
 		$(this).toggleClass('active');
 	});
 
+	$('#frontend').on('click', function(){
+		window.location.href = '../frontend/project.php';
+	});
+	
 	$('#add_project').on('click', function(){
-		window.location.href = 'summary.html';
+		// history.replaceState(null, "report page", window.location.href);
+		window.location.href = 'train.php';
 	});
 
 	$('.c-project').on('click', function(){
-		window.location.href = 'summary.html';
+		// history.replaceState(null, "report page", window.location.href);
+		window.location.href = 'train.php';
 	});
 });

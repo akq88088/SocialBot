@@ -5,8 +5,7 @@ $(document).ready(function(){
 	});
 
 	$('#backend').on('click', function(){
-		window.location.href = '../backend/data_training.html';
-		console.log('123');
+		window.location.href = '../backend/data_training.php';
 	});
 
 	$('#add_project').on('click', function(){

@@ -55,10 +55,10 @@
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-lg-2" id="sidebar">
-				<div class="worker ta-c">
+				<div class="worker ta-c" id="frontend">
 					語料應用
 				</div>
-				<div class="worker ta-c active">
+				<div class="worker ta-c active" id="backend">
 					資料訓練後台
 				</div>
 			</div>
@@ -76,30 +76,6 @@
 				<div class="container">
 					<h6 class="my-4">資 料 訓 練 模 型</h6>
 					<div class="row">
-						<div class="col-lg-3 btm-mg-1">
-							<div class="radius-border c-project">
-								<div class="c-time">2019-09-02</div>
-								<div class="model">國小讀本</div>
-							</div>
-						</div>
-						<div class="col-lg-3 btm-mg-1">
-							<div class="radius-border c-project">
-								<div class="c-time">2019-09-02</div>
-								<div class="model">國小讀本</div>
-							</div>
-						</div>
-						<div class="col-lg-3 btm-mg-1">
-							<div class="radius-border c-project">
-								<div class="c-time">2019-09-02</div>
-								<div class="model">國小讀本</div>
-							</div>
-						</div>
-						<div class="col-lg-3 btm-mg-1">
-							<div class="radius-border c-project">
-								<div class="c-time">2019-09-02</div>
-								<div class="model">國小讀本</div>
-							</div>
-						</div>
 						<div class="col-lg-3 btm-mg-1">
 							<div class="radius-border c-project">
 								<div class="c-time">2019-09-02</div>
