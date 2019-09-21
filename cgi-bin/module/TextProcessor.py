@@ -37,8 +37,6 @@ class TextProcessor():
     def _boson_seg(self, text):
         nlp = BosonNLP('qiVsBy45.26744.9-U4aaXH2yEs')
         if type(text) == str:
-            # result = nlp.tag(text)[0]
-            # words, tags = result['word'], result['tag']
             text = [text]
         
         corpus_len = len(text)
@@ -54,9 +52,6 @@ class TextProcessor():
     
     def _jieba_seg(self, text):
         if type(text) == str:
-            # posseg = [seg for seg in jieba.posseg.cut(text)]
-            # words, tags = list(zip(*posseg))
-            # words, tags = list(words), list(tags)
             text = [text]
         
         words, tags = [], []
@@ -93,7 +88,7 @@ class TextProcessor():
     def seg_tag(self, text, seg_fn='boson', use_stopwords=True):
         try:
             pos_set = {'boson':['n', 'nr1', 'nrf', 'nr', 'ns','t','s','f','v', 'vshi', 'vyou', 'vn', 'a','b','z','r','m','q','d','p','c','u','o','y','h','k','nx','w'], 
-                        'jieba':['n', 'ng', 'nr', 'ns', 'nt', 'nz', 'v', 'vd', 'vg', 'vi', 'vn', 'a', 'ad', 'ag', 'an', 'b','c','d','e','f','g','h','i','j','k','l', 'm', 'mq', 'o','p','q', 'r', 'rg', 'rr', 'rz', 's', 't', 'tg', 'u', 'ud', 'ug', 'uj', 'ul', 'uv', 'uz', 'x','y','z']}[seg_fn]
+                        'jieba':['n', 'ng', 'nr', 'ns', 'nt', 'nz', 'v', 'vd', 'vg', 'vi', 'vn', 'a', 'ad', 'ag', 'an', 'b','c','d','e','f','g','h','i','j','k','l', 'm', 'mq', 'o','p','q', 'r', 'rg', 'rr', 'rz', 's', 't', 'tg', 'u', 'ud', 'ug', 'uj', 'ul', 'uv', 'uz', 'w', 'x','y','z']}[seg_fn]
             seg_fn = {'boson': self._boson_seg, 'jieba': self._jieba_seg}[seg_fn]
         except Exception as e:
             print(e)
