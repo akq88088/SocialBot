@@ -131,5 +131,4 @@ if __name__ == '__main__':
     segment, pos, text_ner = ner.predict(text)
     print("原文:", text)
     print("斷詞:", segment)
-    # print(pos)
     print("實體辨識:", text_ner)
