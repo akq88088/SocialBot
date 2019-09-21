@@ -60,7 +60,7 @@ class TextProcessor():
                 
         return segments
     
-    def segement(self, text, seg_fn='boson', use_stopwords=True):
+    def segment(self, text, seg_fn='boson', use_stopwords=True):
         try:
             seg_fn = {'boson': self._boson_seg, 'jieba': self._jieba_seg}[seg_fn]
         except:
