@@ -95,7 +95,7 @@
 				<div class="worker ta-c active">
 					語料應用
 				</div>
-				<div class="worker ta-c">
+				<div class="worker ta-c" id="backend">
 					資料訓練後台
 				</div>
 			<?php } else {?>
