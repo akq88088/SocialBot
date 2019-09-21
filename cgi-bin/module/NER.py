@@ -57,7 +57,7 @@ class NER():
         part_of_speach = []
         result = []
         for sent in sentence:
-            words, tags = self.TextProcessor.seg_tag(sent, use_stopwords=False)
+            words, tags = self.TextProcessor.seg_tag(sent, seg_fn='jieba' use_stopwords=False)
             words = words[0]
 
             sent_len = len(words)
