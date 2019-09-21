@@ -61,7 +61,7 @@ class TextProcessor():
         
         words, tags = [], []
         for s in text:
-            posseg = [seg for seg in jieba.posseg.cut(s)]
+            posseg = [seg for seg in jieba.posseg.cut(s.strip())]
             w, t = list(zip(*posseg))
             w, t = list(w), list(t)
             words.append(w)
