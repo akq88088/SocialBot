@@ -16,8 +16,8 @@ except:
 cwd = os.path.dirname(__file__)
 
 class NER():
-    def __init__(self, maxlen=30, model_path = cwd+'/data_alex/ner_model.h5',
-                    posDict_path = cwd+'/data_alex/pos_dict.txt',
+    def __init__(self, maxlen=30, model_path = cwd+'/data_alex/ner_model_jieba.h5',
+                    posDict_path = cwd+'/data_alex/pos_dict_jieba.txt',
                     nerDict_path = cwd+'/data_alex/ner_dict.txt'):
         try:
             self.model = load_model(model_path)
@@ -29,7 +29,7 @@ class NER():
 
         self.TextProcessor = TextProcessor.TextProcessor()
         self.transformer = data_trans()
-        self.maxlen = 30
+        self.maxlen = maxlen
 
     def build_model(self, input_len, input_dim, output_dim, embed_units, lstm_units):
         model = Sequential()
@@ -53,9 +53,6 @@ class NER():
     def predict(self, data):
         sentence = self.TextProcessor.sentence_break(data, split_char='!?。！？,，')
 
-        if not self.model:
-            model = _load_model(cwd+'/data_alex/ner_model.h5')
-
         segment = []
         part_of_speach = []
         result = []
@@ -69,7 +66,11 @@ class NER():
 
             pos_pad = self.transformer.padding(pos, maxlen=self.maxlen, padding='pre')
             
-            ner = [np.argmax(i) for i in self.model.predict(pos_pad.reshape(1,self.maxlen))[0]]
+            try:
+                ner = [np.argmax(i) for i in self.model.predict(pos_pad.reshape(1,self.maxlen))[0]]
+            except Exception as e:
+                raise
+
             ner = ner[-sent_len:]
             
             ner = self.transformer.to_ner(ner, self.ner_dict)
@@ -123,7 +124,7 @@ class data_trans():
         return X_ner
 
 if __name__ == '__main__':
-    ner = NER(maxlen=50, posDict_path='data_alex/pos_dict_jieba.txt')
+    ner = NER(maxlen=30, posDict_path='data_alex/pos_dict_jieba.txt')
     dt =  data_trans()
     data = dt.load_data_csv('data_alex/seg1533_prepare2.csv')
     pos, tags = [], []
@@ -141,7 +142,7 @@ if __name__ == '__main__':
     tags_pad = dt.padding(tags, maxlen=ner.maxlen, padding='pre')
     tags_onehot = dt.to_onehot(tags_pad, ner.ner_dict)
 
-    ner.build_model(ner.maxlen, len(ner.pos_dict), len(ner.ner_dict), 64, 64)
+    ner.build_model(ner.maxlen, len(ner.pos_dict), len(ner.ner_dict), 64, 16)
     ner.train(pos_pad, tags_onehot, batch_size=10, epochs=5, validation_split=0.2)
 
     text = '小明，小明跟我來，今天我們比一比，看誰的筆比較長？'
