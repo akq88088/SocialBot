@@ -7,6 +7,10 @@ $(document).ready(function(){
 		// window.location.href = $(this).attr('id') + '.html';
 	});
 	
+	$('#train').on('click', function(){
+		
+	});
+
 	const textUploader = document.querySelector('#upload_text');
 	textUploader.addEventListener('change', function(e) {
 		console.log(e.target.files); // get file object

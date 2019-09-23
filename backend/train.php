@@ -17,6 +17,7 @@
 	<link rel="stylesheet" href="../frontend/css/global.css">
 	<link rel="stylesheet" href="../frontend/css/project.css">
 	<link rel="stylesheet" href="css/button.css">
+	<link rel="stylesheet" href="./css/emotion_recognition.css">
 	<!-- JQuery -->
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" crossorigin="anonymous"></script>
 	<script src="http://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
@@ -24,6 +25,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" crossorigin="anonymous"></script>
 	<!-- Customer JS -->
 	<script src="./js/train.js" crossorigin="anonymous"></script>
+	<script src="./js/emotion_recognition.js"></script>
 	
 	<script>
 		function toLogout() {
@@ -172,7 +174,7 @@
 									<p><label for="inputfile">上傳檔案</label><P>
 									<P><input type="file" id="upload_text" accept=".txt"></p>
 									<div class="col-md-2 offset-md-10">
-										<button class="btn radius-border" id="submit">開始訓練</button>
+										<button class="btn radius-border" id="train">開始訓練</button>
 									</div>
 								</div>
 							</div>
@@ -183,7 +185,7 @@
 						<h6 class="my-4">情 續 辨 別</h6>
 						<div class="alert alert-light radius-border red-block" id="import">
 							<div class="row">
-								<div class="col-lg-6">
+								<div class="col-lg-6" style="height:600px;overflow:auto;">
 									<p>句子情緒辨別</p>
 										<table class="table" id="sentence_result">
 											<col width="70%">
@@ -206,7 +208,7 @@
 											</tbody>
 										</table>
 								</div>
-								<div class="col-lg-6">
+								<div class="col-lg-6" style="height:600px;overflow:auto;">
 									<p>字詞情緒標記</p>
 									<table class="table" id="segment_result">
 										<col width="70%">
