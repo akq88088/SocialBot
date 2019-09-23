@@ -8,7 +8,31 @@ $(document).ready(function(){
 	});
 	
 	$('#train').on('click', function(){
-		
+		var sentence = $('#sentence_result > tbody > tr > td:nth-child(1)');
+		var sentence_label = $('#sentence_result > tbody > tr > td > select');
+		var sentence_json = '{';
+		var segment = $('#segment_result > tbody > tr > td:nth-child(1)');
+		var segment_label = $('#segment_result > tbody > tr > td > select');
+		var segment_json = '{';
+		for(let i = 0; i < sentence.length; i++){
+			sentence_json += '"'+sentence[i].innerHTML+'":"'+sentence_label[i].value+'"';
+			if(i==sentence.length-1){
+				sentence_json += '}';
+			}else{
+				sentence_json += ',';
+			}
+		}
+		console.log(sentence_json);
+		for(let i = 0; i < segment.length; i++){
+			segment_json += '"'+segment[i].innerHTML+'":"'+segment_label[i].value+'"';
+			if(i==segment.length-1){
+				segment_json += '}';
+			}else{
+				segment_json += ',';
+			}
+		}
+		console.log(segment_json);
+		sentimentFeedback(sentence_json,segment_json,"path");
 	});
 
 	const textUploader = document.querySelector('#upload_text');
@@ -82,6 +106,29 @@ $(document).ready(function(){
 				}
 				$('#segment_result > tbody').empty();
 				$('#segment_result > tbody').append(segmentSentiment);
+			},
+			complete:function(){
+			}
+		});
+	}
+
+	var sentimentFeedback = function(sentence_json,segment_json,path){
+		stopAjax(sent_currAjax);
+
+		sent_currAjax = $.ajax({
+			method: "POST",
+			url: "../cgi-bin/sentimentFeedback.py",
+			async: true, //同步化
+			// dataType:"json",
+			data: {
+				"sentence_json" : sentence_json,
+				"segment_json" : segment_json,
+				"path" : path
+			},
+			beforeSend:function(){
+			},
+			success: function(text){
+				console.log(text);
 			},
 			complete:function(){
 			}
