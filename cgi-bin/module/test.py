@@ -1,6 +1,6 @@
-with open('./data_alex/seg2000_prepare2.csv', 'w', encoding='utf8') as file:
+with open('./data_alex/seg1533_prepare2.csv', 'w', encoding='utf8') as file:
 	file.write('\ufeff')
-	with open('./data_alex/seg2000_prepare.csv', 'r', encoding='utf8') as f:
+	with open('./data_alex/seg1533_prepare.csv', 'r', encoding='utf8') as f:
 		line = []
 		for i in f.readlines():
 			x = i.strip().split(',')

@@ -4,6 +4,10 @@ $(document).ready(function(){
 		$(this).toggleClass('active');
 	});
 
+	$('#backend').on('click', function(){
+		window.location.href = '../backend/data_training.php';
+	});
+
 	$('#add_project').on('click', function(){
 		window.location.href = 'dashboard.php';
 	});

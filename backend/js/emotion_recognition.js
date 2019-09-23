@@ -4,7 +4,7 @@ $(document).ready(function(){
 	$('#sidebar > .worker').on('click', function(){
 		// $(this).parent().find('.worker').removeClass('active');
 		// $(this).toggleClass('active');
-		window.location.href = $(this).attr('id') + '.html';
+		// window.location.href = $(this).attr('id') + '.html';
 	});
 	
 	const textUploader = document.querySelector('#upload_text');

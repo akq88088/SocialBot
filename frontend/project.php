@@ -92,10 +92,10 @@
 			<div class="col-lg-2" id="sidebar">
 			<?php 
 				if($authority == 1) { ?>
-				<div class="worker ta-c active">
+				<div class="worker ta-c active" id="frontend">
 					語料應用
 				</div>
-				<div class="worker ta-c">
+				<div class="worker ta-c" id="backend">
 					資料訓練後台
 				</div>
 			<?php } else {?>

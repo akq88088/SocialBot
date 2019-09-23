@@ -21,7 +21,7 @@ class TextSim_TextSum():
             num_summary = compression_ratio
         numsumary = min(len(text), num_summary)
         
-        segments = self.TextProcessor.segement(text, 'boson')
+        segments = self.TextProcessor.segment(text, 'boson')
             
         segments.insert(0, ' '.join(segments))
         
@@ -52,7 +52,7 @@ class TRMap_TextSum():
             num_summary = compression_ratio
         numsumary = min(len(text), num_summary)
         
-        segments = self.TextProcessor.segement(text)
+        segments = self.TextProcessor.segment(text)
         
         countVectorizer = CountVectorizer()
         textVector = countVectorizer.fit_transform(segments)
@@ -93,7 +93,7 @@ class TextRank_TextSum():
             num_summary = compression_ratio
         numsumary = min(len(text), num_summary)
         
-        segments = self.TextProcessor.segement(text, 'boson', use_stopwords=False)
+        segments = self.TextProcessor.segment(text, 'boson', use_stopwords=False)
         
         inputs = '. '.join(segments)
         
