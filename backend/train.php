@@ -18,6 +18,7 @@
 	<link rel="stylesheet" href="../frontend/css/project.css">
 	<link rel="stylesheet" href="css/button.css">
 	<link rel="stylesheet" href="./css/emotion_recognition.css">
+	<link rel="stylesheet" href="./css/NER.css">
 	<!-- JQuery -->
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" crossorigin="anonymous"></script>
 	<script src="http://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
@@ -25,6 +26,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" crossorigin="anonymous"></script>
 	<!-- Customer JS -->
 	<script src="./js/train.js" crossorigin="anonymous"></script>
+	<script src="./js/NER.js"></script>
 	<script src="./js/emotion_recognition.js"></script>
 	
 	<script>
@@ -36,13 +38,13 @@
 	<title>語料專案</title>
 </head>
 <body>
-	<?php
-		require_once("dbtools.inc.php");
+ 	<?php
+		// require_once("dbtools.inc.php");
 		
-		//使用 isset()方法，判別有沒有此變數可以使用，以及為已經登入
-		if(isset($_SESSION['is_login']) && $_SESSION['is_login'] == TRUE):
+		// //使用 isset()方法，判別有沒有此變數可以使用，以及為已經登入
+		// if(isset($_SESSION['is_login']) && $_SESSION['is_login'] == TRUE):
 
-		$email = $_SESSION['email'];
+		// $email = $_SESSION['email'];
 	?>
 	
 	<!-- header -->
@@ -50,7 +52,7 @@
 		<div class="row">
 			<div class="col-md-1 ta-c" id="back" role="button">< 返回</div>
 			<div class="col-md-4 offset-md-3 ta-c" id="title"><h5>語 料 應 用 與 分 析 工 具</h5></div>
-			<div class="col-md-2 offset-md-1 ta-c"><?php echo $email;?></div>
+			<div class="col-md-2 offset-md-1 ta-c"><?//php echo $email;?></div>
 			<div class="col-md-1 ta-c" id="logout" role="button" onclick="toLogout();">登出</div>
 		</div>	
 	</div>
@@ -125,7 +127,7 @@
 							<div class="col-lg-12 btm-mg-1">
 								<div class="radius-border project blue-block">
 									<p><label for="inputfile">上傳檔案</label></p>
-									<p><input type="file" id="inputfile"></p>
+									<p><input type="file" id="ner_file"></p>
 									<div class="col-md-2 offset-md-10">
 										<button class="btn radius-border" id="submit">開始訓練</button>
 									</div>
@@ -134,29 +136,33 @@
 						</div>
 					</div>
 					<div class="container">
-						<h6 class="my-4">出 題 規 則</h6>
+						<h6 class="my-4">實 體 辨 識 結 果</h6>
 						<div class="alert alert-light radius-border darkblue-block" id="import">
 							<div class="row">
-								<div class="col-lg-6">
+								<div class="col-lg-6" style="max-height:600px;overflow:auto;">
 									<p>原文</p>
+									<textarea class="form-control blue-border radius-border" id="context" disabled="disabled" rows="12"></textarea>
 								</div>
-								<div class="col-lg-6">
+								<div class="col-lg-6" style="max-height:600px;overflow:auto;">
 									<p>字詞屬性標記</p>
-									<table class="table">
+									<table class="table" id="NER_result">
 										<thead>
 											<tr>
 												<th><span class="glyphicon glyphicon-font"></span> 字詞</th>
-												<th><span class="glyphicon glyphicon-list"></span> 屬性</th>
+												<th><span class="glyphicon glyphicon-list"></span> 詞性</th>
+												<th><span class="glyphicon glyphicon-list"></span> 實體</th>
 											</tr>
 										</thead>
 										<tbody>
 											<tr>
 												<td>大自然</td>
+												<td>n</td>
 												<td>人</td>
 											</tr>
 											<tr>
 												<td>會</td>
 												<td>v</td>
+												<td></td>
 											</tr>
 										</tbody>
 									</table>
@@ -239,9 +245,9 @@
 		</div>
 	</div>
 	<?php
-		else:
-			header('location: ../frontend/login.php');
-		endif;
+		// else:
+		// 	header('location: ../frontend/login.php');
+		// endif;
 	?>
 </body>
 </html>

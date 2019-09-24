@@ -51,13 +51,13 @@ class NER():
         self.model.save(path)
 
     def predict(self, data):
-        sentence = self.TextProcessor.sentence_break(data, split_char='!?。！？,，')
+        sentence = self.TextProcessor.sentence_break(data, split_char='!?。！？,，」"')
 
         segment = []
         part_of_speach = []
         result = []
         for sent in sentence:
-            words, tags = self.TextProcessor.seg_tag(sent, seg_fn='jieba' use_stopwords=False)
+            words, tags = self.TextProcessor.seg_tag(sent, use_stopwords=False)
             words = words[0]
 
             sent_len = len(words)

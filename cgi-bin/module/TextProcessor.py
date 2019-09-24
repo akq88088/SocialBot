@@ -18,7 +18,7 @@ class TextProcessor():
             
         return stop_words
         
-    def sentence_break(self, text, split_char='!?。！？'):
+    def sentence_break(self, text, split_char='!?。！？」"'):
         sentences = []
         start = 0
         for i, char in enumerate(text):
@@ -117,6 +117,7 @@ class TextProcessor():
 
 if __name__ == '__main__':
     tp = TextProcessor()
-    text = '小明喜歡小美'
-    print(tp.seg_tag(text, seg_fn='jieba', use_stopwords=False))
-    print(tp.seg_tag(text, use_stopwords=False))
+    # text = '小明喜歡小美'
+    print(tp.sentence_break('他看到老師說：「老師好！」'))
+    # print(tp.seg_tag(text, seg_fn='jieba', use_stopwords=False))
+    # print(tp.seg_tag(text, use_stopwords=False))
