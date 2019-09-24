@@ -16,8 +16,8 @@ except:
 cwd = os.path.dirname(__file__)
 
 class NER():
-    def __init__(self, maxlen=30, model_path = cwd+'/data_alex/ner_model_jieba.h5',
-                    posDict_path = cwd+'/data_alex/pos_dict_jieba.txt',
+    def __init__(self, maxlen=30, model_path = cwd+'/data_alex/ner_model.h5',
+                    posDict_path = cwd+'/data_alex/pos_dict.txt',
                     nerDict_path = cwd+'/data_alex/ner_dict.txt'):
         try:
             self.model = load_model(model_path)
@@ -124,7 +124,7 @@ class data_trans():
         return X_ner
 
 if __name__ == '__main__':
-    ner = NER(maxlen=30, posDict_path='data_alex/pos_dict_jieba.txt')
+    ner = NER(maxlen=30, posDict_path='data_alex/pos_dict.txt')
     dt =  data_trans()
     data = dt.load_data_csv('data_alex/seg1533_prepare2.csv')
     pos, tags = [], []
@@ -152,4 +152,4 @@ if __name__ == '__main__':
     print("斷詞:", segment)
     print("實體辨識:", text_ner)
 
-    ner.save_model('data_alex/ner_model_jieba.h5')
+    ner.save_model('data_alex/ner_model.h5')
