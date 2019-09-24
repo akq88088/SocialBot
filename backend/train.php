@@ -240,7 +240,7 @@
 	</div>
 	<?php
 		else:
-			header('location: login.php');
+			header('location: ../frontend/login.php');
 		endif;
 	?>
 </body>
