@@ -232,7 +232,7 @@ $(document).ready(function(){
 
 		$.ajax({
 			method: "POST",
-			url: "../cgi-bin/QA_test.py",
+			url: "../cgi-bin/QA_test_connect.py",
 			async: true, //非同步化
 			// dataType:"json",
 			data: {
