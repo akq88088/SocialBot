@@ -75,9 +75,9 @@ class NER():
             
             ner = self.transformer.to_ner(ner, self.ner_dict)
             
-            segment.extend(words)
-            part_of_speach.extend(tags[0])
-            result.extend(ner)
+            segment.append(words)
+            part_of_speach.append(tags[0])
+            result.append(ner)
 
         return segment, part_of_speach, result 
 
