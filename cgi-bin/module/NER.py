@@ -124,32 +124,32 @@ class data_trans():
         return X_ner
 
 if __name__ == '__main__':
-    ner = NER(maxlen=30, posDict_path='data_alex/pos_dict.txt')
-    dt =  data_trans()
-    data = dt.load_data_csv('data_alex/seg1533_prepare2.csv')
-    pos, tags = [], []
-    for seg in data:
-        temp_p, temp_t = [],[]
-        for element in seg:
-            temp = element.split('%2F')
-            temp_p.append(temp[1])
-            temp_t.append(temp[2])
-        pos.append(temp_p)
-        tags.append(temp_t)
-    pos = dt.to_int(pos,ner.pos_dict)
-    pos_pad = dt.padding(pos, maxlen=ner.maxlen, padding='pre')
-    tags = dt.to_int(tags, ner.ner_dict)
-    tags_pad = dt.padding(tags, maxlen=ner.maxlen, padding='pre')
-    tags_onehot = dt.to_onehot(tags_pad, ner.ner_dict)
+    ner = NER(maxlen=30)
+    # dt =  data_trans()
+    # data = dt.load_data_csv('data_alex/seg2000_prepare2.csv')
+    # pos, tags = [], []
+    # for seg in data:
+    #     temp_p, temp_t = [],[]
+    #     for element in seg:
+    #         temp = element.split('%2F')
+    #         temp_p.append(temp[1])
+    #         temp_t.append(temp[2])
+    #     pos.append(temp_p)
+    #     tags.append(temp_t)
+    # pos = dt.to_int(pos,ner.pos_dict)
+    # pos_pad = dt.padding(pos, maxlen=ner.maxlen, padding='pre')
+    # tags = dt.to_int(tags, ner.ner_dict)
+    # tags_pad = dt.padding(tags, maxlen=ner.maxlen, padding='pre')
+    # tags_onehot = dt.to_onehot(tags_pad, ner.ner_dict)
 
-    ner.build_model(ner.maxlen, len(ner.pos_dict), len(ner.ner_dict), 64, 16)
-    ner.train(pos_pad, tags_onehot, batch_size=10, epochs=5, validation_split=0.2)
+    # ner.build_model(ner.maxlen, len(ner.pos_dict), len(ner.ner_dict), 32, 16)
+    # ner.train(pos_pad, tags_onehot, batch_size=10, epochs=5, validation_split=0.2)
 
-    text = '小明，小明跟我來，今天我們比一比，看誰的筆比較長？'
+    text = '明天是小方的生日，小方打電話給小亮。小方說：「小亮，明天是我生日，請你來我家好嗎？」小亮說：「好啊！我會唱歌給你聽。」小方說：「你要唱什麼歌？」小亮說：「我明天再告訴你。」小方說：「好啊！你明天一定要來！」'
 
     segment, pos, text_ner = ner.predict(text)
     print("原文:", text)
     print("斷詞:", segment)
     print("實體辨識:", text_ner)
 
-    ner.save_model('data_alex/ner_model.h5')
+    # ner.save_model('data_alex/ner_model.h5')
