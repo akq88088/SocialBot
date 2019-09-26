@@ -14,7 +14,7 @@ print("")
 
 parameter = cgi.FieldStorage()
 text = parameter.getvalue('text')
-
+text="小明喜歡小美"
 NER = NER()
 segment, pos, text_ner = NER.predict(text)
-print(json.dumps({'segment': segment, 'ner': text_ner}, ensure_ascii=False))
+print(json.dumps({'segment': segment, 'pos': pos, 'ner': text_ner}, ensure_ascii=False))

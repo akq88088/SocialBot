@@ -35,7 +35,7 @@ class TextProcessor():
         return sentences
     
     def _boson_seg(self, text):
-        nlp = BosonNLP('qiVsBy45.26744.9-U4aaXH2yEs')
+        nlp = BosonNLP('8EP496lI.26743.mNK0Tk6Rpk5F')
         if type(text) == str:
             text = [text]
         

@@ -25,28 +25,30 @@ var getNER = function(text){
 				"text" : text
 			},
 			beforeSend:function(){
-				// $("#context").val(text);
+				$("#context").val("實體判別中...");
 			},
 			success: function(res){
 				$("#context").val(text);
 				res  = JSON.parse(res);
 				$("#NER_result > tbody").html("");
 				for(i=0; i<res.segment.length; i++){
-					let option="<select class='form-control'>\
-								<option value='x'>-</option>\
-								<option value='per'>人</option>\
-								<option value='obj'>物</option>\
-								<option value='time'>時</option>\
-								<option value='place'>地</option>\
-								</select>"
-					$("#NER_result > tbody").append("<tr>");
-					$("#NER_result > tbody").append("<td>"+ res.segment[i] +"</td>");
-					$("#NER_result > tbody").append("<td>"+ res.pos[i] +"</td>");
-					$("#NER_result > tbody").append("<td>"+ option+ "</td>");
-					$("#NER_result").find("select").last().val(res.ner[i]);
-					$("#NER_result > tbody").append("</tr>");
+					for(j=0; j<res.segment[i].length; j++){
+						let option="<select class='form-control'>\
+									<option value='x'>-</option>\
+									<option value='per'>人</option>\
+									<option value='obj'>物</option>\
+									<option value='time'>時</option>\
+									<option value='place'>地</option>\
+									</select>"
+						$("#NER_result > tbody").append("<tr>");
+						$("#NER_result > tbody").append("<td>"+ res.segment[i][j] +"</td>");
+						$("#NER_result > tbody").append("<td>"+ res.pos[i][j] +"</td>");
+						$("#NER_result > tbody").append("<td>"+ option+ "</td>");
+						$("#NER_result").find("select").last().val(res.ner[i][j]);
+						$("#NER_result > tbody").append("</tr>");
+					}
 				}
-				
+				console.log("ner done!");
 			},
 			complete:function(){
 			}
