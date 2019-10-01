@@ -129,7 +129,7 @@
 									<p><label for="inputfile">上傳檔案</label></p>
 									<p><input type="file" id="ner_file"></p>
 									<div class="col-md-2 offset-md-10">
-										<button class="btn radius-border" id="submit">開始訓練</button>
+										<button class="btn radius-border" id="train_ner">開始訓練</button>
 									</div>
 								</div>
 							</div>

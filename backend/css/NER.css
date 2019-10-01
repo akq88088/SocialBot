@@ -1,3 +1,7 @@
 textarea[disabled] {
    background-color: #fff !important; 
 }
+#train_ner{
+	color: #fff;
+	width: 120px;
+	background-color: #74acc5;
