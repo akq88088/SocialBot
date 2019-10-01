@@ -50,15 +50,6 @@
 		<div class="row">
 			<div class="col-8 offset-2">
 				<div class="radius-border" id="panel">
-					<div class="row">
-						<div class="col-5 btn ta-c radius-border" id="Facebook">
-							Facebook			
-						</div>
-						<div class="col-2"></div>
-						<div class="col-5 btn ta-c radius-border" id="Google">
-							Google
-						</div>
-					</div>
 					<form action="checkpassword.php" method="post">
 						<div class="form-group">
 							<input type="email" class="form-control radius-border" placeholder="Email" name="email"></input>
