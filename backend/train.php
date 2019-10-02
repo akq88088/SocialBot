@@ -71,6 +71,13 @@
 				</div>
 			</div>
 			<div class="col-lg-10">
+				<div>
+					<div class="row">
+						<div class="col-md-2">
+							<h5 class="my-5">無專案標題</h1>
+						</div>
+					</div>
+				</div>
 				<div id="QA" class="collapse show">
 					<div class="container">
 						<h6 class="my-4">匯 入 資 料</h6>
