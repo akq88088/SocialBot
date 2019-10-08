@@ -64,16 +64,19 @@ class PredictModel():
 		testX,testSen,testSenSeg = self.makeVector(content)
 		predictions = self.model.predict_classes(testX)
 		result = {"sentence":[],"predict":[],"senSeg":[]}
+		repeat = []
 		for i,pre in enumerate(predictions):
 			result["sentence"].append(testSen[i])
 			result["predict"].append(self.intToSen[pre])
 			temp = {"seg":[],"sen":[]}
 			for seg in mmseg.cut(testSen[i]):
-				temp["seg"].append(seg)
-				if seg in self.sentimentWord:
-					temp["sen"].append(self.sentimentWord[seg])
-				else:
-					temp["sen"].append("無表情")
+				if seg not in repeat:
+					repeat.append(seg)
+					temp["seg"].append(seg)
+					if seg in self.sentimentWord:
+						temp["sen"].append(self.sentimentWord[seg])
+					else:
+						temp["sen"].append("無表情")
 			result["senSeg"].append(temp)
 		return result
 		

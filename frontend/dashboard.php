@@ -103,7 +103,7 @@
 						
 						<p>上傳檔案</p>
 						<div class="form-group">
-							<input type="file" class="form-control-file" id="upload_text" accept=".txt">
+							<input type="file" class="form-control-file" id="upload_text" accept=".txt,.csv">
 						</div>
 						
 						<div class="row">

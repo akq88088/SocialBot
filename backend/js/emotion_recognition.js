@@ -69,6 +69,12 @@ $(document).ready(function(){
 				"text" : text
 			},
 			beforeSend:function(){
+				$('#sentence_result > tbody').empty();
+				$('#sentence_result > tbody').append('資料處理中...');
+				$('#segment_result > tbody').empty();
+				$('#segment_result > tbody').append('資料處理中...');
+				$('#train').attr('disabled',true);
+				$('#train').html('讀資料中');
 			},
 			success: function(text){
 				text = text.replace(/'/g,'"');
@@ -108,6 +114,8 @@ $(document).ready(function(){
 				$('#segment_result > tbody').append(segmentSentiment);
 			},
 			complete:function(){
+				$('#train').attr('disabled',false);
+				$('#train').html('開始訓練');
 			}
 		});
 	}
@@ -126,11 +134,17 @@ $(document).ready(function(){
 				"path" : path
 			},
 			beforeSend:function(){
+				$('#train').attr('disabled',true);
+				$('#train').html('訓練中...');
+				alert('確認後開始訓練\n訓練需要花3~5分鐘\n請耐心等待謝謝...');
 			},
 			success: function(text){
 				console.log(text);
 			},
 			complete:function(){
+				$('#train').attr('disabled',true);
+				$('#train').html('開始訓練');
+				alert('訓練完成!');
 			}
 		});
 	}

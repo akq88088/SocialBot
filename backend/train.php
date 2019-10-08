@@ -87,7 +87,7 @@
 									<p><label for="inputfile">上傳檔案</label><P>
 									<P><input type="file" id="inputfile"></p>
 									<div class="col-md-2 offset-md-10">
-										<button class="btn radius-border" id="submit">開始訓練</button>
+										<button class="btn radius-border train" id="submit">開始訓練</button>
 									</div>
 								</div>
 							</div>
@@ -136,7 +136,7 @@
 									<p><label for="inputfile">上傳檔案</label></p>
 									<p><input type="file" id="ner_file"></p>
 									<div class="col-md-2 offset-md-10">
-										<button class="btn radius-border" id="train_ner">開始訓練</button>
+										<button class="btn radius-border train" id="train_ner">開始訓練</button>
 									</div>
 								</div>
 							</div>
@@ -185,9 +185,9 @@
 							<div class="col-lg-12 btm-mg-1">
 								<div class="radius-border project blue-block">
 									<p><label for="inputfile">上傳檔案</label><P>
-									<P><input type="file" id="upload_text" accept=".txt"></p>
+									<P><input type="file" id="upload_text" accept=".txt,.csv"></p>
 									<div class="col-md-2 offset-md-10">
-										<button class="btn radius-border" id="train">開始訓練</button>
+										<button class="btn radius-border train" id="train">開始訓練</button>
 									</div>
 								</div>
 							</div>
@@ -212,10 +212,10 @@
 											<tbody>
 												<tr>
 													<td>小山羊高興地跑來跑去</td>
-													<td>小山羊到河邊喝水</td>
+													<td>高興</td>
 												</tr>
 												<tr>
-													<td>高興</td>
+													<td>小山羊到河邊喝水</td>
 													<td>無表情</td>
 												</tr>
 											</tbody>
