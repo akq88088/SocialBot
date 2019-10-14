@@ -27,7 +27,7 @@
 
 	<script>
 		function toLogout() {
-			window.location.replace("Logout.php")
+			window.location.replace("../frontend/Logout.php")
 		}
 	</script>
 
@@ -53,7 +53,7 @@
 	</div>
 	
 	<div class="container-fluid">
-		<div class="row">
+		<div class="row" id=content>
 			<div class="col-lg-2" id="sidebar">
 				<div class="worker ta-c" id="frontend">
 					語料應用
@@ -89,7 +89,7 @@
 	</div>
 	<?php
 		else:
-			header('location: login.php');
+			header('location: ../frontend/login.php');
 		endif;
 	?>
 </body>
