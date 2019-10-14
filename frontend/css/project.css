@@ -26,9 +26,12 @@ body{
 
 #content{
 	min-height: 95vh;
-	min-width: 1000px;
+	min-width: 1200px;
 }
 
+.container{
+	min-width: 900px;
+}
 .c-project:active{
 	-webkit-box-shadow: 0 0 0.5rem 0.2rem #a0a0a0 inset;
 	-moz-box-shadow: 0 0 0.5rem 0.1rem #a0a0a0 inset: ;

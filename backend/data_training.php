@@ -40,21 +40,34 @@
 		//使用 isset()方法，判別有沒有此變數可以使用，以及為已經登入
 		if(isset($_SESSION['is_login']) && $_SESSION['is_login'] == TRUE):
 
-		$email = $_SESSION['email'];
+			$email = $_SESSION['email'];
+
+			$link = create_connection();
+			$sql = "SELECT * FROM `model";
+
+			$result = execute_sql($link, "socialbot", $sql);
+			$models = array();
+			while ($row = $result->fetch_assoc()){
+				$model = array('p_id'=>$row['p_id'],
+								'p_name'=>$row['p_name'], 
+								'create_date'=>date("Y-m-d",strtotime($row['create_date'])));
+				array_push($models,$model);
+			}
+
 	?>
 	
 	<!-- header -->
 	<div class="container-fluid header">
 		<div class="row">
-			<div class="col-md-4 offset-md-4 ta-c" id="title"><h5>語 料 應 用 與 分 析 工 具</h5></div>
-			<div class="col-md-2 offset-md-1 ta-c"><?php echo $email;?></div>
-			<div class="col-md-1 ta-c" id="logout" role="button" onclick="toLogout();">登出</div>
+			<div class="col-4 offset-4 ta-c" id="title"><h5>語 料 應 用 與 分 析 工 具</h5></div>
+			<div class="col-2 offset-1 ta-c"><?php echo $email;?></div>
+			<div class="col-1 ta-c" id="logout" role="button" onclick="toLogout();">登出</div>
 		</div>
 	</div>
 	
 	<div class="container-fluid">
 		<div class="row" id=content>
-			<div class="col-lg-2" id="sidebar">
+			<div class="col-2" id="sidebar">
 				<div class="worker ta-c" id="frontend">
 					語料應用
 				</div>
@@ -62,12 +75,12 @@
 					資料訓練後台
 				</div>
 			</div>
-			<div class="col-lg-10">
+			<div class="col-10">
 				<div class="container">
 					<h6 class="my-4">新 增 訓 練 模 型</h6>
 					<div class="row">
-						<div class="col-lg-3 btm-mg-1">
-							<div class="radius-border c-project">
+						<div class="col-3 btm-mg-1">
+							<div class="radius-border c-project new-project">
 								<div class="radius-border ta-c" id="add_project_btn">+</div>
 							</div>
 						</div>
@@ -76,12 +89,14 @@
 				<div class="container">
 					<h6 class="my-4">資 料 訓 練 模 型</h6>
 					<div class="row">
-						<div class="col-lg-3 btm-mg-1">
-							<div class="radius-border c-project">
-								<div class="c-time">2019-09-02</div>
-								<div class="model">國小讀本</div>
+						<?php for($i=0; $i<count($models); $i++){?>
+							<div class="col-3 btm-mg-1">
+								<div class="radius-border c-project old-project">
+									<div class="c-time"><?php echo $models[$i]['create_date'];?></div>
+									<div class="model"><?php echo $models[$i]['p_name'];?></div>
+								</div>
 							</div>
-						</div>
+						<?php }?>
 					</div>
 				</div>
 			</div>

@@ -81,15 +81,15 @@
 	<!-- header -->
 	<div class="container-fluid header">
 		<div class="row">
-			<div class="col-md-4 offset-md-4 ta-c" id="title"><h5>語 料 應 用 與 分 析 工 具</h5></div>
-			<div class="col-md-2 offset-md-1 ta-c"><?php echo $email;?></div>
-			<div class="col-md-1 ta-c" id="logout" role="button" onclick="toLogout();">登出</div>
+			<div class="col-4 offset-4 ta-c" id="title"><h5>語 料 應 用 與 分 析 工 具</h5></div>
+			<div class="col-2 offset-1 ta-c"><?php echo $email;?></div>
+			<div class="col-1 ta-c" id="logout" role="button" onclick="toLogout();">登出</div>
 		</div>
 	</div>
 	
 	<div class="container-fluid">
 		<div class="row" id="content">
-			<div class="col-lg-2" id="sidebar">
+			<div class="col-2" id="sidebar">
 			<?php 
 				if($authority == 1) { ?>
 				<div class="worker ta-c active" id="frontend">
@@ -105,7 +105,7 @@
 			<?php } ?>
 			
 			</div>
-			<div class="col-lg-10">
+			<div class="col-10">
 				<div class="container">
 					<h6 class="my-4">新 增 專 案</h6>
 					<div class="row">

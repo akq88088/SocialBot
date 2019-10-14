@@ -16,7 +16,7 @@
 	<!-- Customer CSS -->
 	<link rel="stylesheet" href="../frontend/css/global.css">
 	<link rel="stylesheet" href="../frontend/css/project.css">
-	<link rel="stylesheet" href="css/button.css">
+	<link rel="stylesheet" href="./css/button.css">
 	<link rel="stylesheet" href="./css/emotion_recognition.css">
 	<link rel="stylesheet" href="./css/NER.css">
 	<!-- JQuery -->
@@ -31,7 +31,7 @@
 	
 	<script>
 		function toLogout() {
-			window.location.replace("Logout.php")
+			window.location.replace("../frontend/Logout.php")
 		}
 	</script>
 
@@ -39,12 +39,12 @@
 </head>
 <body>
  	<?php
-		// require_once("dbtools.inc.php");
+		require_once("dbtools.inc.php");
 		
-		// //使用 isset()方法，判別有沒有此變數可以使用，以及為已經登入
-		// if(isset($_SESSION['is_login']) && $_SESSION['is_login'] == TRUE):
+		//使用 isset()方法，判別有沒有此變數可以使用，以及為已經登入
+		if(isset($_SESSION['is_login']) && $_SESSION['is_login'] == TRUE):
 
-		// $email = $_SESSION['email'];
+		$email = $_SESSION['email'];
 	?>
 	
 	<!-- header -->
@@ -74,7 +74,7 @@
 				<div>
 					<div class="row">
 						<div class="col-md-2">
-							<h5 class="my-5">無專案標題</h1>
+							<h5 class="my-5" id='project_name'><?php echo $_GET['name'];?></h1>
 						</div>
 					</div>
 				</div>
@@ -252,9 +252,9 @@
 		</div>
 	</div>
 	<?php
-		// else:
-		// 	header('location: ../frontend/login.php');
-		// endif;
+		else:
+			header('location: ../frontend/login.php');
+		endif;
 	?>
 </body>
 </html>
