@@ -14,9 +14,11 @@ print("")
 
 parameter = cgi.FieldStorage()
 text = parameter.getvalue('text')
+pid = parameter.getvalue('pid')
 
+model_path = './module/model/'+ str(pid) +'/ner_model.h5'
 text = re.sub(r'\s', "", text)
 
-NER = NER()
+NER = NER(model_path)
 segment, pos, text_ner = NER.predict(text)
 print(json.dumps({'segment': segment, 'pos': pos, 'ner': text_ner}, ensure_ascii=False))

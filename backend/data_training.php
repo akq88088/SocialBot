@@ -43,7 +43,7 @@
 			$email = $_SESSION['email'];
 
 			$link = create_connection();
-			$sql = "SELECT * FROM `model";
+			$sql = "SELECT * FROM model";
 
 			$result = execute_sql($link, "socialbot", $sql);
 			$models = array();

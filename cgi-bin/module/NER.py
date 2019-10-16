@@ -16,13 +16,13 @@ except:
 cwd = os.path.dirname(__file__)
 
 class NER():
-    def __init__(self, maxlen=30, model_path = cwd+'/data_alex/ner_model.h5',
-                    posDict_path = cwd+'/data_alex/pos_dict.txt',
-                    nerDict_path = cwd+'/data_alex/ner_dict.txt'):
+    def __init__(self, model_path, maxlen=30,
+                    posDict_path = cwd+'/model/ner_init/pos_dict.txt',
+                    nerDict_path = cwd+'/model/ner_init/ner_dict.txt'):
         try:
             self.model = load_model(model_path)
         except:
-            self.model = None
+            self.model = load_model(cwd+'/model/ner_init/ner_model.h5')
         
         with open(posDict_path) as f: self.pos_dict = json.load(f)
         with open(nerDict_path) as f: self.ner_dict = json.load(f)
@@ -44,8 +44,8 @@ class NER():
                     metrics=['accuracy'])
         self.model = model
 
-    def train(self, X, Y, batch_size=1, epochs=1, validation_split=0.2):
-        self.model.fit(X, Y, batch_size=batch_size, epochs=epochs, validation_split=validation_split)
+    def train(self, X, Y, batch_size=1, epochs=1, validation_split=0.1):
+        self.model.fit(X, Y, batch_size=batch_size, epochs=epochs)
 
     def save_model(self, path):
         self.model.save(path)
@@ -152,4 +152,4 @@ if __name__ == '__main__':
     print("斷詞:", segment)
     print("實體辨識:", text_ner)
 
-    # ner.save_model('data_alex/ner_model.h5')
+    # ner.save_model('/model/ner_init/ner_model.h5')

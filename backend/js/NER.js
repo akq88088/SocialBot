@@ -1,35 +1,42 @@
 $(document).ready(function(){
+	var pid = $('#project_name').attr('pid');
 	const textUploader = document.querySelector('#ner_file');
-	textUploader.addEventListener('change', function(e) {
-		var reader = new FileReader();
+	textUploader.addEventListener('input', function(e) {
+		// console.log(document.querySelector('#ner_file').files.length);
 
-		reader.onload = function(){
-			var content = reader.result;
-			getNER(content);
-		};
+		if(document.querySelector('#ner_file').files.length > 0){
+			var reader = new FileReader();
 
-		reader.readAsText(e.target.files[0]);
+			reader.onload = function(){
+				var content = reader.result;
+				getNER(content, pid);
+			};
+
+			reader.readAsText(e.target.files[0]);
+			
+		}
+		e.target.value=null;
 	});
 
 	$("#train_ner").click(function(){
-		words = [];
+		var words = [];
 		$.each($(".word"),function(){
 			words.push($(this).text());
 		});
-		pos = [];
+		var pos = [];
 		$.each($(".pos"),function(){
 			pos.push($(this).text());
 		});
-		tags = [];
+		var tags = [];
 		$.each($(".tag"), function(){
 			tags.push($(this).val());
 		});
 
-		trainNER(words, pos, tags);
+		trainNER(words, pos, tags, pid);
 	});
 });
 
-var getNER = function(text){
+var getNER = function(text, pid){
 		// stopAjax(sum_currAjax);
 
 		sum_currAjax = $.ajax({
@@ -38,7 +45,8 @@ var getNER = function(text){
 			async: true, //非同步化
 			// dataType:"json",
 			data: {
-				"text" : text
+				"text" : text,
+				"pid" : pid
 			},
 			beforeSend:function(){
 				$("#context").val("實體判別中...");
@@ -46,6 +54,7 @@ var getNER = function(text){
 			},
 			success: function(res){
 				$("#context").val(text);
+				console.log(res);
 				res  = JSON.parse(res);
 				for(i=0; i<res.segment.length; i++){
 					for(j=0; j<res.segment[i].length; j++){
@@ -70,7 +79,7 @@ var getNER = function(text){
 		});
 	}
 
-var trainNER = function(words, pos, tags){
+var trainNER = function(words, pos, tags, pid){
 		// stopAjax(sum_currAjax);
 
 		sum_currAjax = $.ajax({
@@ -81,13 +90,14 @@ var trainNER = function(words, pos, tags){
 			data: {
 				"words": JSON.stringify(words),
 				"pos" : JSON.stringify(pos),
-				"tags": JSON.stringify(tags)
+				"tags": JSON.stringify(tags),
+				"pid" : pid
 			},
 			beforeSend:function(){
 				$("#train_ner").attr('disabled','disabled');
 			},
 			success: function(res){
-				alert('訓練完成!')
+				alert('訓練完成!');
 			},
 			complete:function(){
 				$("#train_ner").removeAttr('disabled');

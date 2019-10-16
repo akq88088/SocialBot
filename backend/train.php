@@ -44,7 +44,13 @@
 		//使用 isset()方法，判別有沒有此變數可以使用，以及為已經登入
 		if(isset($_SESSION['is_login']) && $_SESSION['is_login'] == TRUE):
 
-		$email = $_SESSION['email'];
+			$email = $_SESSION['email'];
+
+			$link = create_connection();
+			$p_name = mysqli_real_escape_string($link, $_GET['name']);
+			$sql = "SELECT * FROM model WHERE p_name='$p_name'";
+			$result = execute_sql($link, "socialbot", $sql);
+			$_SESSION['p_id'] = $result->fetch_assoc()['p_id'];
 	?>
 	
 	<!-- header -->
@@ -52,7 +58,7 @@
 		<div class="row">
 			<div class="col-md-1 ta-c" id="back" role="button">< 返回</div>
 			<div class="col-md-4 offset-md-3 ta-c" id="title"><h5>語 料 應 用 與 分 析 工 具</h5></div>
-			<div class="col-md-2 offset-md-1 ta-c"><?//php echo $email;?></div>
+			<div class="col-md-2 offset-md-1 ta-c"><?php echo $email;?></div>
 			<div class="col-md-1 ta-c" id="logout" role="button" onclick="toLogout();">登出</div>
 		</div>	
 	</div>
@@ -74,7 +80,7 @@
 				<div>
 					<div class="row">
 						<div class="col-md-2">
-							<h5 class="my-5" id='project_name'><?php echo $_GET['name'];?></h1>
+							<h5 class="my-5" id='project_name' pid=<?php echo $_SESSION['p_id'];?>><?php echo $_GET['name'];?></h1>
 						</div>
 					</div>
 				</div>
