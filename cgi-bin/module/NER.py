@@ -51,7 +51,7 @@ class NER():
         self.model.save(path)
 
     def predict(self, data):
-        sentence = self.TextProcessor.sentence_break(data, split_char='!?。！？,，」"')
+        # sentence = self.TextProcessor.sentence_break(data, split_char='!?。！？,，」"')
 
         segment = []
         part_of_speach = []
