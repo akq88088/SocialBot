@@ -31,7 +31,7 @@
 	
 	<script>
 		function toLogout() {
-			window.location.replace("Logout.php")
+			window.location.replace("../frontend/Logout.php")
 		}
 	</script>
 
@@ -43,11 +43,12 @@
 		
 		//使用 isset()方法，判別有沒有此變數可以使用，以及為已經登入
 		if(isset($_SESSION['is_login']) && $_SESSION['is_login'] == TRUE):
-
-		$email = $_SESSION['email'];
-		$link = create_connection();
-		$sql = "SELECT `project-name` FROM `member` INNER JOIN `project` WHERE `member_id` = `ID`";
-		$result = execute_sql($link, "socialbot", $sql);	
+			$email = $_SESSION['email'];
+			$link = create_connection();
+			$p_name = mysqli_real_escape_string($link, $_GET['name']);
+			$sql = "SELECT `project-name` FROM `member` INNER JOIN `project` WHERE `member_id` = `ID` and `project-name` = '$p_name'";
+			$result = execute_sql($link, "socialbot", $sql);
+			//$_SESSION['p_id'] = $result->fetch_assoc()['p_id'];
 	?>
 	
 	<!-- header -->
@@ -62,17 +63,14 @@
 
 	<!-- Page Content -->
 	<div class="container">
-		<div>
 			<div class="row">
 				<div class="col-md-2">
-					<h5 class="my-5">無專案標題</h1>
+					<h5 class="my-5" id='project_name'><?php echo $_GET['name'];?></h1>
 				</div>
 				<div class="col-md-1 offset-md-9">
 					<button class="btn my-5" id="report">問題回報</button>
 				</div>
 			</div>
-		</div>
-
 		
 		<!-- 匯入資料 -->
 		<div class="container">
@@ -206,7 +204,7 @@
 	
 	<?php
 		else:
-			header('location: login.php');
+			header('location: ../frontend/login.php');
 		endif;
 	?>
 	<input id="help_session" type="hidden" value="<?php echo $_SESSION["member_id"] ?>"></input>

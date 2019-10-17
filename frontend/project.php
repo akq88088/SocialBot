@@ -28,7 +28,7 @@
 	
 	<script>
 		function toLogout() {
-			window.location.replace("Logout.php")
+			window.location.replace("../frontend/Logout.php")
 		}
 	</script>
 
@@ -49,33 +49,19 @@
 		$result = execute_sql($link, "socialbot", $sql);
 		$result_1 = execute_sql($link, "socialbot", $sql_1);
 		
-		//表格內容
-		echo "<table border='1' align='center'><tr align='center'>";
-		while ($field = $result->fetch_field())   // 顯示欄位名稱
-			//echo "<td>" . $field->name . "</td>";
-		echo "</tr>";
+		//專案內容
 		$j=0;
-		while ($row = $result->fetch_row())
-		{
-				for ($i = 0; $i < $result->field_count; $i++)
-					$a[$j][$i] = $row[$i];
-				echo "</tr>";
-				$j++;
+		while ($row = $result->fetch_row()) {
+			for ($i = 0; $i < $result->field_count; $i++)
+				$a[$j][$i] = $row[$i];
+			$j++;
 		}
-		echo "</table>";
 		
-		//表格內容
-		echo "<table border='1' align='center'><tr align='center'>";
-		while ($field = $result_1->fetch_field())   // 顯示欄位名稱
-			//echo "<td>" . $field->name . "</td>";
-		echo "</tr>";
-		while ($row_1 = $result_1->fetch_row())
-		{
-				for ($i = 0; $i < $result_1->field_count; $i++)
-					$authority = $row_1[$i];
-				echo "</tr>";
+		//權限
+		while ($row_1 = $result_1->fetch_row()) {
+			for ($i = 0; $i < $result_1->field_count; $i++)
+				$authority = $row_1[$i];
 		}
-		echo "</table>";
 	?>
 	
 	<!-- header -->
@@ -110,7 +96,7 @@
 					<h6 class="my-4">新 增 專 案</h6>
 					<div class="row">
 						<div class="col-lg-3 btm-mg-1">
-							<div class="radius-border c-project">
+							<div class="radius-border c-project new-project">
 								<div class="radius-border ta-c" id="add_project_btn">+</div>
 							</div>
 						</div>
@@ -121,7 +107,7 @@
 					<div class="row">
 						<?php while($j--){?>
 							<div class="col-lg-3 btm-mg-1">
-								<div class="radius-border c-project">
+								<div class="radius-border c-project old-project">
 									<div class="c-time"><?php echo $a[$j][8];?></div>
 									<div class="project-name"><?php echo $a[$j][2];?></div>
 									<div class="model"><?php echo $a[$j][3];?></div>
@@ -136,7 +122,7 @@
 	
 	<?php
 		else:
-			header('location: login.php');
+			header('location: ../frontend/login.php');
 		endif;
 	?>
 </body>
