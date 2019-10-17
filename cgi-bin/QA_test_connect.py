@@ -8,7 +8,7 @@ import json
 from module.QA_test import QA_test
 
 parameter = cgi.FieldStorage()
-text = parameter.getvalue('text')
+# text = parameter.getvalue('text')
 # text = "我起來了"
 
 text_list = [
@@ -375,7 +375,7 @@ while True:
         break
     # print('please input')
     # text = input()
-    # text = text_list[iRun]
+    text = text_list[iRun]
     df_result = QA_test.predict(text)
     # df_result.to_csv('QA_one_dragon_0925_2104_{}.csv'.format(str(iRun)),index=0,encoding='utf_8_sig')
     # if df_result.columns == 9:

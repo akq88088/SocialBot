@@ -2,7 +2,8 @@ import os
 import pandas as pd
 import numpy as np
 import math
-
+from module.NER import NER
+import pymysql
 class QA_train:
 
     class pair:
@@ -10,29 +11,57 @@ class QA_train:
             self.flag = flag
             self.word = word
 
-    def __init__(self):
+    def __init__(self,owner,p_name):
         self.add_remain_dict = {}
+        self.ner_eng_ch_dict = {'per':'人','obj':'物','time':'時','place':'地'}
         self.article_remain_list = []
         self.que_remain_list = []
         self.flag_que_remain_dict = {}
         self.sql_columns_list = []
         self.data_dir = os.path.join('module','QA_data')
+        self.boson_remain_list = []
+        self.boson_flag_list = []
         self.load_data()
-    
-    def train(self,abs_data_dir):
+        self.db_information = {"IP":"localhost","user":"root","password":"","db":""}
+        self.owner = owner
+        self.p_id = self.get_p_id(p_name)
+
+    def get_p_id(self,p_name):
+        db = pymysql.connect(self.db_information["IP"],self.db_information["user"])
+        cursor = db.cursor()
+        cursor.execute("use socialbot")
+        sql_order = """
+        select p_id
+        from model
+        where p_name = %s
+        """
+        cursor.execute(sql_order,(p_name))
+        p_id = cursor.fetchone()
+        return p_id
+
+    def set_columns(self,df):
+        if len(df.columns) == 6:
+            df.columns = ["原文規則","原文出題規則","原文出題規則答案","原文斷詞","原文出題","原文出題答案"]
+        return df
+
+    def train(self,df):
         result = []
-        df = pd.read_csv(abs_data_dir)
         for i in range(len(df)):
-            if not df.iloc[i,1] == df.iloc[i,1]:#判斷nan
+            article = df.iloc[i,0]
+            que = df.iloc[i,1]
+            if article != article:#判斷nan
                 continue
-            if not df.iloc[i,2] == df.iloc[i,2]:#判斷nan
+            if que != que:#判斷nan
                 continue
             # if df.iloc[i,3] == df.iloc[i,3]:
             #     continue
-            df.iloc[i,1] = self.article_pre(df.iloc[i,1])
-            df.iloc[i,2] = self.article_pre(df.iloc[i,2])
-            article = df.iloc[i,1]
+            # df.iloc[i,1] = self.article_pre(df.iloc[i,1])
+            # df.iloc[i,2] = self.article_pre(df.iloc[i,2])
+            article = article.replace('\r',' ')
+            article = article.replace('\n',' ')
             article = article.split(' ')
+            que = que.replace('\r',' ')
+            que = que.replace('\n',' ')
             while '' in article:
                 article.remove('')
             article,word_in_article_remain = self.check_article_remain(article)
@@ -41,7 +70,6 @@ class QA_train:
             article,article_flag_list = self.p_flag_sort(article)
             ori_article = ' '.join(article)
             article_aft = ' + '.join(article_flag_list)
-            que = df.iloc[i,2]
             que = self.word_cut(article,que)
             word_in_que_remain = self.check_que_remain(que)
             if not word_in_que_remain:
@@ -53,28 +81,153 @@ class QA_train:
             if ans_word == '':
                 continue
             # row_data = [i + 2,ori_article,df.iloc[i,2],article_aft,que_aft,ans_flag,ans_word]
-            row_data = [ori_article,df.iloc[i,2],ans_word,article_aft,que_aft,ans_flag]
+            # row_data = [ori_article,df.iloc[i,2],ans_word,article_aft,que_aft,ans_flag]
+            row_data = [article_aft,que_aft,ans_flag,ori_article,df.iloc[i,1],ans_word]
             result.append(row_data)
-        for row in result:
-            print(row)
-        self.save_sql(result)
+        # for row in result:
+        #     print(row)
+        df = pd.DataFrame(np.array(result))
+        # print(df.head(10))
+        df = self.set_columns(df)
+        return df
     
-    def save_sql(self,result):
-        result = pd.DataFrame(np.array(result))
-        result.to_csv('D:\\dektop\\work_data_backup_0923_2256\\rule.csv',encoding='utf_8_sig')
+    def save_sql(self,data):
+        df = pd.DataFrame(np.array(data))
+        df.to_csv('D:\\dektop\\work_data_backup_0923_2256\\rule.csv',encoding='utf_8_sig')
 
-    def change_rule(self,flag):
-        if flag < 0 or flag > 2:
-            return 0
-        if flag == 0:
-            pass
-        elif flag == 1:
-            pass
-        else:
-            pass
+    def call_NER(self,text):
+        NER_class = NER()
+        text = text.replace('\r','')
+        text = text.replace('\n','')
+        text = text.replace(' ','')
+        segment,flag_list,ner = NER_class.predict(text)
+        word_cut = self.article_pre(segment,flag_list,ner)
+        return word_cut
 
-    def load_data(self,add_remain = '',article_remain = 'article_remain_test.txt',que_remain = 'que_remain_long_test.txt',flag_que_remain = 'flag_que_remain_dict_test.txt'):
-        print(os.getcwd())
+    def read_data_generate_rule_main(self):
+        df = self.get_training_data()
+        with open("C:\\Users\\student\\Desktop\\main.txt",'w') as fout:
+            # fout.write(str(self.p_name) + '\n')
+            fout.write(str(self.p_id) + '\n')
+            fout.write(str(self.owner) + '\n')
+            fout.write(str(df.head(10)))
+        df = self.training_data2rule(df)
+        with open("C:\\Users\\student\\Desktop\\main_2.txt",'w') as fout:
+            fout.write(str(df.head(10)))
+        self.re_qa_rule()
+        self.insert_rule(df)
+
+
+    def re_qa_rule(self):
+        db = pymysql.connect(self.db_information["IP"],self.db_information["user"])
+        cursor = db.cursor()
+        cursor.execute("use socialbot")
+        cursor.execute("drop table qa_rule")
+        cursor.execute(
+            """
+            create table qa_rule(
+            ID int(11) auto_increment primary key,
+            owner varchar(255),
+            p_id varchar(255),
+            原文規則 varchar(100),
+            原文出題規則 varchar(100),
+            原文出題規則答案 varchar(100),
+            原文斷詞 varchar(100),
+            原文出題 varchar(100),
+            原文出題答案 varchar(100)
+            );
+            """)
+        cursor.execute("alter table qa_rule change 原文規則 原文規則 varchar(100) character set utf8mb4 collate utf8mb4_bin")
+        cursor.execute("alter table qa_rule change 原文出題規則 原文出題規則 varchar(100) character set utf8mb4 collate utf8mb4_bin")
+        cursor.execute("alter table qa_rule change 原文出題規則答案 原文出題規則答案 varchar(100) character set utf8mb4 collate utf8mb4_bin")
+        cursor.execute("alter table qa_rule change 原文斷詞 原文斷詞 varchar(100) character set utf8mb4 collate utf8mb4_bin")
+        cursor.execute("alter table qa_rule change 原文出題 原文出題 varchar(100) character set utf8mb4 collate utf8mb4_bin")
+        cursor.execute("alter table qa_rule change 原文出題答案 原文出題答案 varchar(100) character set utf8mb4 collate utf8mb4_bin")
+        db.commit()
+
+    def get_training_data(self):
+        # 目前不判斷owner
+        db = pymysql.connect(self.db_information["IP"],self.db_information["user"])
+        cursor = db.cursor()
+        cursor.execute("use socialbot")
+        sql_order = "select 課文,題目 from qa_training where owner = %s and p_id = %s"
+        cursor.execute(sql_order,(self.owner,self.p_id))
+        data = cursor.fetchall()
+        df = pd.DataFrame(np.array(data))
+        return df
+
+    def training_data2rule(self,df):
+        for i in range(len(df)):
+            sentence = df.iloc[i,0]
+            sentence = self.call_NER(sentence)
+            df.iloc[i,0] = sentence
+        df = self.train(df)
+        return df
+
+    def insert_training_data(self,df):
+        db = pymysql.connect(self.db_information["IP"],self.db_information["user"])
+        cursor = db.cursor()
+        cursor.execute("use socialbot")
+        sql_order = "insert into qa_training(owner,p_id,課文,題目) values(%s,%s,%s,%s)"
+        for i in range(len(df)):
+            if df.iloc[i,0] != df.iloc[i,0]:
+                continue
+            if df.iloc[i,1] != df.iloc[i,1]:
+                continue
+            cursor.execute(sql_order,(self.owner,self.p_id,df["課文"].iloc[i],df["題目"].iloc[i]))
+        db.commit()
+
+    def insert_rule(self,df):
+        db = pymysql.connect(self.db_information["IP"],self.db_information["user"])
+        with open("C:\\Users\\student\\Desktop\\json_test.txt",'w') as fout:
+            fout.write(str(df.head()))
+        cursor = db.cursor()
+        cursor.execute("use socialbot")
+        sql_order = "insert into qa_rule(owner,p_id,原文規則,原文出題規則,原文出題規則答案,原文斷詞,原文出題,原文出題答案)values(%s,%s,%s,%s,%s,%s,%s,%s);"
+        for i in range(len(df)):
+            cursor.execute(sql_order,(self.owner,self.p_id,df["原文規則"].iloc[i],df["原文出題規則"].iloc[i],df["原文出題規則答案"].iloc[i],df["原文斷詞"].iloc[i],df["原文出題"].iloc[i],df["原文出題答案"].iloc[i]))
+
+        db.commit()
+    
+    def change_rule(self,df):
+        db = pymysql.connect(self.db_information["IP"],self.db_information["user"])
+        cursor = db.cursor()
+        cursor.execute("use socialbot")
+        sql_order = "UPDATE qa_rule SET 原文出題規則 = %s,原文出題規則答案 = %s  WHERE ID = %s AND owner = %s AND p_id = %s"
+        for i in range(len(df)):
+            cursor.execute(sql_order,(df["原文出題規則"].iloc[i],df["原文出題規則答案"].iloc[i],int(df["ID"].iloc[i]),self.owner,self.p_id))
+        db.commit()
+    
+    def remove_rule(self,df):
+        db = pymysql.connect(self.db_information["IP"],self.db_information["user"])
+        cursor = db.cursor()
+        cursor.execute("use socialbot")
+        sql_order = "delete from QA_rule where ID = %s and owner = %s and p_id = %s;"
+        for i in range(len(df)):
+            cursor.execute(sql_order,(int(df["ID"].iloc[i]),self.owner,self.p_id))
+        db.commit()
+
+    def QA_train_main(self,data):
+        data = data.fillna(value="")
+        df_insert = data[data["datatype"] == "insert"]
+        df_upload = data[data["datatype"] == "upload"]
+        df_insert = pd.concat([df_insert,df_upload],axis=0)
+        df_change = data[data["datatype"] == "change"]
+        df_remove = data[data["datatype"] == "remove"]
+        
+        if not df_insert.empty:
+            self.insert_rule(df_insert)
+        
+        if not df_change.empty:
+            self.change_rule(df_change)
+        
+        if not df_remove.empty:
+            self.remove_rule(df_remove)
+
+    def get_rule_check_data(self):
+        return self.article_remain_list,self.que_remain_list,self.flag_que_remain_dict,self.boson_flag_list
+
+    def load_data(self,add_remain = '',article_remain = 'article_remain_test.txt',que_remain = 'que_remain_long_test.txt',flag_que_remain = 'flag_que_remain_dict_test.txt',boson_remain = 'boson_remain.txt',boson_flag = 'boson_flag.txt'):
         self.add_remain_dict = {'人':'誰','事':'什麼','物':'什麼','地':'哪裡','時':'何時'}
         with open(os.path.join(self.data_dir,article_remain),'r',encoding='utf8') as fin:
             for row in fin:
@@ -99,6 +252,24 @@ class QA_train:
                     self.flag_que_remain_dict.update({row[0]:lis})
                 except:
                     continue
+        
+        with open(os.path.join(self.data_dir,boson_remain),'r',encoding='utf8') as fin:
+            bFR = True
+            for row in fin:
+                if bFR:
+                    bFR = False
+                    continue
+                row = row.lstrip().rstrip()
+                self.boson_remain_list.append(row)
+        
+        with open(os.path.join(self.data_dir,boson_flag),'r',encoding='utf8') as fin:
+            bFR = True
+            for row in fin:
+                if bFR:
+                    bFR = False
+                    continue
+                row = row.lstrip().rstrip()
+                self.boson_flag_list.append(row)
                 
     def word_cut(self,article,s):#article = [大自然_人1,會_v1,說話_v2] s = '誰會說話' output = [pair,pair]
         all_word = []
@@ -173,10 +344,6 @@ class QA_train:
         return lis
     
     def generate_ans(self,rule,que_transfer,article):
-        print('generate_ans_test')
-        print(rule)
-        print(que_transfer)
-        # print(article)
         que_transfer_no_num = self.flag_remove_num(que_transfer[:])
         rule_no_num = self.flag_remove_num(rule[:])
         ans = ''
@@ -308,11 +475,6 @@ class QA_train:
                 break
         return word_in_que_remain
     
-    def article_pre(self,data):
-        data = data.replace('\n',' ')
-        data = data.replace('\r',' ')
-        return data
-
     def add_remain_word(self,article_flag,que_flag):
         que_flag_index = []
         result = []
@@ -338,5 +500,22 @@ class QA_train:
         if remain_word == '':
             err = True
         return result,err
+    
+    def article_pre(self,segment,flag_list,ner):#待修正
+        word_cut_list = []
+        for i in range(len(segment)):
+            word = segment[i][0]
+            flag = ner[i][0]
+            if flag in self.boson_remain_list:
+                flag = self.ner_eng_ch_dict.get(ner[i][0])
+            else:
+                flag = flag_list[i][0]
+            word_cut_list.append(word + '_' + flag)
+        word_cut = ' '.join(word_cut_list)
+        word_cut = word_cut.replace('\n','')
+        word_cut = word_cut.replace('\r',' ')
+        word_cut,b = self.p_flag_sort(word_cut.split(' '))
+        word_cut = ' '.join(word_cut)
+        return word_cut
     
 

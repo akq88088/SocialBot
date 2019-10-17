@@ -8,6 +8,7 @@ from module.NER import NER
 from module.TextProcessor import TextProcessor
 import json
 import time
+import pymysql
 #transfer [誰,v,n,ans]
 class QA_test:
     class node:
@@ -24,6 +25,7 @@ class QA_test:
         self.ner_eng_ch_dict = {'per':'人','obj':'物','time':'時','place':'地'}
         self.root_list = []
         self.data_dir = os.path.join('module','QA_data')
+        self.db_information = {"IP":"localhost","user":"root","password":"","db":""}
         self.load_data()
         self.create_root_tree()
 
@@ -36,13 +38,24 @@ class QA_test:
         return result
         
 
-    def read_sql(self,data):
-        pass
+    def read_sql(self):
+        db = pymysql.connect(self.db_information["IP"],self.db_information["user"])
+        cursor = db.cursor()
+        cursor.execute("use socialbot")
+        sql_order = "SELECT * from qa_rule"
+        cursor.execute(sql_order)
+        db.commit()
+        data = cursor.fetchall()
+        data = pd.DataFrame(np.array(data))
+        print(data.head())
+        db.close()
+        return data
 
     def create_root_tree(self):
         # data_dir = 'D:\\dektop\\work_data_backup_0923_2256\\rule_one_dragon.csv'
-        data_dir = os.path.join(os.getcwd(),'module','QA_data','rule.csv')
-        df = pd.read_csv(data_dir,engine='python',encoding='utf_8_sig')
+        # data_dir = os.path.join(os.getcwd(),'module','QA_data','rule.csv')
+        # df = pd.read_csv(data_dir,engine='python',encoding='utf_8_sig')
+        df = self.read_sql()
         #df = read_sql
         for i in range(len(df)):
             if df.iloc[i,4] != df.iloc[i,4]:
@@ -86,15 +99,7 @@ class QA_test:
                 row = row.lstrip().rstrip()
                 self.boson_remain_list.append(row)
 
-        # with open(os.path.join(self.data_dir,boson_simpler),'r',encoding='utf8') as fin:
-        #     bFR = True
-        #     for row in fin:
-        #         if bFR:
-        #             bFR = False
-        #             continue
-        #         row = row.lstrip().rstrip()
-        #         row = row.split(' ')
-        #         self.boson_simpler_dict.update({row[0]:row[1]})
+        self.read_sql()
     
     def insert(self,a,lis,ite,transfer):
         if ite > len(lis) - 1:

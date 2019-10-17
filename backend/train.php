@@ -28,6 +28,7 @@
 	<script src="./js/train.js" crossorigin="anonymous"></script>
 	<script src="./js/NER.js"></script>
 	<script src="./js/emotion_recognition.js"></script>
+	<script src="./js/QA.js"></script>
 	
 	<script>
 		function toLogout() {
@@ -45,12 +46,16 @@
 		if(isset($_SESSION['is_login']) && $_SESSION['is_login'] == TRUE):
 
 			$email = $_SESSION['email'];
-
+			$email_1 = hash('md5',$email);
 			$link = create_connection();
 			$p_name = mysqli_real_escape_string($link, $_GET['name']);
 			$sql = "SELECT * FROM model WHERE p_name='$p_name'";
 			$result = execute_sql($link, "socialbot", $sql);
 			$_SESSION['p_id'] = $result->fetch_assoc()['p_id'];
+			$p_id = $_SESSION['p_id'];
+			$link = create_connection();
+			$sql = "SELECT * FROM `qa_rule` where `p_id` = '$p_id'";
+			$result = execute_sql($link, "socialbot", $sql);
 	?>
 	
 	<!-- header -->
@@ -91,9 +96,10 @@
 							<div class="col-lg-12 btm-mg-1">
 								<div class="radius-border project blue-block">
 									<p><label for="inputfile">上傳檔案</label><P>
-									<P><input type="file" id="inputfile"></p>
+									<P><input type="file" id="QA_file"></p>
 									<div class="col-md-2 offset-md-10">
-										<button class="btn radius-border train" id="submit">開始訓練</button>
+										<button class="btn radius-border" id="submit">開始訓練</button>
+										<button class="btn radius-border" id="rule">產生規則</button>
 									</div>
 								</div>
 							</div>
@@ -104,34 +110,74 @@
 						<div class="row">
 							<div class="col-lg-12 btm-mg-1">
 								<div class="alert alert-light radius-border project yellow-block">
-									<table class="table">
-										<thead>
-											<tr>
-												<th><span class="glyphicon glyphicon-font"></span> 問題</th>
-												<th><span class="glyphicon glyphicon-list"></span> 出題規則</th>
-												<th><span class="glyphicon glyphicon-align-left"></span> 原句</th>
-												<th><span class="glyphicon glyphicon-align-left"></span> 答案</th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr>
-												<td>誰會說話?</td>
-												<td>誰+v1+v2</td>
-												<td>大自然會說話</td>
-												<td>大自然</td>
-											</tr>
-											<tr>
-												<td>孔子很注重視什麼?</td>
-												<td>人1+d1+v1+什麼</td>
-												<td>孔子很重視孝道</td>
-												<td>孝道</td>
-											</tr>
-										</tbody>
-									</table>
+								<?php
+				
+									//表格內容
+									echo "<table owner=$email_1 border='1' align='center' id='table' class='table table-dark'><tr align='center'>";
+									$iRun = 0;
+									while ($field = $result->fetch_field())   // 顯示欄位名稱
+										{
+										if($iRun == 1 || $iRun == 2){
+											$iRun += 1;
+											continue;
+										}
+										echo "<td>" . $field->name . "</td>";
+										$iRun += 1;
+										}
+									echo "</tr>";
+									$j=-1;
+									while ($row = $result->fetch_row())
+									{
+										$j++;
+										echo "<tr id='$j'>";
+										$iRun = 0;
+										for ($i = 0; $i < $result->field_count; $i++)
+										{
+											if($iRun == 1 || $iRun == 2){
+												$iRun += 1;
+												continue;
+											}
+											$a[$j][$i] = $row[$i];
+											echo "<td>" . $a[$j][$i] . "</td>";
+											$iRun += 1;
+										}
+								?>
+									<td><a class="remove_a" row=<?php echo $j;?> href="javascript:;">刪除</a></td>
+									<td><a class="modify_a" row=<?php echo $j;?> href="javascript:;">修改</a></td>
+								<?php		
+										echo "</tr>";
+									}
+									echo "</table>";
+								?>
+								</div>
+								<h6 class="my-4">修 改 規 則</h6>
+								<div class="alert alert-light radius-border project yellow-block">
+									<?php
+										echo "<table border='1' align='center' id='t1' class='table table-dark tabel-responsive'><tr class='CaseRow' align='center' >";
+										$result = execute_sql($link, "socialbot", $sql);
+										echo "<td>datatype</td>";
+										$iRun = 0;
+										while ($field = $result->fetch_field())   // 顯示欄位名稱
+											{
+											if($iRun == 1 || $iRun == 2){
+												$iRun += 1;
+												continue;
+											}
+											echo "<td>" . $field->name . "</td>";
+											$iRun += 1;
+											}
+										echo "</tr>";
+										echo "</table>";
+									?>
 								</div>
 							</div>
 						</div>
 					</div>
+					<a class="add_a" href="javascript:;">新增一列</a>
+					<a href='javascript:;' id='determine_sql'>
+					確定修改
+					</a>
+					<br><br><br><br><br>
 				</div>
 				<div id="NER" class="collapse">
 					<div class="container">
