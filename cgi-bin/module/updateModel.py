@@ -13,7 +13,7 @@ mmseg = Tokenizer('module/data_kenlee/userDict.txt')
 def updateData(sentence_dict,segment_dict,path=""):
 	originData = pd.read_csv('module/data_kenlee/SentenceLabel.csv',header=None)
 	senToInt = {'喜歡':0,'憤怒':1,'難過':2,'驚訝':3,'害怕':4,'無表情':5}
-	title = originData.values[0][1:] 
+	title = originData.values[0][1:]
 	sentence = list(originData.values[1:,0])
 	sentiment = list(originData.values[1:,1:].astype(int))
 	print(sentence_dict)

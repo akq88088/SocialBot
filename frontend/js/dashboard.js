@@ -24,13 +24,21 @@ $(document).ready(function(){
 	textUploader.addEventListener('change', function(e) {
 		console.log(e.target.files); // get file object
 		var reader = new FileReader();
-
-		reader.onload = function(){
-			var content = reader.result;
-			$('#paste_text').val(content);
-		};
-
-		reader.readAsText(e.target.files[0]);
+		if(e.target.files[0].name.includes('.docx')){
+			reader.onload = function(){
+				var zip = new JSZip(reader.result);
+			    var doc = new window.docxtemplater().loadZip(zip);
+			    $('#paste_text').val(doc.getFullText());
+			};
+		    reader.readAsBinaryString(e.target.files[0]);
+		}else{
+			reader.onload = function(){
+				var content = reader.result;
+				$('#paste_text').val(content);
+			};
+			reader.readAsText(e.target.files[0]);
+		}
+		e.target.value=null;
 	});
 
 

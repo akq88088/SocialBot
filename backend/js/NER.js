@@ -1,19 +1,22 @@
 $(document).ready(function(){
 	var pid = $('#project_name').attr('pid');
 	const textUploader = document.querySelector('#ner_file');
-	textUploader.addEventListener('input', function(e) {
-		// console.log(document.querySelector('#ner_file').files.length);
-
-		if(document.querySelector('#ner_file').files.length > 0){
-			var reader = new FileReader();
-
+	textUploader.addEventListener('change', function(e) {
+		console.log(e.target.files); // get file object
+		var reader = new FileReader();
+		if(e.target.files[0].name.includes('.docx')){
+			reader.onload = function(){
+				var zip = new JSZip(reader.result);
+			    var doc = new window.docxtemplater().loadZip(zip);
+			    $('#paste_text').val(doc.getFullText());
+			};
+		    reader.readAsBinaryString(e.target.files[0]);
+		}else{
 			reader.onload = function(){
 				var content = reader.result;
-				getNER(content, pid);
+				$('#paste_text').val(content);
 			};
-
 			reader.readAsText(e.target.files[0]);
-			
 		}
 		e.target.value=null;
 	});

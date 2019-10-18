@@ -29,6 +29,10 @@
 	<script src="./js/global.js" crossorigin="anonymous"></script>	
 	<script src="./js/dashboard.js" crossorigin="anonymous"></script>
 	
+	<!--Read .docx JS-->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/docxtemplater/3.1.9/docxtemplater.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.6.1/jszip.js"></script>
+
 	<script>
 		function toLogout() {
 			window.location.replace("../frontend/Logout.php")
@@ -101,7 +105,7 @@
 						
 						<p>上傳檔案</p>
 						<div class="form-group">
-							<input type="file" class="form-control-file" id="upload_text" accept=".txt,.csv">
+							<input type="file" class="form-control-file" id="upload_text" accept=".txt,.csv,.docx">
 						</div>
 						
 						<div class="row">
