@@ -32,7 +32,7 @@ class QA_train:
             self.project_dir = ""
         self.NER_class = NER(self.project_dir)
     def get_p_id(self,p_name):
-        db = pymysql.connect(self.db_information["IP"],self.db_information["user"])
+        db = pymysql.connect(self.db_information["IP"],self.db_information["user"],self.db_information["password"])
         cursor = db.cursor()
         cursor.execute("use socialbot")
         sql_order = """
@@ -133,7 +133,7 @@ class QA_train:
 
 
     def delete_qa_rule(self):
-        db = pymysql.connect(self.db_information["IP"],self.db_information["user"])
+        db = pymysql.connect(self.db_information["IP"],self.db_information["user"],self.db_information["password"])
         cursor = db.cursor()
         cursor.execute("use socialbot")
         sql_order = "delete from QA_rule where owner = %s and p_id = %s;"
@@ -163,7 +163,7 @@ class QA_train:
 
     def get_training_data(self):
         # 目前不判斷owner
-        db = pymysql.connect(self.db_information["IP"],self.db_information["user"])
+        db = pymysql.connect(self.db_information["IP"],self.db_information["user"],self.db_information["password"])
         cursor = db.cursor()
         cursor.execute("use socialbot")
         sql_order = "select 課文,題目 from qa_training where owner = %s and p_id = %s"
@@ -206,7 +206,7 @@ class QA_train:
         return df
 
     def insert_training_data(self,df):
-        db = pymysql.connect(self.db_information["IP"],self.db_information["user"])
+        db = pymysql.connect(self.db_information["IP"],self.db_information["user"],self.db_information["password"])
         cursor = db.cursor()
         cursor.execute("use socialbot")
         sql_order = "insert into qa_training(owner,p_id,課文,題目) values(%s,%s,%s,%s)"
@@ -219,7 +219,7 @@ class QA_train:
         db.commit()
 
     def insert_rule(self,df):
-        db = pymysql.connect(self.db_information["IP"],self.db_information["user"])
+        db = pymysql.connect(self.db_information["IP"],self.db_information["user"],self.db_information["password"])
         # with open("C:\\Users\\student\\Desktop\\json_test.txt",'w') as fout:
         #     fout.write(str(df.head()))
         cursor = db.cursor()
@@ -231,7 +231,7 @@ class QA_train:
         db.commit()
     
     def change_rule(self,df):
-        db = pymysql.connect(self.db_information["IP"],self.db_information["user"])
+        db = pymysql.connect(self.db_information["IP"],self.db_information["user"],self.db_information["password"])
         cursor = db.cursor()
         cursor.execute("use socialbot")
         sql_order = "UPDATE qa_rule SET 原文出題規則 = %s,原文出題規則答案 = %s  WHERE ID = %s AND owner = %s AND p_id = %s"
@@ -240,7 +240,7 @@ class QA_train:
         db.commit()
     
     def remove_rule(self,df):
-        db = pymysql.connect(self.db_information["IP"],self.db_information["user"])
+        db = pymysql.connect(self.db_information["IP"],self.db_information["user"],self.db_information["password"])
         cursor = db.cursor()
         cursor.execute("use socialbot")
         sql_order = "delete from QA_rule where ID = %s and owner = %s and p_id = %s;"
