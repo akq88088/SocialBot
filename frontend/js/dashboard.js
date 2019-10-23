@@ -17,8 +17,17 @@ $(document).ready(function(){
 
 		// getNER(text);
 		getSummary(text, algorithm, percentage);
-		getSentiment(text);
-		getQA_test(text);
+		//getSentiment(text);
+		//getQA_test(text);
+		var email = $('#email').text();
+		var model = $('#model_select :selected').text();
+		var project_name = $("#project_name").text();
+		var summary = $("#summary").val();
+		var sentiment = "happy";
+		var QA = "123";
+		console.log(text);
+		save_content(email,text,model,project_name,summary,sentiment,QA);
+		
 	});
 	
 	textUploader.addEventListener('change', function(e) {
@@ -135,6 +144,37 @@ $(document).ready(function(){
 			complete:function(){
 				// 全部執行完要做什麼
 			}
+		});
+	}
+	
+		var save_content = function(email,text,model,project_name,summary,sentiment,QA){
+
+		$.ajax({
+			method: "POST",
+			url: "./save.php",
+			async: true, //非同步化
+			// dataType:"json",
+			data: {
+				"email" : email,
+				"text" : text,
+				"model" : model,
+				"project_name" : project_name,
+				"summary" : summary,
+				"sentiment" : sentiment,
+				"QA" : QA
+			},
+			beforeSend:function(){
+				console.log(123);
+			},
+			success: function(text){
+				console.log(text);
+			},
+			complete:function(){
+				// 全部執行完要做什麼
+			},
+			error:function(E){
+				console.log(E);
+			},
 		});
 	}
 

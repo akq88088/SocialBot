@@ -60,7 +60,7 @@
 		<div class="row">
 			<div class="col-md-1 ta-c" id="back" role="button">< 返回</div>
 			<div class="col-md-4 offset-md-3 ta-c" id="title"><h5>語 料 應 用 與 分 析 工 具</h5></div>
-			<div class="col-md-2 offset-md-1 ta-c"><?php echo $email;?></div>
+			<div class="col-md-2 offset-md-1 ta-c" id="email"><?php echo $email;?></div>
 			<div class="col-md-1 ta-c" id="logout" role="button" onclick="toLogout();">登出</div>
 		</div>	
 	</div>
@@ -77,6 +77,7 @@
 			</div>
 		
 		<!-- 匯入資料 -->
+	
 		<div class="container">
 			<div>
 				<h6 class="my-4">匯 入 資 料</h6>
@@ -86,7 +87,7 @@
 					<div class="col-lg-6">
 						<p>選擇文字模型</p>
 						<div>
-							<select class="form-control blue-border" id="model_select" >
+							<select class="form-control blue-border" name="model_select" id="model_select" >
 								<option disabled selected hidden>請選擇模型</option>
 								<option>兒童讀本</option>
 								<option>國小讀本</option>
@@ -110,12 +111,11 @@
 						
 						<div class="row">
 							<div class="col-md-12 ta-r">
-								<button class="btn radius-border" id="analyze">分析</button>
+								<button type="submit" class="btn radius-border" id="analyze">分析</button>
 							</div>
 						</div>
 					</div>
 				</div>
-
 			</div>
 		</div>
 
@@ -205,6 +205,7 @@
 			</div>
 		</div>
 	</div>
+	
 	
 	<?php
 		else:
