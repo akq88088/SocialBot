@@ -53,6 +53,17 @@
 			$sql = "SELECT `project-name` FROM `member` INNER JOIN `project` WHERE `member_id` = `ID` and `project-name` = '$p_name'";
 			$result = execute_sql($link, "socialbot", $sql);
 			//$_SESSION['p_id'] = $result->fetch_assoc()['p_id'];
+			
+			$sql_model = "SELECT `p_name` FROM `model`";
+			$result_model = execute_sql($link, "socialbot", $sql_model);
+			
+			$j=0;
+			while ($row = $result_model->fetch_row()) 
+			{
+				for ($i = 0; $i < $result_model->field_count; $i++)
+					$model[$j] = $row[$i];
+				$j++;
+			}
 	?>
 	
 	<!-- header -->
@@ -89,11 +100,11 @@
 						<div>
 							<select class="form-control blue-border" name="model_select" id="model_select" >
 								<option disabled selected hidden>請選擇模型</option>
-								<option>兒童讀本</option>
-								<option>國小讀本</option>
-								<option>國中讀本</option>
-								<option>高中讀本</option>
-								<option>新聞媒體</option>
+								<?php
+									while($j--)
+									{?>
+										<option><?php echo $model[$j];?></option>
+								<?php } ?>
 							</select>
 						</div>
 					</div>
