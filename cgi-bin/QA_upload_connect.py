@@ -18,6 +18,8 @@ def text2df(data,owner):
             temp[j] = temp[j].replace('\n','')
         if len(temp) != 2:
             continue
+        if temp[0] == '' or temp[1] == '' or temp[0] != temp[0] or temp[1] != temp[1]:
+            continue
         result.append(temp)
     result = pd.DataFrame(np.array(result))
     # result['owner'] = owner

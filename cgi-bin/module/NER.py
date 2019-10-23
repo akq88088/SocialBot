@@ -80,6 +80,67 @@ class NER():
             result.append(ner)
 
         return segment, part_of_speach, result 
+    
+    def predict_qa_test(self, data):
+        sentence = self.TextProcessor.sentence_break(data, split_char='!?。！？,，」"')
+
+        segment = []
+        part_of_speach = []
+        result = []
+        for sent in sentence:
+            words, tags = self.TextProcessor.seg_tag(sent, use_stopwords=False)
+            words = words[0]
+
+            sent_len = len(words)
+
+            pos = self.transformer.to_int(tags, self.pos_dict)
+
+            pos_pad = self.transformer.padding(pos, maxlen=self.maxlen, padding='pre')
+            
+            try:
+                ner = [np.argmax(i) for i in self.model.predict(pos_pad.reshape(1,self.maxlen))[0]]
+            except Exception as e:
+                raise
+
+            ner = ner[-sent_len:]
+            
+            ner = self.transformer.to_ner(ner, self.ner_dict)
+            
+            segment.append(words)
+            part_of_speach.append(tags[0])
+            result.append(ner)
+        return segment, part_of_speach, result 
+    
+    def predict_qa_train(self, data):
+        # sentence = self.TextProcessor.sentence_break(data, split_char='!?。！？,，」"')
+        sentence = [data]
+        segment = []
+        part_of_speach = []
+        result = []
+        for sent in sentence:
+            words, tags = self.TextProcessor.seg_tag(sent, use_stopwords=False)
+            words = words[0]
+
+            sent_len = len(words)
+
+            pos = self.transformer.to_int(tags, self.pos_dict)
+
+            pos_pad = self.transformer.padding(pos, maxlen=self.maxlen, padding='pre')
+            
+            try:
+                ner = [np.argmax(i) for i in self.model.predict(pos_pad.reshape(1,self.maxlen))[0]]
+            except Exception as e:
+                raise
+
+            ner = ner[-sent_len:]
+            
+            ner = self.transformer.to_ner(ner, self.ner_dict)
+            
+            segment.extend(words)
+            part_of_speach.extend(tags[0])
+            result.extend(ner)
+
+        return segment, part_of_speach, result 
 
 class data_trans():
     def __init__(self):

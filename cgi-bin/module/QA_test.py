@@ -1,5 +1,3 @@
-#!D:/Python/Python36/python.exe
-#!C:/ProgramData/Anaconda3/python.exe
 import cgi, cgitb
 import os
 import pandas as pd
@@ -17,7 +15,8 @@ class QA_test:
             self.link = []
             self.transfer = []
 
-    def __init__(self):
+    def __init__(self,p_name='test_1020_2005'):
+        self.df_origin_article = ""
         self.boson_remain_list = []
         self.boson_simpler_dict = {}
         self.que_remain_list = []
@@ -26,8 +25,28 @@ class QA_test:
         self.root_list = []
         self.data_dir = os.path.join('module','QA_data')
         self.db_information = {"IP":"localhost","user":"root","password":"","db":""}
+        self.p_id = self.get_p_id(p_name)[0]
+        try:
+            self.project_dir = os.path.join(os.getcwd(),"module","model",self.p_id[0])
+        except:
+            self.project_dir = ""
+        self.NER_class = NER(self.project_dir)
         self.load_data()
         self.create_root_tree()
+        
+
+    def get_p_id(self,p_name):
+        db = pymysql.connect(self.db_information["IP"],self.db_information["user"])
+        cursor = db.cursor()
+        cursor.execute("use socialbot")
+        sql_order = """
+        select p_id
+        from model
+        where p_name = %s
+        """
+        cursor.execute(sql_order,(p_name))
+        p_id = cursor.fetchone()
+        return p_id
 
     def predict(self,text):
         result = self.call_NER(text)
@@ -42,12 +61,13 @@ class QA_test:
         db = pymysql.connect(self.db_information["IP"],self.db_information["user"])
         cursor = db.cursor()
         cursor.execute("use socialbot")
-        sql_order = "SELECT * from qa_rule"
-        cursor.execute(sql_order)
+        sql_order = "SELECT * from qa_rule where p_id = %s"
+        cursor.execute(sql_order,(self.p_id))
         db.commit()
         data = cursor.fetchall()
         data = pd.DataFrame(np.array(data))
-        print(data.head())
+        data.columns = ["ID","owner","p_id","原文規則","原文出題規則","原文出題規則答案","原文斷詞","原文出題","原文出題答案"]
+        self.df_origin_article = data
         db.close()
         return data
 
@@ -58,16 +78,16 @@ class QA_test:
         df = self.read_sql()
         #df = read_sql
         for i in range(len(df)):
+            if df.iloc[i,3] != df.iloc[i,3]:
+                continue
             if df.iloc[i,4] != df.iloc[i,4]:
                 continue
             if df.iloc[i,5] != df.iloc[i,5]:
                 continue
-            if df.iloc[i,6] != df.iloc[i,6]:
-                continue
             id_num = df.iloc[i,0]
-            rule = df.iloc[i,4]
-            transfer = df.iloc[i,5]
-            ans = df.iloc[i,6]
+            rule = df.iloc[i,3]
+            transfer = df.iloc[i,4]
+            ans = df.iloc[i,5]
             transfer += ' + ' + ans
             transfer += ' + ' + str(id_num)
             rule = rule.split('+')
@@ -245,12 +265,12 @@ class QA_test:
         return result,article_list
 
     def call_NER(self,text):
-        NER_class = NER()
+        # NER_class = NER()
         text = text.replace('\r','')
         text = text.replace('\n','')
         text = text.replace(' ','')
         t0 = time.time()
-        words,flags,ners = NER_class.predict(text)
+        words,flags,ners = self.NER_class.predict_qa_test(text)
         # print(time.time() - t0)
         # print('ner predict test')
         # print(a)
@@ -261,28 +281,34 @@ class QA_test:
         # print('3---')
         df_result = []
         # data_dir = 'D:\\dektop\\work_data_backup_0923_2256\\rule.csv'#change to sql
-        data_dir = os.path.join(os.getcwd(),'module','QA_data','rule.csv')
-        df_origin_article = pd.read_csv(data_dir)
+        # data_dir = os.path.join(os.getcwd(),'module','QA_data','rule.csv')
+        # df_origin_article = pd.read_csv(data_dir)
+        print(self.df_origin_article.head())
         for i in range(len(words)):
             segment = words[i]
             flag_list = flags[i]
             ner = ners[i]
             word_cut = self.article_pre(segment,flag_list,ner)
-            # print(word_cut)
-            # print('---')
+            print(word_cut)
+            print('---')
             find_rule_temp = self.find_rule_main(word_cut)
             if find_rule_temp:
-                # print('find_rule_temp')
-                # print(find_rule_temp)
-                # print('---')
+                print('find_rule_temp')
+                print(find_rule_temp)
+                print('---')
                 #find_rule_temp match origin article
                 for i in range(len(find_rule_temp)):
-                    id_num = int(float(find_rule_temp[i][-1]))
-                    # print('test!!!')
-                    # print(id_num)
-                    origin_article = df_origin_article[df_origin_article["RID"] == id_num]
-                    # print(origin_article)
-                    # print('---')
+                    id_num = str(int(float(find_rule_temp[i][-1])))
+                    print('id num')
+                    print(id_num)
+                    print(type(id_num))
+                    print('id')
+                    print(self.df_origin_article["ID"].iloc[0])
+                    print(type(self.df_origin_article["ID"].iloc[0]))
+                    origin_article = self.df_origin_article[self.df_origin_article["ID"] == id_num]
+                    print('origin_article')
+                    print(origin_article.head())
+                    print('---')
                     find_rule_temp[i].append(origin_article["原文斷詞"].iloc[0])
                     find_rule_temp[i].append(origin_article["原文出題"].iloc[0])
                     find_rule_temp[i].append(word_cut)

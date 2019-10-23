@@ -12,6 +12,7 @@ var boson_flag = Array()
 var p_name = ""
 var owner = ""
 var content = "" 
+var call_progress = ""
 $(document).ready(function(){
 	p_name = $("#project_name")[0].textContent
 	owner = $("table,[owner]")[0].getAttribute("owner");
@@ -44,7 +45,8 @@ $(document).ready(function(){
 				// 送出前要做什麼
 			},
 			success: function(text){
-				
+				alert("檔案上傳完成!")
+				window.location.reload();
 				// 成功回傳後要做甚麼
 			},
 			complete:function(){
@@ -68,9 +70,33 @@ $(document).ready(function(){
 			beforeSend:function(){
 			},
 			success: function(text){
-				
+				alert("規則產生完成!")
+				window.location.reload();
 			},
 			complete:function(){
+				
+				// console.log("rule generate complete")
+			}
+		});
+	}
+	var call_rule_progress = function(owner,p_name){
+		$.ajax({
+			method: "POST",
+			url: "../cgi-bin/QA_call_progress.py",
+			async: true, //非同步化
+			// dataType:"json",
+			data: {
+				"owner" : owner,
+				"p_name" : p_name
+			},
+			beforeSend:function(){
+				console.log('rule p run')
+			},
+			success: function(rate){
+				console.log(rate)
+			},
+			complete:function(){
+				console.log("rule progress complete")
 			}
 		});
 	}

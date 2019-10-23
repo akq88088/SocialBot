@@ -4,6 +4,7 @@ import numpy as np
 import math
 from module.NER import NER
 import pymysql
+import time
 class QA_train:
 
     class pair:
@@ -25,7 +26,11 @@ class QA_train:
         self.db_information = {"IP":"localhost","user":"root","password":"","db":""}
         self.owner = owner
         self.p_id = self.get_p_id(p_name)
-
+        try:
+            self.project_dir = os.path.join(os.getcwd(),"module","model",self.p_id[0])
+        except:
+            self.project_dir = ""
+        self.NER_class = NER(self.project_dir)
     def get_p_id(self,p_name):
         db = pymysql.connect(self.db_information["IP"],self.db_information["user"])
         cursor = db.cursor()
@@ -96,53 +101,64 @@ class QA_train:
         df.to_csv('D:\\dektop\\work_data_backup_0923_2256\\rule.csv',encoding='utf_8_sig')
 
     def call_NER(self,text):
-        NER_class = NER()
+        # print(text)
+        # NER_class = NER(self.project_dir)
         text = text.replace('\r','')
         text = text.replace('\n','')
         text = text.replace(' ','')
-        segment,flag_list,ner = NER_class.predict(text)
-        word_cut = self.article_pre(segment,flag_list,ner)
+        not_success = True
+        error_run = 1
+        while not_success:
+            try:
+                segment,flag_list,ner = self.NER_class.predict_qa_train(text)
+                not_success = False
+                # print("out of error_run!")
+            except:
+                # if error_run % 5 == 0:
+                    # print("error_run : " + str(error_run))
+                error_run += 1
+        try:
+            word_cut = self.article_pre(segment,flag_list,ner)
+        except:
+            word_cut = ""
+        # print('----')
         return word_cut
 
     def read_data_generate_rule_main(self):
         df = self.get_training_data()
-        with open("C:\\Users\\student\\Desktop\\main.txt",'w') as fout:
-            # fout.write(str(self.p_name) + '\n')
-            fout.write(str(self.p_id) + '\n')
-            fout.write(str(self.owner) + '\n')
-            fout.write(str(df.head(10)))
         df = self.training_data2rule(df)
-        with open("C:\\Users\\student\\Desktop\\main_2.txt",'w') as fout:
-            fout.write(str(df.head(10)))
-        self.re_qa_rule()
+        self.delete_qa_rule()
         self.insert_rule(df)
+        # self.training_data2rule("")
 
 
-    def re_qa_rule(self):
+    def delete_qa_rule(self):
         db = pymysql.connect(self.db_information["IP"],self.db_information["user"])
         cursor = db.cursor()
         cursor.execute("use socialbot")
-        cursor.execute("drop table qa_rule")
-        cursor.execute(
-            """
-            create table qa_rule(
-            ID int(11) auto_increment primary key,
-            owner varchar(255),
-            p_id varchar(255),
-            原文規則 varchar(100),
-            原文出題規則 varchar(100),
-            原文出題規則答案 varchar(100),
-            原文斷詞 varchar(100),
-            原文出題 varchar(100),
-            原文出題答案 varchar(100)
-            );
-            """)
-        cursor.execute("alter table qa_rule change 原文規則 原文規則 varchar(100) character set utf8mb4 collate utf8mb4_bin")
-        cursor.execute("alter table qa_rule change 原文出題規則 原文出題規則 varchar(100) character set utf8mb4 collate utf8mb4_bin")
-        cursor.execute("alter table qa_rule change 原文出題規則答案 原文出題規則答案 varchar(100) character set utf8mb4 collate utf8mb4_bin")
-        cursor.execute("alter table qa_rule change 原文斷詞 原文斷詞 varchar(100) character set utf8mb4 collate utf8mb4_bin")
-        cursor.execute("alter table qa_rule change 原文出題 原文出題 varchar(100) character set utf8mb4 collate utf8mb4_bin")
-        cursor.execute("alter table qa_rule change 原文出題答案 原文出題答案 varchar(100) character set utf8mb4 collate utf8mb4_bin")
+        sql_order = "delete from QA_rule where owner = %s and p_id = %s;"
+        cursor.execute(sql_order,(self.owner,self.p_id))
+        # cursor.execute("drop table qa_rule")
+        # cursor.execute(
+        #     """
+        #     create table qa_rule(
+        #     ID int(11) auto_increment primary key,
+        #     owner varchar(255),
+        #     p_id varchar(255),
+        #     原文規則 varchar(100),
+        #     原文出題規則 varchar(100),
+        #     原文出題規則答案 varchar(100),
+        #     原文斷詞 varchar(100),
+        #     原文出題 varchar(100),
+        #     原文出題答案 varchar(100)
+        #     );
+        #     """)
+        # cursor.execute("alter table qa_rule change 原文規則 原文規則 varchar(100) character set utf8mb4 collate utf8mb4_bin")
+        # cursor.execute("alter table qa_rule change 原文出題規則 原文出題規則 varchar(100) character set utf8mb4 collate utf8mb4_bin")
+        # cursor.execute("alter table qa_rule change 原文出題規則答案 原文出題規則答案 varchar(100) character set utf8mb4 collate utf8mb4_bin")
+        # cursor.execute("alter table qa_rule change 原文斷詞 原文斷詞 varchar(100) character set utf8mb4 collate utf8mb4_bin")
+        # cursor.execute("alter table qa_rule change 原文出題 原文出題 varchar(100) character set utf8mb4 collate utf8mb4_bin")
+        # cursor.execute("alter table qa_rule change 原文出題答案 原文出題答案 varchar(100) character set utf8mb4 collate utf8mb4_bin")
         db.commit()
 
     def get_training_data(self):
@@ -156,12 +172,37 @@ class QA_train:
         df = pd.DataFrame(np.array(data))
         return df
 
+    def write_rule_progress(self,i,df_ln):
+        pass
+        # i = int(i * 100 / df_ln)
+        # i = str(i)
+        # with open(os.path.join(self.project_dir,'progress.txt'),'w',encoding='utf_8_sig') as fout:
+        #     fout.write(str(i))
+        # f = open(os.path.join(self.project_dir,'progress.txt'),'w',encoding='utf_8_sig')
+        # f.write(str(i))
+        # f.close()
+
+    def read_rule_progress(self):
+        result = ''
+        # with open(os.path.join(self.project_dir,'progress.txt'),'r',encoding='utf_8_sig') as fin:
+        #     result = fin.read()
+        return result
+
     def training_data2rule(self,df):
-        for i in range(len(df)):
+        df_ln = len(df)
+        for i in range(df_ln):
+            self.write_rule_progress(i,df_ln)
             sentence = df.iloc[i,0]
             sentence = self.call_NER(sentence)
             df.iloc[i,0] = sentence
         df = self.train(df)
+        # i = 0
+        # while True:
+        #     if i > 3:
+        #         break
+        #     self.write_rule_progress(i,200)
+        #     time.sleep(3)
+        #     i += 1
         return df
 
     def insert_training_data(self,df):
@@ -179,8 +220,8 @@ class QA_train:
 
     def insert_rule(self,df):
         db = pymysql.connect(self.db_information["IP"],self.db_information["user"])
-        with open("C:\\Users\\student\\Desktop\\json_test.txt",'w') as fout:
-            fout.write(str(df.head()))
+        # with open("C:\\Users\\student\\Desktop\\json_test.txt",'w') as fout:
+        #     fout.write(str(df.head()))
         cursor = db.cursor()
         cursor.execute("use socialbot")
         sql_order = "insert into qa_rule(owner,p_id,原文規則,原文出題規則,原文出題規則答案,原文斷詞,原文出題,原文出題答案)values(%s,%s,%s,%s,%s,%s,%s,%s);"
@@ -504,10 +545,10 @@ class QA_train:
     def article_pre(self,segment,flag_list,ner):#待修正
         word_cut_list = []
         for i in range(len(segment)):
-            word = segment[i][0]
-            flag = ner[i][0]
+            word = segment[i]
+            flag = ner[i]
             if flag in self.boson_remain_list:
-                flag = self.ner_eng_ch_dict.get(ner[i][0])
+                flag = self.ner_eng_ch_dict.get(ner[i])
             else:
                 flag = flag_list[i][0]
             word_cut_list.append(word + '_' + flag)

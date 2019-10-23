@@ -4,12 +4,17 @@ import os
 import jieba
 import jieba.posseg
 from bosonnlp import BosonNLP
-
+import random
 cwd = os.path.dirname(__file__)
 
 class TextProcessor():
     def __init__(self):
-        pass
+        self.boson_key_list = ['g8lQg9Mv.25818.fAbbwt6TYhh8',
+        'Xrzs7xvr.26748.xUoREj5Sgifi',
+        'ySsYfLMS.26746.MrODj8fAYeQu',
+        'DOeszme9.26747.xg3lcXi7Jun4',
+        '8EP496lI.26743.mNK0Tk6Rpk5F',
+        'qiVsBy45.26744.9-U4aaXH2yEs']
     
     def _read_stopwords(self, path=cwd+'/data_alex/stop_words.txt'):
         stop_words = set()
@@ -35,7 +40,8 @@ class TextProcessor():
         return sentences
     
     def _boson_seg(self, text):
-        nlp = BosonNLP('8EP496lI.26743.mNK0Tk6Rpk5F')
+        boson_key = self.boson_key_list[random.randint(0,len(self.boson_key_list)- 1)]
+        nlp = BosonNLP(boson_key)
         if type(text) == str:
             text = [text]
         

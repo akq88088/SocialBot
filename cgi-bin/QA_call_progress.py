@@ -10,10 +10,12 @@ from module.QA_train import QA_train
 parameter = cgi.FieldStorage()
 owner = parameter.getvalue('owner')
 p_name = parameter.getvalue('p_name')
-# owner = "c2525a7f58ae3776070e44c106c48e15"
-# p_name = "test_1020_2005"
 QA_train = QA_train(owner,p_name)
-QA_train.read_data_generate_rule_main()
+
+try:
+    progress_rate = QA_train.read_rule_progress()
+except:
+    progress_rate = "0"
 print("Content-type:text/html") #必須
 print('') #必須
-print('QA rule generate finish')
+print(progress_rate)
