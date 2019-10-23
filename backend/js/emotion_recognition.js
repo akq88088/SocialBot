@@ -43,13 +43,14 @@ $(document).ready(function(){
 			reader.onload = function(){
 				var zip = new JSZip(reader.result);
 			    var doc = new window.docxtemplater().loadZip(zip);
+			    predictSentiment(doc.getFullText());
 			    $('#paste_text').val(doc.getFullText());
 			};
 		    reader.readAsBinaryString(e.target.files[0]);
 		}else{
 			reader.onload = function(){
 				var content = reader.result;
-				$('#paste_text').val(content);
+				predictSentiment(content);
 			};
 			reader.readAsText(e.target.files[0]);
 		}
