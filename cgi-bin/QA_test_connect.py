@@ -364,43 +364,53 @@ text_list = [
 我今天好早好早就起床了。我想我一定比蜜蜂還要勤勞，所以，我現在好想好想睡覺。
 """
 ]
-# parameter = cgi.FieldStorage()
-# text = parameter.getvalue('text')
+parameter = cgi.FieldStorage()
+text = parameter.getvalue('text')
+p_name = parameter.getvalue('p_name')
 # owner = parameter.getvalue('owner')
-# p_name = parameter.getvalue('p_name')
 # text = "我起來了"
-QA_test = QA_test()
+QA_test = QA_test(p_name)
 iRun = 0
 insert_id = 0
 result_list = []
-while True:
-    if iRun >= len(text_list):
-        break
-    # print('please input')
-    # text = input()
-    text = text_list[iRun]
-    not_success = True
-    while not_success:
-        try:
-            df_result = QA_test.predict(text)
-            not_success = False
-        except:
-            print('QA test predict error!')
-            continue
-    # df_result = QA_test.predict(text)
-    if len(df_result) > 0:
-        df_result["n_article"] = iRun
-        result_list.append(df_result)
-    # if df_result.columns == 9:
-    # que_ans_dict = {}
-    # for i in range(len(df_result)):
-    #     que_ans_dict.update({insert_id:[df_result["輸入出題"][i],df_result["輸入答案"][i]]})
-    #     insert_id += 1
-        # print(que_ans_dict)
-    iRun += 1
-    # break
-df = df_result.concat(result_list,axis=0)
-df.to_csv('QA_one_dragon_1023_1529.csv',index=0,encoding='utf_8_sig')
+que_ans_dict = {}
+df_result = QA_test.predict(text)
+if df_result.columns == 9:
+    que_ans_dict = {}
+    for i in range(len(df_result)):
+        que_ans_dict.update({insert_id:[df_result["輸入出題"][i],df_result["輸入答案"][i]]})
+        insert_id += 1
+else:
+    que_ans_dict.update({insert_id:["沒有產生問題","沒有產生答案"]})
+# que_ans_dict.update({insert_id:["p_id",df_result]})
+# while True:
+#     if iRun >= len(text_list):
+#         break
+#     # print('please input')
+#     # text = input()
+#     text = text_list[iRun]
+#     not_success = True
+#     while not_success:
+#         try:
+#             df_result = QA_test.predict(text)
+#             not_success = False
+#         except:
+#             print('QA test predict error!')
+#             continue
+#     # df_result = QA_test.predict(text)
+#     if len(df_result) > 0:
+#         df_result["n_article"] = iRun
+#         result_list.append(df_result)
+#     # if df_result.columns == 9:
+#     # que_ans_dict = {}
+#     # for i in range(len(df_result)):
+#     #     que_ans_dict.update({insert_id:[df_result["輸入出題"][i],df_result["輸入答案"][i]]})
+#     #     insert_id += 1
+#     #     # print(que_ans_dict)
+#     iRun += 1
+#     # break
+# df = df_result.concat(result_list,axis=0)
+# df.to_csv('QA_one_dragon_1023_1529.csv',index=0,encoding='utf_8_sig')
 #將輸入丟進規則樹
 print("Content-type:text/html") #必須
 print('') #必須

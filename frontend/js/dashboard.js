@@ -9,16 +9,20 @@ $(document).ready(function(){
 		var text = $('#paste_text').val();
 		var algorithm = $('.btn-group > button.active')[0].id;
 		var percentage = $('.btn-group > button.active')[1].getAttribute("percentage");
+		var p_name = $("#model_select").find(":selected").val()
+		if(p_name == "請選擇模型"){
+			alert("請選擇模型")
+			return
+		}
 		if(!text){
 			alert('請輸入欲分析之內容');
 		}
 		$('#TextSum_and_SA').show();
 		$('#QA').show();
-
-		// getNER(text);
+		getNER(text);
 		getSummary(text, algorithm, percentage);
-		//getSentiment(text);
-		//getQA_test(text);
+		getSentiment(text);
+		getQA_test(text,p_name);
 		var email = $('#email').text();
 		var model = $('#model_select :selected').text();
 		var project_name = $("#project_name").text();
@@ -276,7 +280,7 @@ $(document).ready(function(){
 			}
 		});
 	}
-	var getQA_test = function(text){
+	var getQA_test = function(text,p_name){
 
 		$.ajax({
 			method: "POST",
@@ -284,7 +288,8 @@ $(document).ready(function(){
 			async: true, //非同步化
 			// dataType:"json",
 			data: {
-				"text":text
+				"text":text,
+				"p_name":p_name
 				// data
 			},
 			beforeSend:function(){

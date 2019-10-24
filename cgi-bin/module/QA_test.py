@@ -24,7 +24,8 @@ class QA_test:
         self.ner_eng_ch_dict = {'per':'人','obj':'物','time':'時','place':'地'}
         self.root_list = []
         self.data_dir = os.path.join('module','QA_data')
-        self.db_information = {"IP":"localhost","user":"root","password":"","db":""}
+        # self.db_information = {"IP":"localhost","user":"root","password":"","db":""}
+        self.db_information = {"IP":"120.125.85.96","user":"socialbot","password":"mcuiii","db":""}
         self.p_id = self.get_p_id(p_name)[0]
         try:
             self.project_dir = os.path.join(os.getcwd(),"module","model",self.p_id[0])
@@ -36,14 +37,11 @@ class QA_test:
         
 
     def get_p_id(self,p_name):
-        db = pymysql.connect(self.db_information["IP"],self.db_information["user"])
+        db = pymysql.connect(self.db_information["IP"],self.db_information["user"],self.db_information["password"])
+        # db = pymysql.connect(self.db_information["IP"],self.db_information["user"])
         cursor = db.cursor()
         cursor.execute("use socialbot")
-        sql_order = """
-        select p_id
-        from model
-        where p_name = %s
-        """
+        sql_order = "select p_id from model where p_name = %s"
         cursor.execute(sql_order,(p_name))
         p_id = cursor.fetchone()
         return p_id
@@ -54,11 +52,13 @@ class QA_test:
         if len(result.columns) == 9:
             result.columns = ["匹配規則","匹配出題規則","輸入語句","輸入出題","輸入答案","RID","原文斷詞","原文出題","輸入斷詞"]
             result = result[["RID","輸入語句","輸入斷詞","輸入出題","輸入答案","匹配規則","匹配出題規則","原文斷詞","原文出題"]]
+        # result = self.p_id
         return result
         
 
     def read_sql(self):
-        db = pymysql.connect(self.db_information["IP"],self.db_information["user"])
+        db = pymysql.connect(self.db_information["IP"],self.db_information["user"],self.db_information["password"])
+        # db = pymysql.connect(self.db_information["IP"],self.db_information["user"])
         cursor = db.cursor()
         cursor.execute("use socialbot")
         sql_order = "SELECT * from qa_rule where p_id = %s"
@@ -66,7 +66,10 @@ class QA_test:
         db.commit()
         data = cursor.fetchall()
         data = pd.DataFrame(np.array(data))
-        data.columns = ["ID","owner","p_id","原文規則","原文出題規則","原文出題規則答案","原文斷詞","原文出題","原文出題答案"]
+        try:
+            data.columns = ["ID","owner","p_id","原文規則","原文出題規則","原文出題規則答案","原文斷詞","原文出題","原文出題答案"]
+        except:
+            pass
         self.df_origin_article = data
         db.close()
         return data
@@ -283,32 +286,32 @@ class QA_test:
         # data_dir = 'D:\\dektop\\work_data_backup_0923_2256\\rule.csv'#change to sql
         # data_dir = os.path.join(os.getcwd(),'module','QA_data','rule.csv')
         # df_origin_article = pd.read_csv(data_dir)
-        print(self.df_origin_article.head())
+        # print(self.df_origin_article.head())
         for i in range(len(words)):
             segment = words[i]
             flag_list = flags[i]
             ner = ners[i]
             word_cut = self.article_pre(segment,flag_list,ner)
-            print(word_cut)
-            print('---')
+            # print(word_cut)
+            # print('---')
             find_rule_temp = self.find_rule_main(word_cut)
             if find_rule_temp:
-                print('find_rule_temp')
-                print(find_rule_temp)
-                print('---')
+                # print('find_rule_temp')
+                # print(find_rule_temp)
+                # print('---')
                 #find_rule_temp match origin article
                 for i in range(len(find_rule_temp)):
                     id_num = str(int(float(find_rule_temp[i][-1])))
-                    print('id num')
-                    print(id_num)
-                    print(type(id_num))
-                    print('id')
-                    print(self.df_origin_article["ID"].iloc[0])
-                    print(type(self.df_origin_article["ID"].iloc[0]))
+                    # print('id num')
+                    # print(id_num)
+                    # print(type(id_num))
+                    # print('id')
+                    # print(self.df_origin_article["ID"].iloc[0])
+                    # print(type(self.df_origin_article["ID"].iloc[0]))
                     origin_article = self.df_origin_article[self.df_origin_article["ID"] == id_num]
-                    print('origin_article')
-                    print(origin_article.head())
-                    print('---')
+                    # print('origin_article')
+                    # print(origin_article.head())
+                    # print('---')
                     find_rule_temp[i].append(origin_article["原文斷詞"].iloc[0])
                     find_rule_temp[i].append(origin_article["原文出題"].iloc[0])
                     find_rule_temp[i].append(word_cut)
