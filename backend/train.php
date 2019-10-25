@@ -237,7 +237,7 @@
 							<div class="col-lg-12 btm-mg-1">
 								<div class="radius-border project blue-block">
 									<p><label for="inputfile">上傳檔案</label><P>
-									<P><input type="file" id="upload_text" accept=".txt,.csv"></p>
+									<P><input type="file" id="upload_text" accept=".txt,.csv,.docx"></p>
 									<div class="col-md-2 offset-md-10">
 										<button class="btn radius-border train" id="train">開始訓練</button>
 									</div>
