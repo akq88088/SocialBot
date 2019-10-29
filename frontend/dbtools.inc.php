@@ -2,6 +2,7 @@
   function create_connection()
   {
     $link = mysqli_connect("120.125.85.96","socialbot","mcuiii")
+    // $link = mysqli_connect("127.0.0.1","root")
       or die("無法建立資料連接: " . mysqli_connect_error());
 	  
     mysqli_query($link, "SET NAMES utf8");

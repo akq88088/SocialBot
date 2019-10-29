@@ -105,26 +105,30 @@ class QA_train:
     def call_NER(self,text):
         # print(text)
         # NER_class = NER(self.project_dir)
+        word_cut_list = []
         text = text.replace('\r','')
         text = text.replace('\n','')
         text = text.replace(' ','')
         not_success = True
         error_run = 1
-        while not_success:
+        segment,flag_list,ner = self.NER_class.predict_qa_train(text)
+        # while not_success:
+        #     try:
+        #         segment,flag_list,ner = self.NER_class.predict_qa_train(text)
+        #         not_success = False
+        #         # print("out of error_run!")
+        #     except:
+        #         # if error_run % 5 == 0:
+        #             # print("error_run : " + str(error_run))
+        #         error_run += 1
+        for i in range(len(flag_list)):
             try:
-                segment,flag_list,ner = self.NER_class.predict_qa_train(text)
-                not_success = False
-                # print("out of error_run!")
+                word_cut = self.article_pre(segment[i],flag_list[i],ner[i])
             except:
-                # if error_run % 5 == 0:
-                    # print("error_run : " + str(error_run))
-                error_run += 1
-        try:
-            word_cut = self.article_pre(segment,flag_list,ner)
-        except:
-            word_cut = ""
+                word_cut = ""
+            word_cut_list.append(word_cut)
         # print('----')
-        return word_cut
+        return word_cut_list
 
     def read_data_generate_rule_main(self):
         df = self.get_training_data()
@@ -193,20 +197,18 @@ class QA_train:
         return result
 
     def training_data2rule(self,df):
+        # df_ln = len(df)
+        # for i in range(df_ln):
+        #     self.write_rule_progress(i,df_ln)
+        #     sentence = df.iloc[i,0]
+        #     sentence = self.call_NER(sentence)
+        #     df.iloc[i,0] = sentence
+        # df = self.train(df)
         df_ln = len(df)
-        for i in range(df_ln):
-            self.write_rule_progress(i,df_ln)
-            sentence = df.iloc[i,0]
-            sentence = self.call_NER(sentence)
-            df.iloc[i,0] = sentence
+        sentence_list = df.iloc[:,0]
+        sentence_list = self.call_NER(sentence_list)
+        df.iloc[:,0] = sentence_list
         df = self.train(df)
-        # i = 0
-        # while True:
-        #     if i > 3:
-        #         break
-        #     self.write_rule_progress(i,200)
-        #     time.sleep(3)
-        #     i += 1
         return df
 
     def insert_training_data(self,df):
