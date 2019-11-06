@@ -19,7 +19,7 @@ $(document).ready(function(){
 		}
 		$('#TextSum_and_SA').show();
 		$('#QA').show();
-		getNER(text);
+		// getNER(text);
 		getSummary(text, algorithm, percentage);
 		getSentiment(text);
 		getQA_test(text,p_name);
@@ -151,7 +151,7 @@ $(document).ready(function(){
 		});
 	}
 	
-		var save_content = function(email,text,model,project_name,summary,sentiment,QA){
+	var save_content = function(email,text,model,project_name,summary,sentiment,QA){
 
 		$.ajax({
 			method: "POST",
@@ -168,10 +168,10 @@ $(document).ready(function(){
 				"QA" : QA
 			},
 			beforeSend:function(){
-				console.log(123);
+				// console.log(123);
 			},
 			success: function(text){
-				console.log(text);
+				// console.log(text);
 			},
 			complete:function(){
 				// 全部執行完要做什麼
