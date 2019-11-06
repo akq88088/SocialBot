@@ -23,16 +23,19 @@ class TextProcessor():
             
         return stop_words
         
-    def sentence_break(self, text, split_char='!?。！？」"'):
+    def sentence_break(self, text, split_char='!?。！？"'):
         sentences = []
         start = 0
-        for i, char in enumerate(text):
-            if char in split_char:
-                if start == i:
-                    sentences[-1] += text[i]
+        group = 1
+        for end, char in enumerate(text):
+            if char == '「'or char == '」': #「」不斷詞
+                group = group*-1
+            if group > 0 and (char in split_char or (char == '」' and text[end-1] in split_char)):
+                if start == end:
+                    sentences[-1] += text[end]
                 else:
-                    sentences.append(text[start:i+1])
-                start = i + 1
+                    sentences.append(text[start:end+1])
+                start = end+1
                 
         if start < len(text):
             sentences.append(text[start:len(text)])
