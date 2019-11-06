@@ -5,11 +5,12 @@ $(document).ready(function(){
 	const textUploader = document.querySelector('#upload_text');
 	var sum_currAjax = null;
 	var sent_currAjax = null;
+	var p_name = "";
 	$('#analyze').on('click', function(){
 		var text = $('#paste_text').val();
 		var algorithm = $('.btn-group > button.active')[0].id;
 		var percentage = $('.btn-group > button.active')[1].getAttribute("percentage");
-		var p_name = $("#model_select").find(":selected").val()
+		p_name = $("#model_select").find(":selected").val()
 		if(p_name == "請選擇模型"){
 			alert("請選擇模型")
 			return
@@ -19,10 +20,10 @@ $(document).ready(function(){
 		}
 		$('#TextSum_and_SA').show();
 		$('#QA').show();
-		// getNER(text);
 		getSummary(text, algorithm, percentage);
 		getSentiment(text);
-		getQA_test(text,p_name);
+		// getQA_test(text,p_name);
+		
 		var email = $('#email').text();
 		var model = $('#model_select :selected').text();
 		var project_name = $("#project_name").text();
@@ -100,6 +101,8 @@ $(document).ready(function(){
 			success: function(text){
 				$("#summary").val(text);
 				console.log('summary done!');
+				console.log(text)
+				getQA_test(text,p_name)
 			},
 			complete:function(){
 			}
@@ -351,11 +354,12 @@ $(document).ready(function(){
 				});
 				var node = document.getElementsByClassName("alert alert-light radius-border orange-block")[0]
 				node.innerHTML = que_ans_row;
+				console.log('ner done')
 				// 成功回傳後要做甚麼
 			},
 			complete:function(){
 				// 全部執行完要做什麼
-				console.log('ner finish')
+				
 			}
 		});
 	}

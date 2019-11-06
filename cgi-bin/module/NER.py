@@ -83,20 +83,20 @@ class NER():
     
     def predict_qa_test(self, data):
         sentence = self.TextProcessor.sentence_break(data, split_char='!?。！？,，」"')
-
+        # sentence = list(data)
         segment = []
         part_of_speach = []
         result = []
-        for sent in sentence:
-            words, tags = self.TextProcessor.seg_tag(sent, use_stopwords=False)
-            words = words[0]
+        words_list, tags_list = self.TextProcessor.seg_tag(sentence, use_stopwords=False)
+        for i in range(len(words_list)):
+            words = words_list[i]
+            tags = tags_list[i]
 
             sent_len = len(words)
 
-            pos = self.transformer.to_int(tags, self.pos_dict)
+            pos = self.transformer.to_int([tags], self.pos_dict)##
 
             pos_pad = self.transformer.padding(pos, maxlen=self.maxlen, padding='pre')
-            
             try:
                 ner = [np.argmax(i) for i in self.model.predict(pos_pad.reshape(1,self.maxlen))[0]]
             except Exception as e:
@@ -107,7 +107,7 @@ class NER():
             ner = self.transformer.to_ner(ner, self.ner_dict)
             
             segment.append(words)
-            part_of_speach.append(tags[0])
+            part_of_speach.append(tags)
             result.append(ner)
         return segment, part_of_speach, result 
     

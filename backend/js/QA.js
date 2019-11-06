@@ -368,9 +368,10 @@ $(document).ready(function(){
 			beforeSend:function(){
 			},
 			success: function(text){
+				window.location.reload();
 			},
 			complete:function(){
-				window.location.reload();
+				// window.location.reload();
 			}
 		});
 	}
@@ -381,7 +382,8 @@ $(document).ready(function(){
 			async: true, //非同步化
 			// dataType:"json",
 			data: {
-				data:"data"
+				data:"data",
+				"p_name":p_name
 			},
 			beforeSend:function(){
 			},

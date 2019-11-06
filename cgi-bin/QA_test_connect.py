@@ -367,54 +367,53 @@ text_list = [
 parameter = cgi.FieldStorage()
 text = parameter.getvalue('text')
 p_name = parameter.getvalue('p_name')
-# owner = parameter.getvalue('owner')
-# text = "我起來了"
+owner = parameter.getvalue('owner')
+# p_name = "tt"
+# text = "小方喜歡上學"
 QA_test = QA_test(p_name)
 iRun = 0
 insert_id = 0
 result_list = []
 que_ans_dict = {}
-df_result = QA_test.predict(text)
-if df_result.columns == 9:
+df_result = QA_test.predict_rule_scan(text)
+if len(df_result.columns) == 9:
     que_ans_dict = {}
     for i in range(len(df_result)):
         que_ans_dict.update({insert_id:[df_result["輸入出題"][i],df_result["輸入答案"][i]]})
         insert_id += 1
 else:
     que_ans_dict.update({insert_id:["沒有產生問題","沒有產生答案"]})
-# que_ans_dict.update({insert_id:["p_id",df_result]})
+# iRun = 0
+# result_list = []
+# output_list = [4,5,10,12,13,14]
+# for i in range(len(text_list)):
+#     if i in output_list:
+#         with open('article_' + str(i) + '.txt','w',encoding = 'utf_8_sig') as fout:
+#             fout.write(text_list[i])
+# print('finsih')
 # while True:
 #     if iRun >= len(text_list):
 #         break
-#     # print('please input')
-#     # text = input()
+#     # if iRun >= 2:
+#     #     break
 #     text = text_list[iRun]
 #     not_success = True
 #     while not_success:
-#         try:
-#             df_result = QA_test.predict(text)
-#             not_success = False
-#         except:
-#             print('QA test predict error!')
-#             continue
-#     # df_result = QA_test.predict(text)
+#         df_result = QA_test.predict_rule_scan(text)
+#         not_success = False
+#         break
+#         # except:
+#         #     print('QA test predict error!')
+#         #     continue
 #     if len(df_result) > 0:
 #         df_result["n_article"] = iRun
 #         result_list.append(df_result)
-#     # if df_result.columns == 9:
-#     # que_ans_dict = {}
-#     # for i in range(len(df_result)):
-#     #     que_ans_dict.update({insert_id:[df_result["輸入出題"][i],df_result["輸入答案"][i]]})
-#     #     insert_id += 1
-#     #     # print(que_ans_dict)
 #     iRun += 1
-#     # break
-# df = df_result.concat(result_list,axis=0)
-# df.to_csv('QA_one_dragon_1023_1529.csv',index=0,encoding='utf_8_sig')
+
+# df = pd.concat(result_list,axis=0)
+# df.to_csv('QA_one_dragon.csv',index=0,encoding='utf_8_sig')
 #將輸入丟進規則樹
 print("Content-type:text/html") #必須
 print('') #必須
 #print(que_ans_dict)
-# print(que_ans_dict)
-# print(que_ans_dict)
 print(json.dumps(que_ans_dict))

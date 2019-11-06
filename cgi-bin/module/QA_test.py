@@ -34,6 +34,8 @@ class QA_test:
         self.NER_class = NER(self.project_dir)
         self.load_data()
         self.create_root_tree()
+        self.df_rule_scan = []
+        self.create_rule_scan()
         
 
     def get_p_id(self,p_name):
@@ -50,11 +52,20 @@ class QA_test:
         result = self.call_NER(text)
         result = pd.DataFrame(np.array(result))
         if len(result.columns) == 9:
-            result.columns = ["匹配規則","匹配出題規則","輸入語句","輸入出題","輸入答案","RID","原文斷詞","原文出題","輸入斷詞"]
-            result = result[["RID","輸入語句","輸入斷詞","輸入出題","輸入答案","匹配規則","匹配出題規則","原文斷詞","原文出題"]]
+            result.columns = ["匹配規則","匹配出題規則","匹配出題規則答案","輸入語句","輸入出題","輸入答案","RID","原文斷詞","原文出題","輸入斷詞"]
+            result = result[["RID","輸入語句","輸入斷詞","輸入出題","輸入答案","匹配規則","匹配出題規則","匹配出題規則答案","原文斷詞","原文出題"]]
         # result = self.p_id
         return result
+    
+    def predict_rule_scan(self,text):
+        result = self.call_NER_rule_scan(text)
+        result = pd.DataFrame(np.array(result))
         
+        if len(result.columns) == 10:
+            result.columns = ["匹配規則","匹配出題規則","匹配出題規則答案","輸入語句","輸入出題","輸入答案","RID","原文斷詞","原文出題","輸入斷詞"]
+            result = result[["RID","輸入語句","輸入斷詞","輸入出題","輸入答案","匹配規則","匹配出題規則","匹配出題規則答案","原文斷詞","原文出題"]]
+        # result = self.p_id
+        return result
 
     def read_sql(self):
         db = pymysql.connect(self.db_information["IP"],self.db_information["user"],self.db_information["password"])
@@ -106,6 +117,35 @@ class QA_test:
                 self.root_list.append(root)
             root = self.insert(root,rule,1,transfer)
 
+    def create_rule_scan(self):
+        df = self.read_sql()
+        rule_scan = []
+        rule_head = []
+        for i in range(len(df)):
+            if df["原文規則"][i] != df["原文規則"][i]:
+                continue
+            if df["原文出題規則"][i] != df["原文出題規則"][i]:
+                continue
+            if df["原文出題規則答案"][i] != df["原文出題規則答案"][i]:
+                continue
+            rule = df["原文規則"][i]
+            transfer = df["原文出題規則"][i]
+            ans = df["原文出題規則答案"][i]
+            rule = rule.split('+')
+            for j in range(len(rule)):
+                rule[j] = rule[j].lstrip().rstrip()
+            transfer = transfer.split("+")
+            for j in range(len(transfer)):
+                transfer[j] = transfer[j].lstrip().rstrip()
+            rule_head.append(rule[0])
+            rule_scan.append([df["ID"][i],rule,transfer,ans])
+        self.df_rule_scan = pd.DataFrame(np.array(rule_scan))
+        self.df_rule_scan["rule_head"] = rule_head
+        try:
+            self.df_rule_scan.columns = ["ID","原文規則","原文出題規則","原文出題規則答案","rule_head"]
+        except:
+            pass
+        
     def load_data(self,boson_remain = 'boson_remain.txt',boson_simpler='boson_simpler.txt',que_remain='que_remain_long_test.txt'):
         with open(os.path.join(self.data_dir,que_remain),'r',encoding='utf8') as fin:
             for row in fin:
@@ -156,7 +196,142 @@ class QA_test:
             return False
         else:
             return True
+
+    def lcs(self,s1,s2):
+        m = [[0 for i in range(len(s2) + 1)] for j in range(len(s1) + 1)]  # 生成0矩陣，爲方便後續計算，比字符串長度多了一列
+        mmax = 0  # 最長匹配的長度
+        p = 0  # 最長匹配對應在s1中的最後一位
+        for i in range(len(s1)):
+            for j in range(len(s2)):
+                if s1[i] == s2[j]: # 如果相等，則加入現有的公共子串
+                    m[i + 1][j + 1] = m[i][j] + 1
+                    if m[i + 1][j + 1] > mmax:
+                        mmax = m[i + 1][j + 1]
+                        p = i + 1
+        return s1[p - mmax:p], mmax  # 返回最長子串及其長度
+
+    def rule_scan_match(self,rule,rule_find):
+        a = rule
+        b = rule_find
+        sub_s,sub_s_ln = self.lcs(a,b)
+        # if sub_s_ln / len(a) > 0.8 and sub_s_ln / len(b) > 0.8:
+        #     return True
+        # else:
+        #     return False
+        if sub_s_ln == len(a) and sub_s_ln / len(b) > 0.8:
+            return True
+        else:
+            return False
     
+    def rule2list(self,data):
+        data = data.split("+")
+        for i in range(len(data)):
+            data[i] = data[i].lstrip().rstrip()
+        return data
+
+    def word_cut2word_flag_list(self,word_cut):
+        temp = word_cut.split(" ")
+        word_list = []
+        flag_list = []
+        for i in range(len(temp)):
+            try:
+                word,flag = temp[i].split('_')
+            except:
+                continue
+            word = word.lstrip().rstrip()
+            flag = flag.lstrip().rstrip()
+            word_list.append(word)
+            flag_list.append(flag)
+        return word_list,flag_list
+
+    def change_sentence_for_rule_change(self,df_change):
+        #根據規則與問題轉換規則來產生問題
+        for i in range(len(df_change)):
+            rule = self.rule2list(df_change["原文規則"].iloc[i])
+            transfer = self.rule2list(df_change["原文出題規則"].iloc[i])
+            ans = df_change["原文出題規則答案"].iloc[i]
+            word_list,flag_list = self.word_cut2word_flag_list(df_change["原文斷詞"].iloc[i])
+            bool_list = []
+            for j in range(len(flag_list)):
+                bool_list.append(True)
+            aft_transfer = ''
+            for f in transfer:
+                if f in self.que_remain_list:
+                    aft_transfer += f
+                    continue
+                for k in range(len(flag_list)):
+                    if flag_list[k] == f and bool_list[k]:
+                        aft_transfer += word_list[k]
+                        bool_list[k] = False
+                        break
+                for k in range(len(flag_list)):
+                    if flag_list[k] == ans:
+                        ans = word_list[k]
+                        break
+            if ans == df_change["原文出題規則答案"].iloc[i]:
+                continue
+            df_change["原文出題"].iloc[i] = aft_transfer
+        return df_change 
+                
+        
+
+    def rule_scan_main(self,data):
+        data = data.split(' ')
+        word_list = []
+        flag_list = []
+        df_return = []
+        for i in range(len(data)):
+            data[i] = data[i].split('_')
+            try:
+                word = data[i][0]
+                flag = data[i][1]
+            except:
+                continue
+            word_list.append(word)
+            flag_list.append(flag)
+        df_rule_find = self.df_rule_scan[self.df_rule_scan["rule_head"] == flag_list[0]]
+        for i in range(len(df_rule_find)):
+            rule = df_rule_find["原文規則"].iloc[i]
+            if self.rule_scan_match(flag_list,rule):
+                # print("rule match!")
+                # print(rule)
+                #根據規則與問題轉換規則來產生問題
+                transfer = df_rule_find["原文出題規則"].iloc[i]
+                ans = df_rule_find["原文出題規則答案"].iloc[i]
+                # print(transfer)
+                # print(ans)
+                id_num = df_rule_find["ID"].iloc[i]
+                df = []
+                df.append(' + '.join(rule))
+                bool_list = []
+                for j in range(len(flag_list)):
+                    bool_list.append(True)
+                aft_transfer = ''
+                for f in transfer:
+                    if f in self.que_remain_list:
+                        aft_transfer += f
+                        continue
+                    for k in range(len(flag_list)):
+                        if flag_list[k] == f and bool_list[k]:
+                            aft_transfer += word_list[k]
+                            bool_list[k] = False
+                            break
+                    for k in range(len(flag_list)):
+                        if flag_list[k] == ans:
+                            ans = word_list[k]
+                            break
+                if ans == df_rule_find["原文出題規則答案"].iloc[i]:
+                    continue
+                df.append(' + '.join(transfer))
+                df.append(df_rule_find["原文出題規則答案"].iloc[i])
+                df.append(''.join(word_list))
+                df.append(aft_transfer)
+                df.append(ans)
+                df.append(id_num)
+                if len(df) == 7:
+                    df_return.append(df)
+        return df_return
+        
     def find_rule_main(self,data):#change to match multiy rule
         global all_transfer
         data = data.split(' ')
@@ -182,6 +357,7 @@ class QA_test:
                 if all_transfer:
                     # print('in all transfer!')
                     all_transfer = list(set(all_transfer))
+                    # print(all_transfer)
                     for rule in all_transfer:
                         df = []
                         df.append(' + '.join(flag_list))
@@ -267,6 +443,37 @@ class QA_test:
             article_list.append(flag)
         return result,article_list
 
+    def call_NER_rule_scan(self,text):
+        text = text.replace('\r','')
+        text = text.replace('\n','')
+        text = text.replace(' ','')
+        t0 = time.time()
+        words,flags,ners = self.NER_class.predict_qa_test(text)
+        df_result = []
+        for i in range(len(words)):
+            segment = words[i]
+            flag_list = flags[i]
+            ner = ners[i]
+            try:
+                word_cut = self.article_pre(segment,flag_list,ner)
+            except:
+                word_cut = ""
+            if len(word_cut) < 1:
+                continue
+            # print('word_cut : ' + word_cut)
+            rule_scan_temp = self.rule_scan_main(word_cut)
+            if rule_scan_temp:
+                for j in range(len(rule_scan_temp)):
+                    id_num = str(int(float(rule_scan_temp[j][-1])))
+                    origin_article = self.df_origin_article[self.df_origin_article["ID"] == id_num]
+                    rule_scan_temp[j].append(origin_article["原文斷詞"].iloc[0])
+                    rule_scan_temp[j].append(origin_article["原文出題"].iloc[0])
+                    rule_scan_temp[j].append(word_cut)
+                df_result.extend(rule_scan_temp)    
+
+                #----
+        return df_result
+
     def call_NER(self,text):
         # NER_class = NER()
         text = text.replace('\r','')
@@ -291,7 +498,10 @@ class QA_test:
             segment = words[i]
             flag_list = flags[i]
             ner = ners[i]
-            word_cut = self.article_pre(segment,flag_list,ner)
+            try:
+                word_cut = self.article_pre(segment,flag_list,ner)
+            except:
+                word_cut = ""
             # print(word_cut)
             # print('---')
             find_rule_temp = self.find_rule_main(word_cut)

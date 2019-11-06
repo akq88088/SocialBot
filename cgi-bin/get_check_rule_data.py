@@ -8,8 +8,9 @@ import json
 from module.QA_train import QA_train
 parameter = cgi.FieldStorage()
 data = parameter.getvalue('data')
+p_name = parameter.getvalue('p_name')
 result_dict = {}
-QA_train = QA_train("","")
+QA_train = QA_train("",p_name)
 article_remain,que_remain,flag_que_remain_dict,boson_flag = QA_train.get_rule_check_data()
 result_dict.update({"article_remain":article_remain,"que_remain":que_remain,"flag_que_remain_dict":flag_que_remain_dict,"boson_flag":boson_flag})
 # result_dict.update({"article_remain":article_remain})

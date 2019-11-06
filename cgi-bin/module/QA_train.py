@@ -5,6 +5,7 @@ import math
 from module.NER import NER
 import pymysql
 import time
+from module.QA_test import QA_test
 class QA_train:
 
     class pair:
@@ -32,6 +33,8 @@ class QA_train:
         except:
             self.project_dir = ""
         self.NER_class = NER(self.project_dir)
+        self.QA_test = QA_test(p_name)
+
     def get_p_id(self,p_name):
         db = pymysql.connect(self.db_information["IP"],self.db_information["user"],self.db_information["password"])
         # db = pymysql.connect(self.db_information["IP"],self.db_information["user"])
@@ -96,6 +99,7 @@ class QA_train:
         df = pd.DataFrame(np.array(result))
         # print(df.head(10))
         df = self.set_columns(df)
+        df = df.drop_duplicates(["原文規則","原文出題規則"])
         return df
     
     def save_sql(self,data):
@@ -133,7 +137,7 @@ class QA_train:
     def read_data_generate_rule_main(self):
         df = self.get_training_data()
         df = self.training_data2rule(df)
-        self.delete_qa_rule()
+        self.delete_qa_rule()#maybe remove?
         self.insert_rule(df)
         # self.training_data2rule("")
 
@@ -243,9 +247,9 @@ class QA_train:
         # db = pymysql.connect(self.db_information["IP"],self.db_information["user"])
         cursor = db.cursor()
         cursor.execute("use socialbot")
-        sql_order = "UPDATE qa_rule SET 原文出題規則 = %s,原文出題規則答案 = %s  WHERE ID = %s AND owner = %s AND p_id = %s"
+        sql_order = "UPDATE qa_rule SET 原文出題規則 = %s,原文出題規則答案 = %s,原文出題 = %s,原文出題答案 = %s WHERE ID = %s AND owner = %s AND p_id = %s"
         for i in range(len(df)):
-            cursor.execute(sql_order,(df["原文出題規則"].iloc[i],df["原文出題規則答案"].iloc[i],int(df["ID"].iloc[i]),self.owner,self.p_id))
+            cursor.execute(sql_order,(df["原文出題規則"].iloc[i],df["原文出題規則答案"].iloc[i],df["原文出題"].iloc[i],df["原文出題答案"].iloc[i],int(df["ID"].iloc[i]),self.owner,self.p_id))
         db.commit()
     
     def remove_rule(self,df):
@@ -266,6 +270,9 @@ class QA_train:
         df_change = data[data["datatype"] == "change"]
         df_remove = data[data["datatype"] == "remove"]
         
+        df_change = self.QA_test.change_sentence_for_rule_change(df_change)
+        # df_change.to_csv("df_change.csv",encoding='utf_8_sig',index=0)
+        
         if not df_insert.empty:
             self.insert_rule(df_insert)
         
@@ -274,6 +281,7 @@ class QA_train:
         
         if not df_remove.empty:
             self.remove_rule(df_remove)
+        
 
     def get_rule_check_data(self):
         return self.article_remain_list,self.que_remain_list,self.flag_que_remain_dict,self.boson_flag_list
