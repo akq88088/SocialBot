@@ -100,8 +100,6 @@ $(document).ready(function(){
 			},
 			success: function(text){
 				$("#summary").val(text);
-				console.log('summary done!');
-				console.log(text)
 				getQA_test(text,p_name)
 			},
 			complete:function(){
@@ -299,8 +297,6 @@ $(document).ready(function(){
 				//$("#summary").val("出題中...");
 			},
 			success: function(data){
-				console.log('ner success');
-				console.log(data);
 				var que_ans_dict = JSON.parse(data);
 				var que_ans_row = "";
 				var iRun = 0;

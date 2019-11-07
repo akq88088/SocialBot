@@ -218,7 +218,11 @@ class QA_test:
         #     return True
         # else:
         #     return False
-        if sub_s_ln == len(a) and sub_s_ln / len(b) > 0.8:
+        # if sub_s_ln == len(a) and sub_s_ln / len(b) > 0.8:
+        #     return True
+        # else:
+        #     return False
+        if sub_s == a and sub_s == b:
             return True
         else:
             return False
