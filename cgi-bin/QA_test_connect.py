@@ -378,7 +378,7 @@ def txt2text_list(data_dir='C:\\Users\\student\\Desktop\\泰北課文txt'):
         with open(txt,'r',encoding='utf_8_sig') as fin:
             result_list.append(fin.read())
     return result_list
-text_list = txt2text_list()
+# text_list = txt2text_list()
 parameter = cgi.FieldStorage()
 text = parameter.getvalue('text')
 p_name = parameter.getvalue('p_name')
