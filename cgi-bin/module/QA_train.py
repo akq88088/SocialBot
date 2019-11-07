@@ -137,7 +137,7 @@ class QA_train:
     def read_data_generate_rule_main(self):
         df = self.get_training_data()
         df = self.training_data2rule(df)
-        # self.delete_qa_rule()#maybe remove?
+        self.delete_qa_rule()#maybe remove?
         self.insert_rule(df)
         # self.training_data2rule("")
 
