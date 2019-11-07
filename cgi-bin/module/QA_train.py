@@ -24,8 +24,8 @@ class QA_train:
         self.boson_remain_list = []
         self.boson_flag_list = []
         self.load_data()
-        self.db_information = {"IP":"localhost","user":"root","password":"","db":""}
-        # self.db_information = {"IP":"120.125.85.96","user":"socialbot","password":"mcuiii","db":""}
+        # self.db_information = {"IP":"localhost","user":"root","password":"","db":""}
+        self.db_information = {"IP":"120.125.85.96","user":"socialbot","password":"mcuiii","db":""}
         self.owner = owner
         self.p_id = self.get_p_id(p_name)
         try:
