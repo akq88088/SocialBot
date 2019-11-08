@@ -98,8 +98,8 @@
 									<p><label for="inputfile">上傳檔案</label><P>
 									<P><input type="file" id="QA_file"></p>
 									<div class="col-md-2 offset-md-10">
-										<button class="btn radius-border" id="submit">開始訓練</button>
-										<button class="btn radius-border" id="rule">產生規則</button>
+										<button class="btn radius-border train" id="submit">開始訓練</button><br><br>
+										<button class="btn radius-border train" id="rule">產生規則</button>
 									</div>
 								</div>
 							</div>
@@ -109,7 +109,7 @@
 						<h6 class="my-4">出 題 規 則</h6>
 						<div class="row">
 							<div class="col-lg-12 btm-mg-1">
-								<div class="alert alert-light radius-border project yellow-block">
+								<div class="alert alert-light radius-border project yellow-block" style="height:550px;overflow-y:auto" >
 								<?php
 				
 									//表格內容
