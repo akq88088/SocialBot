@@ -137,12 +137,14 @@ class QA_train:
     def read_data_generate_rule_main(self):
         df = self.get_training_data()
         df = self.training_data2rule(df)
-        self.delete_qa_rule()#maybe remove?
+        df = df.dropna(subset=["原文規則","原文出題規則"])
+        # df.to_csv("D:\\dektop\\QA_test_demo\\rule.csv",index=0,encoding='utf_8_sig')
+        self.remove_qa_rule()#maybe remove?
         self.insert_rule(df)
         # self.training_data2rule("")
 
 
-    def delete_qa_rule(self):
+    def remove_qa_rule(self):
         db = pymysql.connect(self.db_information["IP"],self.db_information["user"],self.db_information["password"])
         # db = pymysql.connect(self.db_information["IP"],self.db_information["user"])
         cursor = db.cursor()
@@ -260,6 +262,15 @@ class QA_train:
         sql_order = "delete from QA_rule where ID = %s and owner = %s and p_id = %s;"
         for i in range(len(df)):
             cursor.execute(sql_order,(int(df["ID"].iloc[i]),self.owner,self.p_id))
+        db.commit()
+
+    def remove_qa_training(self):
+        db = pymysql.connect(self.db_information["IP"],self.db_information["user"],self.db_information["password"])
+        # db = pymysql.connect(self.db_information["IP"],self.db_information["user"])
+        cursor = db.cursor()
+        cursor.execute("use socialbot")
+        sql_order = "delete from QA_training where p_id = %s;"
+        cursor.execute(sql_order,(self.p_id))
         db.commit()
 
     def QA_train_main(self,data):

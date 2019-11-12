@@ -30,6 +30,30 @@ $(document).ready(function(){
 	$("#submit").on('click',function() {
 		QA_upload(content);
 	});
+	var load_check_rule_data = function(){
+		$.ajax({
+			method: "POST",
+			url: "../cgi-bin/get_check_rule_data.py",
+			async: true, //非同步化
+			// dataType:"json",
+			data: {
+				data:"data",
+				"p_name":p_name
+			},
+			beforeSend:function(){
+			},
+			success: function(t){
+				var data = JSON.parse(t)
+				article_remain = data['article_remain']
+				que_remain = data['que_remain']
+				flag_que_remain_dict = data['flag_que_remain_dict']
+				boson_flag = data['boson_flag']
+			},
+			complete:function(){
+			}
+		});
+	}
+	load_check_rule_data();//改放到前面?
 	var QA_upload = function(data){
 		$.ajax({
 			method: "POST",
@@ -375,30 +399,56 @@ $(document).ready(function(){
 			}
 		});
 	}
-	var load_check_rule_data = function(){
+	$("#remove_qa_training").on('click',function() {
+		remove_qa_training(owner,p_name)
+	});
+	var remove_qa_training = function(owner,p_name){
 		$.ajax({
 			method: "POST",
-			url: "../cgi-bin/get_check_rule_data.py",
+			url: "../cgi-bin/QA_remove_qa_training.py",
 			async: true, //非同步化
 			// dataType:"json",
 			data: {
-				data:"data",
-				"p_name":p_name
+				"owner" : owner,
+				"p_name" : p_name
 			},
 			beforeSend:function(){
 			},
-			success: function(t){
-				var data = JSON.parse(t)
-				article_remain = data['article_remain']
-				que_remain = data['que_remain']
-				flag_que_remain_dict = data['flag_que_remain_dict']
-				boson_flag = data['boson_flag']
+			success: function(text){
+				alert("訓練資料刪除完成!")
+				window.location.reload();
 			},
 			complete:function(){
+				
+				// console.log("rule generate complete")
 			}
 		});
 	}
-	load_check_rule_data();
+	$("#remove_qa_rule").on('click',function() {
+		remove_qa_rule(owner,p_name)
+	});
+	var remove_qa_rule = function(owner,p_name){
+		$.ajax({
+			method: "POST",
+			url: "../cgi-bin/QA_remove_qa_rule.py",
+			async: true, //非同步化
+			// dataType:"json",
+			data: {
+				"owner" : owner,
+				"p_name" : p_name
+			},
+			beforeSend:function(){
+			},
+			success: function(text){
+				alert("規則刪除完成!")
+				window.location.reload();
+			},
+			complete:function(){
+				
+				// console.log("rule generate complete")
+			}
+		});
+	}
 });
 function test(temp)
 {

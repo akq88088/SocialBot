@@ -99,7 +99,9 @@
 									<P><input type="file" id="QA_file"></p>
 									<div class="col-md-2 offset-md-10">
 										<button class="btn radius-border train" id="submit">開始訓練</button><br><br>
-										<button class="btn radius-border train" id="rule">產生規則</button>
+										<button class="btn radius-border train" id="rule">產生規則</button><br><br>
+										<button class="btn radius-border train" id="remove_qa_training">刪除訓練資料</button><br><br>
+										<button class="btn radius-border train" id="remove_qa_rule">刪除規則</button>
 									</div>
 								</div>
 							</div>

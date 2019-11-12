@@ -371,65 +371,65 @@ def getSummary(text,algorithm="textsim",percentage=0.4):
     Summary = algoritm_dic[algorithm]
     return " ".join(Summary.summary(text, compression_ratio=percentage))
 
-def txt2text_list(data_dir='C:\\Users\\student\\Desktop\\泰北課文txt'):
+def txt2text_list(data_dir='D:\\dektop\\QA_test_demo\\泰北課文'):
     result_list = []
     text_list = glob.glob(os.path.join(data_dir,'*.txt'))
     for txt in text_list:
         with open(txt,'r',encoding='utf_8_sig') as fin:
             result_list.append(fin.read())
     return result_list
-# text_list = txt2text_list()
-parameter = cgi.FieldStorage()
-text = parameter.getvalue('text')
-p_name = parameter.getvalue('p_name')
-owner = parameter.getvalue('owner')
-# p_name = "tt"
+
+# parameter = cgi.FieldStorage()
+# text = parameter.getvalue('text')
+# p_name = parameter.getvalue('p_name')
+# owner = parameter.getvalue('owner')
+p_name = "tt"
 QA_test = QA_test(p_name)
 
 
-iRun = 0
-insert_id = 0
-result_list = []
-que_ans_dict = {}
-df_result = QA_test.predict_rule_scan(text)
-if len(df_result.columns) == 10:
-    que_ans_dict = {}
-    for i in range(len(df_result)):
-        que_ans_dict.update({insert_id:[df_result["輸入出題"][i],df_result["輸入答案"][i]]})
-        insert_id += 1
-else:
-    que_ans_dict.update({insert_id:["沒有產生問題","沒有產生答案"]})
-print("Content-type:text/html") #必須
-print('') #必須
-print(json.dumps(que_ans_dict))
-
 # iRun = 0
+# insert_id = 0
 # result_list = []
-# while True:
-#     if iRun >= len(text_list):
-#         break
-#     # if iRun >= 2:
-#     #     break
-#     print(iRun)
-#     # text = text_list[iRun]
-#     # text = getSummary(text)
-#     not_success = True
-#     while not_success:
-#         try:
-#             text = text_list[iRun]
-#             text = getSummary(text)
-#             df_result = QA_test.predict_rule_scan(text)
-#             not_success = False
-#         # break
-#         except:
-#             print('QA test predict error!')
-#             continue
-#     if len(df_result) > 0:
-#         df_result["n_article"] = text
-#         result_list.append(df_result)
-#     iRun += 1
+# que_ans_dict = {}
+# df_result = QA_test.predict_rule_scan(text)
+# if len(df_result.columns) == 10:
+#     que_ans_dict = {}
+#     for i in range(len(df_result)):
+#         que_ans_dict.update({insert_id:[df_result["輸入出題"][i],df_result["輸入答案"][i]]})
+#         insert_id += 1
+# else:
+#     que_ans_dict.update({insert_id:["沒有產生問題","沒有產生答案"]})
+# print("Content-type:text/html") #必須
+# print('') #必須
+# print(json.dumps(que_ans_dict))
+# text_list = txt2text_list()
+iRun = 0
+result_list = []
+while True:
+    if iRun >= len(text_list):
+        break
+    # if iRun >= 2:
+    #     break
+    print(iRun)
+    # text = text_list[iRun]
+    # text = getSummary(text)
+    not_success = True
+    while not_success:
+        try:
+            text = text_list[iRun]
+            text = getSummary(text)
+            df_result = QA_test.predict_rule_scan(text)
+            not_success = False
+        # break
+        except:
+            print('QA test predict error!')
+            continue
+    if len(df_result) > 0:
+        df_result["n_article"] = text
+        result_list.append(df_result)
+    iRun += 1
 
-# df = pd.concat(result_list,axis=0)
-# df.to_csv('QA_泰北_summary.csv',index=0,encoding='utf_8_sig')
-# 將輸入丟進規則樹
+df = pd.concat(result_list,axis=0)
+df.to_csv(os.path.join('D:\\dektop\\QA_test_demo','QA_翰林_all.csv'),index=0,encoding='utf_8_sig')
+print('finish')
 

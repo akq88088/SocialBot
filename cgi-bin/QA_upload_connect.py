@@ -10,7 +10,7 @@ from module.QA_train import QA_train
 def text2df(data,owner):
     sentence_list = data.split('\n')
     result = []
-    for i in range(len(sentence_list)):
+    for i in range(1,len(sentence_list)):
         temp = sentence_list[i].split(',')
         for j in range(len(temp)):
             temp[j] = temp[j].lstrip().rstrip()
