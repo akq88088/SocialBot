@@ -80,9 +80,16 @@ class NER():
             result.append(ner)
 
         return segment, part_of_speach, result 
-    
+
+    def select_two_sentence(self,sentence):
+        result = sentence[:]
+        for i in range(len(sentence) - 1):
+            result.append(sentence[i] + sentence[i + 1])
+        return result
+
     def predict_qa_test(self, data):
         sentence = self.TextProcessor.sentence_break(data, split_char='!?。！？,，」"')
+        # sentence = self.select_two_sentence(sentence)
         # sentence = list(data)
         segment = []
         part_of_speach = []

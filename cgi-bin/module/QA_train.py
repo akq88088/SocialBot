@@ -15,7 +15,7 @@ class QA_train:
 
     def __init__(self,owner,p_name):
         self.add_remain_dict = {}
-        self.ner_eng_ch_dict = {'per':'人','obj':'物','time':'時','place':'地'}
+        self.ner_eng_ch_dict = {'per':'人','obj':'物','time':'時','place':'地','人':'per','物':'obj','時':'time','地':'place'}
         self.article_remain_list = []
         self.que_remain_list = []
         self.flag_que_remain_dict = {}
@@ -23,6 +23,7 @@ class QA_train:
         self.data_dir = os.path.join('module','QA_data')
         self.boson_remain_list = []
         self.boson_flag_list = []
+        self.remain_transfer_dict = {}
         self.load_data()
         # self.db_information = {"IP":"localhost","user":"root","password":"","db":""}
         self.db_information = {"IP":"120.125.85.96","user":"socialbot","password":"mcuiii","db":""}
@@ -80,7 +81,10 @@ class QA_train:
             article,article_flag_list = self.p_flag_sort(article)
             ori_article = ' '.join(article)
             article_aft = ' + '.join(article_flag_list)
-            que = self.word_cut(article,que)
+            try:
+                que = self.word_cut(article,que)
+            except:
+                continue
             word_in_que_remain = self.check_que_remain(que)
             if not word_in_que_remain:
                 que,err = self.add_remain_word(article_flag_list,que)
@@ -106,6 +110,18 @@ class QA_train:
         df = pd.DataFrame(np.array(data))
         df.to_csv('D:\\dektop\\work_data_backup_0923_2256\\rule.csv',encoding='utf_8_sig')
 
+    def remain_transfer(self,segment,ner):
+        for i in range(len(segment)):
+            for j in range(len(segment[i])):
+                temp = self.remain_transfer_dict.get(segment[i][j])
+                temp = self.ner_eng_ch_dict.get(temp)
+                if temp != None:
+                    try:
+                        ner[i][j] = temp
+                    except:
+                        pass
+        return segment,ner
+
     def call_NER(self,text):
         # print(text)
         # NER_class = NER(self.project_dir)
@@ -116,6 +132,7 @@ class QA_train:
         not_success = True
         error_run = 1
         segment,flag_list,ner = self.NER_class.predict_qa_train(text)
+        segment,ner = self.remain_transfer(segment,ner)
         # while not_success:
         #     try:
         #         segment,flag_list,ner = self.NER_class.predict_qa_train(text)
@@ -297,7 +314,7 @@ class QA_train:
     def get_rule_check_data(self):
         return self.article_remain_list,self.que_remain_list,self.flag_que_remain_dict,self.boson_flag_list
 
-    def load_data(self,add_remain = '',article_remain = 'article_remain_test.txt',que_remain = 'que_remain_long_test.txt',flag_que_remain = 'flag_que_remain_dict_test.txt',boson_remain = 'boson_remain.txt',boson_flag = 'boson_flag.txt'):
+    def load_data(self,add_remain = '',article_remain = 'article_remain_test.txt',que_remain = 'que_remain_long_test.txt',flag_que_remain = 'flag_que_remain_dict_test.txt',boson_remain = 'boson_remain.txt',boson_flag = 'boson_flag.txt',remain_transfer = 'remain_transfer_dict.txt'):
         self.add_remain_dict = {'人':'誰','事':'什麼','物':'什麼','地':'哪裡','時':'何時'}
         with open(os.path.join(self.data_dir,article_remain),'r',encoding='utf8') as fin:
             for row in fin:
@@ -340,6 +357,23 @@ class QA_train:
                     continue
                 row = row.lstrip().rstrip()
                 self.boson_flag_list.append(row)
+        
+        with open(os.path.join(self.data_dir,remain_transfer),'r',encoding='utf8') as fin:
+            bFR = True
+            for row in fin:
+                if bFR:
+                    bFR = False
+                    continue
+                row = row.lstrip().rstrip()
+                try:
+                    temp = row.split(' ')
+                    a,b = temp[0],temp[1]
+                except:
+                    continue
+                
+                a = a.lstrip().rstrip()
+                b = b.lstrip().rstrip()
+                self.remain_transfer_dict.update({a:b})
                 
     def word_cut(self,article,s):#article = [大自然_人1,會_v1,說話_v2] s = '誰會說話' output = [pair,pair]
         all_word = []
