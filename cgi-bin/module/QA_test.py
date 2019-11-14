@@ -21,12 +21,13 @@ class QA_test:
         self.boson_simpler_dict = {}
         self.que_remain_list = []
         self.sql_columns_list = []
-        self.ner_eng_ch_dict = {'per':'人','obj':'物','time':'時','place':'地'}
+        self.ner_eng_ch_dict = {'per':'人','obj':'物','time':'時','place':'地','人':'per','物':'obj','時':'time','地':'place'}
         self.root_list = []
         self.data_dir = os.path.join('module','QA_data')
         # self.db_information = {"IP":"localhost","user":"root","password":"","db":""}
         self.db_information = {"IP":"120.125.85.96","user":"socialbot","password":"mcuiii","db":""}
         self.p_id = self.get_p_id(p_name)[0]
+        self.remain_transfer_dict = {}
         try:
             self.project_dir = os.path.join(os.getcwd(),"module","model",self.p_id[0])
         except:
@@ -146,7 +147,7 @@ class QA_test:
         except:
             pass
         
-    def load_data(self,boson_remain = 'boson_remain.txt',boson_simpler='boson_simpler.txt',que_remain='que_remain_long_test.txt'):
+    def load_data(self,boson_remain = 'boson_remain.txt',boson_simpler='boson_simpler.txt',que_remain='que_remain_long_test.txt',remain_transfer='remain_transfer_dict.txt'):
         with open(os.path.join(self.data_dir,que_remain),'r',encoding='utf8') as fin:
             for row in fin:
                 row = row.lstrip().rstrip()
@@ -161,6 +162,23 @@ class QA_test:
                     continue
                 row = row.lstrip().rstrip()
                 self.boson_remain_list.append(row)
+
+        with open(os.path.join(self.data_dir,remain_transfer),'r',encoding='utf8') as fin:
+            bFR = True
+            for row in fin:
+                if bFR:
+                    bFR = False
+                    continue
+                row = row.lstrip().rstrip()
+                try:
+                    temp = row.split(' ')
+                    a,b = temp[0],temp[1]
+                except:
+                    continue
+                
+                a = a.lstrip().rstrip()
+                b = b.lstrip().rstrip()
+                self.remain_transfer_dict.update({a:b})
 
         self.read_sql()
     
@@ -447,12 +465,25 @@ class QA_test:
             article_list.append(flag)
         return result,article_list
 
+    def remain_transfer(self,segment,ner):
+        for i in range(len(segment)):
+            for j in range(len(segment[i])):
+                temp = self.remain_transfer_dict.get(segment[i][j])
+                temp = self.ner_eng_ch_dict.get(temp)
+                if temp != None:
+                    try:
+                        ner[i][j] = temp
+                    except:
+                        pass
+        return segment,ner
+
     def call_NER_rule_scan(self,text):
         text = text.replace('\r','')
         text = text.replace('\n','')
         text = text.replace(' ','')
         t0 = time.time()
         words,flags,ners = self.NER_class.predict_qa_test(text)
+        words,ners = self.remain_transfer(words,ners)
         df_result = []
         for i in range(len(words)):
             segment = words[i]

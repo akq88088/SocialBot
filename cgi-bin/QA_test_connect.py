@@ -371,19 +371,19 @@ def getSummary(text,algorithm="textsim",percentage=0.4):
     Summary = algoritm_dic[algorithm]
     return " ".join(Summary.summary(text, compression_ratio=percentage))
 
-def txt2text_list(data_dir='C:\\Users\\student\\Desktop\\泰北課文txt'):
+def txt2text_list(data_dir='D:\\dektop\\QA_test_demo\\泰北課文'):
     result_list = []
     text_list = glob.glob(os.path.join(data_dir,'*.txt'))
     for txt in text_list:
         with open(txt,'r',encoding='utf_8_sig') as fin:
             result_list.append(fin.read())
     return result_list
-# text_list = txt2text_list()
+
 parameter = cgi.FieldStorage()
 text = parameter.getvalue('text')
 p_name = parameter.getvalue('p_name')
+# p_name = "tt2"
 owner = parameter.getvalue('owner')
-# p_name = "tt"
 QA_test = QA_test(p_name)
 
 
@@ -402,7 +402,7 @@ else:
 print("Content-type:text/html") #必須
 print('') #必須
 print(json.dumps(que_ans_dict))
-
+# text_list = txt2text_list()
 # iRun = 0
 # result_list = []
 # while True:
@@ -413,6 +413,7 @@ print(json.dumps(que_ans_dict))
 #     print(iRun)
 #     # text = text_list[iRun]
 #     # text = getSummary(text)
+#     # df_result = QA_test.predict_rule_scan(text)
 #     not_success = True
 #     while not_success:
 #         try:
@@ -430,6 +431,6 @@ print(json.dumps(que_ans_dict))
 #     iRun += 1
 
 # df = pd.concat(result_list,axis=0)
-# df.to_csv('QA_泰北_summary.csv',index=0,encoding='utf_8_sig')
-# 將輸入丟進規則樹
+# df.to_csv(os.path.join('D:\\dektop\\QA_test_demo','QA_泰北_remain_transfer.csv'),index=0,encoding='utf_8_sig')
+# print('finish')
 
