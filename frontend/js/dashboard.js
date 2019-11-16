@@ -34,7 +34,7 @@ $(document).ready(function(){
 		save_content(email,text,model,project_name,summary,sentiment,QA);
 		
 	});
-	
+	// 上傳不同格式
 	textUploader.addEventListener('change', function(e) {
 		console.log(e.target.files); // get file object
 		var reader = new FileReader();

@@ -29,6 +29,9 @@
 	<script src="./js/NER.js"></script>
 	<script src="./js/emotion_recognition.js"></script>
 	<script src="./js/QA.js"></script>
+	<!--Read .docx JS-->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/docxtemplater/3.1.9/docxtemplater.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.6.1/jszip.js"></script>
 	
 	<script>
 		function toLogout() {

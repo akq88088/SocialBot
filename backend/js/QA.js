@@ -16,18 +16,42 @@ var call_progress = ""
 $(document).ready(function(){
 	p_name = $("#project_name")[0].textContent
 	owner = $("table,[owner]")[0].getAttribute("owner");
+	// const textUploader = document.querySelector('#QA_file');
+	// textUploader.addEventListener('change', function(e) {
+	// 	var reader = new FileReader();
+
+	// 	reader.onload = function(){
+	// 		content = ""
+	// 		content = reader.result;
+	// 	};
+
+	// 	reader.readAsText(e.target.files[0]);
+	// });
+	// $("#submit").on('click',function() {
+	// 	QA_upload(content);
+	// });
 	const textUploader = document.querySelector('#QA_file');
 	textUploader.addEventListener('change', function(e) {
+		console.log(e.target.files); // get file object
 		var reader = new FileReader();
-
-		reader.onload = function(){
-			content = ""
-			content = reader.result;
-		};
-
-		reader.readAsText(e.target.files[0]);
+		if(e.target.files[0].name.includes('.docx')){
+			reader.onload = function(){
+				var zip = new JSZip(reader.result);
+				var doc = new window.docxtemplater().loadZip(zip);
+				content = doc.getFullText()
+			    $('#paste_text').val(doc.getFullText());
+			};
+		    reader.readAsBinaryString(e.target.files[0]);
+		}else{
+			reader.onload = function(){
+				content = reader.result;
+			};
+			reader.readAsText(e.target.files[0]);
+		}
+		// e.target.value=null;
 	});
 	$("#submit").on('click',function() {
+		alert(content)
 		QA_upload(content);
 	});
 	var load_check_rule_data = function(){

@@ -15,7 +15,7 @@ class QA_test:
             self.link = []
             self.transfer = []
 
-    def __init__(self,p_name='test_1020_2005'):
+    def __init__(self,p_name):
         self.df_origin_article = ""
         self.boson_remain_list = []
         self.boson_simpler_dict = {}
