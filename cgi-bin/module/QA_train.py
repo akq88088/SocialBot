@@ -23,7 +23,6 @@ class QA_train:
         self.data_dir = os.path.join('module','QA_data')
         self.boson_remain_list = []
         self.boson_flag_list = []
-        self.remain_transfer_dict = {}
         self.load_data()
         # self.db_information = {"IP":"localhost","user":"root","password":"","db":""}
         self.db_information = {"IP":"120.125.85.96","user":"socialbot","password":"mcuiii","db":""}
@@ -34,6 +33,7 @@ class QA_train:
         except:
             self.project_dir = ""
         self.NER_class = NER(self.project_dir)
+        self.remain_transfer_dict = self.load_remain_transfer_dict()
         self.QA_test = QA_test(p_name)
 
     def get_p_id(self,p_name):
@@ -233,6 +233,54 @@ class QA_train:
         df.iloc[:,0] = sentence_list
         df = self.train(df)
         return df
+    def remain_transfer_dict_train_main(self,df):
+        data = df.fillna(value="")
+        df_insert = data[data["datatype"] == "insert"]
+        df_change = data[data["datatype"] == "change"]
+        df_remove = data[data["datatype"] == "remove"]
+
+        if not df_insert.empty:
+            self.insert_remain_transfer_dict(df_insert)
+        
+        if not df_change.empty:
+            self.change_remain_transfer_dict(df_change)
+        
+        if not df_remove.empty:
+            self.remove_remain_transfer_dict(df_remove)
+        
+    def insert_remain_transfer_dict(self,df):
+        db = pymysql.connect(self.db_information["IP"],self.db_information["user"],self.db_information["password"])
+        # db = pymysql.connect(self.db_information["IP"],self.db_information["user"])
+        cursor = db.cursor()
+        cursor.execute("use socialbot")
+        sql_order = "insert into qa_remain_transfer_dict(p_id,字詞,實體) values(%s,%s,%s)"
+        for i in range(len(df)):
+            if df.iloc[i,0] != df.iloc[i,0]:
+                continue
+            if df.iloc[i,1] != df.iloc[i,1]:
+                continue
+            cursor.execute(sql_order,(self.p_id,df["字詞"].iloc[i],df["實體"].iloc[i]))
+        db.commit()
+
+    def change_remain_transfer_dict(self,df):
+        db = pymysql.connect(self.db_information["IP"],self.db_information["user"],self.db_information["password"])
+        # db = pymysql.connect(self.db_information["IP"],self.db_information["user"])
+        cursor = db.cursor()
+        cursor.execute("use socialbot")
+        sql_order = "UPDATE qa_remain_transfer_dict SET 字詞 = %s,實體 = %s WHERE ID = %s AND p_id = %s"
+        for i in range(len(df)):
+            cursor.execute(sql_order,(df["字詞"].iloc[i],df["實體"].iloc[i],int(df["ID"].iloc[i]),self.p_id))
+        db.commit()
+    
+    def remove_remain_transfer_dict(self,df):
+        db = pymysql.connect(self.db_information["IP"],self.db_information["user"],self.db_information["password"])
+        # db = pymysql.connect(self.db_information["IP"],self.db_information["user"])
+        cursor = db.cursor()
+        cursor.execute("use socialbot")
+        sql_order = "delete from qa_remain_transfer_dict where ID = %s and p_id = %s;"
+        for i in range(len(df)):
+            cursor.execute(sql_order,(int(df["ID"].iloc[i]),self.p_id))
+        db.commit()
 
     def insert_training_data(self,df):
         db = pymysql.connect(self.db_information["IP"],self.db_information["user"],self.db_information["password"])
@@ -314,7 +362,7 @@ class QA_train:
     def get_rule_check_data(self):
         return self.article_remain_list,self.que_remain_list,self.flag_que_remain_dict,self.boson_flag_list
 
-    def load_data(self,add_remain = '',article_remain = 'article_remain_test.txt',que_remain = 'que_remain_long_test.txt',flag_que_remain = 'flag_que_remain_dict_test.txt',boson_remain = 'boson_remain.txt',boson_flag = 'boson_flag.txt',remain_transfer = 'remain_transfer_dict.txt'):
+    def load_data(self,add_remain = '',article_remain = 'article_remain_test.txt',que_remain = 'que_remain_long_test.txt',flag_que_remain = 'flag_que_remain_dict_test.txt',boson_remain = 'boson_remain.txt',boson_flag = 'boson_flag.txt'):
         self.add_remain_dict = {'人':'誰','事':'什麼','物':'什麼','地':'哪裡','時':'何時'}
         with open(os.path.join(self.data_dir,article_remain),'r',encoding='utf8') as fin:
             for row in fin:
@@ -357,24 +405,25 @@ class QA_train:
                     continue
                 row = row.lstrip().rstrip()
                 self.boson_flag_list.append(row)
-        
-        with open(os.path.join(self.data_dir,remain_transfer),'r',encoding='utf8') as fin:
-            bFR = True
-            for row in fin:
-                if bFR:
-                    bFR = False
-                    continue
-                row = row.lstrip().rstrip()
-                try:
-                    temp = row.split(' ')
-                    a,b = temp[0],temp[1]
-                except:
-                    continue
-                
-                a = a.lstrip().rstrip()
-                b = b.lstrip().rstrip()
-                self.remain_transfer_dict.update({a:b})
-                
+
+    def load_remain_transfer_dict(self):
+        db = pymysql.connect(self.db_information["IP"],self.db_information["user"],self.db_information["password"])
+        cursor = db.cursor()
+        cursor.execute("use socialbot")
+        sql_order = "SELECT 字詞,實體 FROM qa_remain_transfer_dict WHERE p_id = %s"
+        cursor.execute(sql_order,(self.p_id))
+        result = cursor.fetchall()
+        result_dict = {}
+        for row in result:
+            try:
+                a,b = row[0],row[1]
+            except:
+                continue
+            a = a.lstrip().rstrip()
+            b = b.lstrip().rstrip()
+            result_dict.update({a:b})
+        return result_dict
+
     def word_cut(self,article,s):#article = [大自然_人1,會_v1,說話_v2] s = '誰會說話' output = [pair,pair]
         all_word = []
         all_flag = []

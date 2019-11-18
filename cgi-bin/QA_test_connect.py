@@ -382,7 +382,7 @@ def txt2text_list(data_dir='D:\\dektop\\QA_test_demo\\泰北課文'):
 parameter = cgi.FieldStorage()
 text = parameter.getvalue('text')
 p_name = parameter.getvalue('p_name')
-# p_name = "tt2"
+# p_name = "tt"
 owner = parameter.getvalue('owner')
 QA_test = QA_test(p_name)
 
@@ -391,7 +391,7 @@ iRun = 0
 insert_id = 0
 result_list = []
 que_ans_dict = {}
-df_result = QA_test.predict_rule_scan(text)
+df_result = QA_test.predict(text)
 if len(df_result.columns) == 10:
     que_ans_dict = {}
     for i in range(len(df_result)):
@@ -408,7 +408,7 @@ print(json.dumps(que_ans_dict))
 # while True:
 #     if iRun >= len(text_list):
 #         break
-#     # if iRun >= 2:
+#     # if iRun >= 10:
 #     #     break
 #     print(iRun)
 #     # text = text_list[iRun]
@@ -431,6 +431,6 @@ print(json.dumps(que_ans_dict))
 #     iRun += 1
 
 # df = pd.concat(result_list,axis=0)
-# df.to_csv(os.path.join('D:\\dektop\\QA_test_demo','QA_泰北_remain_transfer.csv'),index=0,encoding='utf_8_sig')
+# df.to_csv(os.path.join('D:\\dektop\\QA_test_demo','QA_test_1116.csv'),index=0,encoding='utf_8_sig')
 # print('finish')
 

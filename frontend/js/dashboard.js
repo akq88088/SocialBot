@@ -97,6 +97,8 @@ $(document).ready(function(){
 			},
 			beforeSend:function(){
 				$("#summary").val("計算摘要中...");
+				var node = document.getElementsByClassName("alert alert-light radius-border orange-block")[0]
+				node.innerHTML = "<div>計算QA中...</div>"
 			},
 			success: function(text){
 				$("#summary").val(text);

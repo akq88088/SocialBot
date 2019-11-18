@@ -52,7 +52,7 @@ class QA_test:
     def predict(self,text):
         result = self.call_NER(text)
         result = pd.DataFrame(np.array(result))
-        if len(result.columns) == 9:
+        if len(result.columns) == 10:
             result.columns = ["匹配規則","匹配出題規則","匹配出題規則答案","輸入語句","輸入出題","輸入答案","RID","原文斷詞","原文出題","輸入斷詞"]
             result = result[["RID","輸入語句","輸入斷詞","輸入出題","輸入答案","匹配規則","匹配出題規則","匹配出題規則答案","原文斷詞","原文出題"]]
         # result = self.p_id
@@ -391,6 +391,7 @@ class QA_test:
                         for j in range(len(rule)):
                             rule[j] = rule[j].lstrip().rstrip()
                         ans = rule[-2]
+                        original_ans = ans
                         id_num = rule[-1]
                         rule = rule[:-2]
                         df.append(' + '.join(rule))
@@ -407,11 +408,12 @@ class QA_test:
                                 if flag_list[j] == ans:
                                     ans = word_list[j]
                                     break
+                        df.append(original_ans)
                         df.append(''.join(word_list))
                         df.append(aft_transfer)
                         df.append(ans)
                         df.append(id_num)
-                        if len(df) == 6 and self.rule_match(flag_list,rule):
+                        if len(df) == 7 and self.rule_match(flag_list,rule):
                             df_return.append(df)
                     all_transfer = []
         return df_return
@@ -481,7 +483,6 @@ class QA_test:
         text = text.replace('\r','')
         text = text.replace('\n','')
         text = text.replace(' ','')
-        t0 = time.time()
         words,flags,ners = self.NER_class.predict_qa_test(text)
         words,ners = self.remain_transfer(words,ners)
         df_result = []
@@ -510,25 +511,12 @@ class QA_test:
         return df_result
 
     def call_NER(self,text):
-        # NER_class = NER()
         text = text.replace('\r','')
         text = text.replace('\n','')
         text = text.replace(' ','')
-        t0 = time.time()
         words,flags,ners = self.NER_class.predict_qa_test(text)
-        # print(time.time() - t0)
-        # print('ner predict test')
-        # print(a)
-        # print('1---')
-        # print(b)
-        # print('2---')
-        # print(c)
-        # print('3---')
+        words,ners = self.remain_transfer(words,ners)
         df_result = []
-        # data_dir = 'D:\\dektop\\work_data_backup_0923_2256\\rule.csv'#change to sql
-        # data_dir = os.path.join(os.getcwd(),'module','QA_data','rule.csv')
-        # df_origin_article = pd.read_csv(data_dir)
-        # print(self.df_origin_article.head())
         for i in range(len(words)):
             segment = words[i]
             flag_list = flags[i]
@@ -537,8 +525,8 @@ class QA_test:
                 word_cut = self.article_pre(segment,flag_list,ner)
             except:
                 word_cut = ""
-            # print(word_cut)
-            # print('---')
+            if len(word_cut) < 1:
+                continue
             find_rule_temp = self.find_rule_main(word_cut)
             if find_rule_temp:
                 # print('find_rule_temp')

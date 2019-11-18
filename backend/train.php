@@ -29,6 +29,8 @@
 	<script src="./js/NER.js"></script>
 	<script src="./js/emotion_recognition.js"></script>
 	<script src="./js/QA.js"></script>
+	<script src="./js/QA_remain_transfer_dict.js"></script>
+	<script src="./js/QA_speech.js"></script>
 	<!--Read .docx JS-->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/docxtemplater/3.1.9/docxtemplater.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.6.1/jszip.js"></script>
@@ -77,6 +79,12 @@
 				<div class="worker ta-c active" target="#QA">
 					出題問答
 				</div>
+				<div class="worker ta-c" target="#QA_remain_transfer_dict">
+					出題問答保留字字典
+				</div>
+				<div class="worker ta-c" target="#QA_speech">
+					出題問答斷句詞性
+				</div>
 				<div class="worker ta-c" target="#NER">
 					命名實體
 				</div>
@@ -118,8 +126,9 @@
 								<?php
 				
 									//表格內容
-									echo "<table owner=$email_1 border='1' align='center' id='table' class='table table-dark'><tr align='center'>";
+									echo "<table owner=$email_1 border='1' align='center' id='t_a' class='table table-dark'><tr align='center'>";
 									$iRun = 0;
+									$result = execute_sql($link, "socialbot", $sql);
 									while ($field = $result->fetch_field())   // 顯示欄位名稱
 										{
 										if($iRun == 1 || $iRun == 2){
@@ -158,7 +167,7 @@
 								<h6 class="my-4">修 改 規 則</h6>
 								<div class="alert alert-light radius-border project yellow-block">
 									<?php
-										echo "<table border='1' align='center' id='t1' class='table table-dark tabel-responsive'><tr class='CaseRow' align='center' >";
+										echo "<table border='1' align='center' id='t_b' class='table table-dark tabel-responsive'><tr class='CaseRow' align='center' >";
 										$result = execute_sql($link, "socialbot", $sql);
 										echo "<td>datatype</td>";
 										$iRun = 0;
@@ -180,6 +189,265 @@
 					</div>
 					<a class="add_a" href="javascript:;">新增一列</a>
 					<a href='javascript:;' id='determine_sql'>
+					確定修改
+					</a>
+					<br><br><br><br><br>
+				</div>
+				<div id="QA_remain_transfer_dict" class="collapse">
+					<div class="container">
+						<h6 class="my-4">匯 入 資 料</h6>
+						<div class="row">
+							<div class="col-lg-12 btm-mg-1">
+								<div class="radius-border project blue-block">
+									<p><label for="inputfile">上傳檔案</label><P>
+									<P><input type="file" id="file_qa_remain_transfer_dict"></p>
+									<div class="col-md-2 offset-md-10">
+										<button class="btn radius-border train" id="submit_qa_remain_transfer_dict">上傳檔案</button><br><br>
+										<button class="btn radius-border train" id="remove_qa_remain_transfer_dict">刪除整個字典</button><br><br>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="container">
+						<h6 class="my-4">保留字字典</h6>
+						<div class="row">
+							<div class="col-lg-12 btm-mg-1">
+								<div class="alert alert-light radius-border project yellow-block" style="height:550px;overflow-y:auto" >
+								    <div class="row">
+									    <div class="col-lg-6" style="height:600px;overflow:auto;">
+											<?php
+							
+												//表格內容
+												echo "<table owner=$email_1 border='1' align='center' id='t1_1_a' class='table table-dark'><tr align='center'>";
+												
+												$link = create_connection();
+												$sql = "SELECT ID,字詞,實體 FROM `qa_remain_transfer_dict` where `p_id` = '$p_id'";
+												$mysql_class = execute_sql($link, "socialbot", $sql);
+												$remain_transfer_dict = $mysql_class->fetch_all();
+												if(!empty($remain_transfer_dict)){
+												if(count($remain_transfer_dict) % 2 == 0){
+													$remain_transfer_dict = array_chunk($remain_transfer_dict,count($remain_transfer_dict) / 2);
+												}
+												else{
+													$remain_transfer_dict = array_chunk($remain_transfer_dict,count($remain_transfer_dict) / 2 + 1);
+													
+												}
+												$result = $remain_transfer_dict[0];
+												}
+												else{
+													$result = array();
+												}
+												$iRun = 1;
+												
+												while ($field = $mysql_class->fetch_field())   // 顯示欄位名稱
+													{
+													echo "<td>" . $field->name . "</td>";
+													$iRun += 1;
+													}
+												echo "</tr>";
+												$k=-1;
+												for($i = 0;$i < count($result);$i ++)
+												{
+													$k++;
+													echo "<tr id_qa_remain_transfer_dict='$k'>";
+													for ($j = 0; $j < count($result[$i]); $j++)
+													{
+														echo "<td>" . $result[$i][$j] . "</td>";
+													}
+											?>
+												<td><a class="remove_a_qa_remain_transfer_dict" row=<?php echo $k;?> href="javascript:;">刪除</a></td>
+												<td><a class="modify_a_qa_remain_transfer_dict" row=<?php echo $k;?> href="javascript:;">修改</a></td>
+											<?php		
+													echo "</tr>";
+												}
+												echo "</table>";
+											?>
+									    </div>
+										<div class="col-lg-6" style="height:600px;overflow:auto;">
+											<?php
+												$mysql_class = execute_sql($link, "socialbot", $sql);
+												//表格內容
+												echo "<table owner=$email_1 border='1' align='center' id='t1_2_a' class='table table-dark'><tr align='center'>";
+												$iRun = 1;
+												if(empty($remain_transfer_dict) || count($remain_transfer_dict) < 2){
+													$result = array();
+												}
+												else{
+													$result = $remain_transfer_dict[1];
+												}
+												while ($field = $mysql_class->fetch_field())   // 顯示欄位名稱
+													{
+													echo "<td>" . $field->name . "</td>";
+													$iRun += 1;
+													}
+												echo "</tr>";
+												for($i = 0;$i < count($result);$i ++)
+												{
+													$k++;
+													echo "<tr id_qa_remain_transfer_dict='$k'>";
+													for ($j = 0; $j < count($result[$i]); $j++)
+													{
+														echo "<td>" . $result[$i][$j] . "</td>";
+													}
+											?>
+												<td><a class="remove_a_qa_remain_transfer_dict" row=<?php echo $k;?> href="javascript:;">刪除</a></td>
+												<td><a class="modify_a_qa_remain_transfer_dict" row=<?php echo $k;?> href="javascript:;">修改</a></td>
+											<?php		
+													echo "</tr>";
+												}
+												echo "</table>";
+											?>
+									    </div>
+									</div>
+								</div>
+								<h6 class="my-4">修 改 規 則</h6>
+								<div class="alert alert-light radius-border project yellow-block">
+									<?php
+										echo "<table border='1' align='center' id='t1_b' class='table table-dark tabel-responsive'><tr class='CaseRow_qa_remain_transfer_dict' align='center' >";
+										$link = create_connection();
+										$sql = "SELECT ID,字詞,實體 FROM `qa_remain_transfer_dict` where `p_id` = '$p_id'";
+										$mysql_class = execute_sql($link, "socialbot", $sql);
+										echo "<td>datatype</td>";
+										$iRun = 1;
+										while ($field = $mysql_class->fetch_field())   // 顯示欄位名稱
+											{
+											echo "<td>" . $field->name . "</td>";
+											$iRun += 1;
+											}
+										echo "</tr>";
+										echo "</table>";
+									?>
+								</div>
+							</div>
+						</div>
+					</div>
+					<a class="add_a_qa_remain_transfer_dict" href="javascript:;">新增一列</a>
+					<a href='javascript:;' id='determine_sql_qa_remain_transfer_dict'>
+					確定修改
+					</a>
+					<br><br><br><br><br>
+				</div>
+				<div id="QA_speech" class="collapse">
+					<div class="container">
+						<h6 class="my-4">匯 入 資 料</h6>
+						<div class="row">
+							<div class="col-lg-12 btm-mg-1">
+								<div class="radius-border project blue-block">
+									<p><label for="inputfile">上傳檔案</label><P>
+									<P><input type="file" id="file_qa_speech"></p>
+									<div class="col-md-2 offset-md-10">
+										<button class="btn radius-border train" id="submit_qa_speech">上傳檔案</button><br><br>
+										<button class="btn radius-border train" id="remove_qa_speech">刪除整個字典</button><br><br>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="container">
+						<h6 class="my-4">保留字字典</h6>
+						<div class="row">
+							<div class="col-lg-12 btm-mg-1">
+								<div class="alert alert-light radius-border project yellow-block" style="height:550px;overflow-y:auto" >
+								    <div class="row">
+									    <div class="col-lg-6" style="height:600px;overflow:auto;">
+											<?php
+							
+												//表格內容
+												echo "<table owner=$email_1 border='1' align='center' id='t2_1_a' class='table table-dark'><tr align='center'>";
+												$link = create_connection();
+												$sql = "SELECT ID,原文斷詞 FROM `qa_rule` where `p_id` = '$p_id'";
+												$mysql_class = execute_sql($link, "socialbot", $sql);
+												$remain_transfer_dict = $mysql_class->fetch_all();
+												if(!empty($remain_transfer_dict)){
+													if(count($remain_transfer_dict) % 2 == 0){
+														$remain_transfer_dict = array_chunk($remain_transfer_dict,count($remain_transfer_dict) / 2);
+													}
+													else{
+														$remain_transfer_dict = array_chunk($remain_transfer_dict,count($remain_transfer_dict) / 2 + 1);
+													}
+													$result = $remain_transfer_dict[0];
+												}
+												else{
+													$result = array();
+												}
+												while ($field = $mysql_class->fetch_field())   // 顯示欄位名稱
+													{
+													echo "<td>" . $field->name . "</td>";
+													}
+												echo "</tr>";
+												$k=-1;
+												for($i = 0;$i < count($result);$i ++)
+												{
+													$k++;
+													echo "<tr id_qa_speech='$k'>";
+													for ($j = 0; $j < count($result[$i]); $j++)
+													{
+														echo "<td>" . $result[$i][$j] . "</td>";
+													}
+											?>
+												<td><a class="modify_a_qa_speech" row=<?php echo $k;?> href="javascript:;">修改</a></td>
+											<?php		
+													echo "</tr>";
+												}
+												echo "</table>";
+											?>
+									    </div>
+										<div class="col-lg-6" style="height:600px;overflow:auto;">
+											<?php
+												$mysql_class = execute_sql($link, "socialbot", $sql);
+												//表格內容
+												echo "<table owner=$email_1 border='1' align='center' id='t2_2_a' class='table table-dark'><tr align='center'>";
+												if(empty($remain_transfer_dict) || count($remain_transfer_dict) < 2){
+													$result = array();
+												}
+												else{
+													$result = $remain_transfer_dict[1];
+												}
+												while ($field = $mysql_class->fetch_field())   // 顯示欄位名稱
+													{
+													echo "<td>" . $field->name . "</td>";
+													}
+												echo "</tr>";
+												for($i = 0;$i < count($result);$i ++)
+												{
+													$k++;
+													echo "<tr id_qa_speech='$k'>";
+													for ($j = 0; $j < count($result[$i]); $j++)
+													{
+														echo "<td>" . $result[$i][$j] . "</td>";
+													}
+											?>
+												<td><a class="modify_a_qa_speech" row=<?php echo $k;?> href="javascript:;">修改</a></td>
+											<?php		
+													echo "</tr>";
+												}
+												echo "</table>";
+											?>
+									    </div>
+									</div>
+								</div>
+								<h6 class="my-4">修 改 規 則</h6>
+								<div class="alert alert-light radius-border project yellow-block">
+									<?php
+										echo "<table border='1' align='center' id='t2_b' class='table table-dark tabel-responsive'><tr class='CaseRow_qa_speech' align='center' >";
+										$link = create_connection();
+										$sql = "SELECT ID,原文斷詞 FROM `qa_rule` where `p_id` = '$p_id'";
+										$mysql_class = execute_sql($link, "socialbot", $sql);
+										echo "<td>datatype</td>";
+										while ($field = $mysql_class->fetch_field())   // 顯示欄位名稱
+											{
+											echo "<td>" . $field->name . "</td>";
+											}
+										echo "<td>斷詞修改</td>";
+										echo "</tr>";
+										echo "</table>";
+									?>
+								</div>
+							</div>
+						</div>
+					</div>
+					<a href='javascript:;' id='determine_sql_qa_speech'>
 					確定修改
 					</a>
 					<br><br><br><br><br>
