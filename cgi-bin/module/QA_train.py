@@ -338,6 +338,21 @@ class QA_train:
         cursor.execute(sql_order,(self.p_id))
         db.commit()
 
+    def word_cut2word_flag():#!
+        pass
+
+    def speech_train_main(self,df):#!
+        for i in range(len(df)):
+            word_after = df["斷詞修改"].iloc[i]
+            word_list = word_after.split(' ')
+            for j in range(len(word_list)):
+                word_list[j] = word_list[j].lstrip().rstrip()
+                temp = word_list[j].split('_')
+                try:
+                    word,flag = temp[0],temp[1]
+                except:
+                    continue
+                
     def QA_train_main(self,data):
         data = data.fillna(value="")
         df_insert = data[data["datatype"] == "insert"]

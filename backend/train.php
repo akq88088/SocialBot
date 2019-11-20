@@ -330,21 +330,6 @@
 				</div>
 				<div id="QA_speech" class="collapse">
 					<div class="container">
-						<h6 class="my-4">匯 入 資 料</h6>
-						<div class="row">
-							<div class="col-lg-12 btm-mg-1">
-								<div class="radius-border project blue-block">
-									<p><label for="inputfile">上傳檔案</label><P>
-									<P><input type="file" id="file_qa_speech"></p>
-									<div class="col-md-2 offset-md-10">
-										<button class="btn radius-border train" id="submit_qa_speech">上傳檔案</button><br><br>
-										<button class="btn radius-border train" id="remove_qa_speech">刪除整個字典</button><br><br>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="container">
 						<h6 class="my-4">保留字字典</h6>
 						<div class="row">
 							<div class="col-lg-12 btm-mg-1">

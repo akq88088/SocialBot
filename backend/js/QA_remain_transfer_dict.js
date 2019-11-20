@@ -286,6 +286,7 @@ $(document).ready(function(){
 			result_dict[i] = text_list;
 		}
 		var result_json = JSON.stringify(result_dict);
+		alert(result_json)
 		sql_modify_call(result_json,owner);
 	});
 

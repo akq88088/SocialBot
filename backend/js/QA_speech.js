@@ -23,30 +23,6 @@ var call_progress = ""
 $(document).ready(function(){
 	p_name = $("#project_name")[0].textContent
 	owner = $("table,[owner]")[0].getAttribute("owner");
-	const textUploader = document.querySelector('#file_qa_speech');
-	textUploader.addEventListener('change', function(e) {
-		console.log(e.target.files); // get file object
-		var reader = new FileReader();
-		if(e.target.files[0].name.includes('.docx')){
-			reader.onload = function(){
-				var zip = new JSZip(reader.result);
-				var doc = new window.docxtemplater().loadZip(zip);
-				content = doc.getFullText()
-			    $('#paste_text').val(doc.getFullText());
-			};
-		    reader.readAsBinaryString(e.target.files[0]);
-		}else{
-			reader.onload = function(){
-				content = reader.result;
-			};
-			reader.readAsText(e.target.files[0]);
-		}
-		// e.target.value=null;
-	});
-	$("#submit_qa_speech").on('click',function() {
-		// alert(content)
-		QA_upload(content);
-	});
 		$(".modify_a_qa_speech").on("click",function() {
 			var button_id = $(this).attr('row')
 			var b_check_id = $("#t2_b>tbody>tr")
@@ -180,7 +156,7 @@ $(document).ready(function(){
 	});
 
 	$('#determine_sql_qa_speech').on('click', function(){
-		var obj_text = $("#t1").find("input:text");
+		var obj_text = $("#t2_b").find("input:text");
 		if(obj_text.length){
 			alert("請將規則修改完畢後再按確認修改");
 			return
@@ -196,13 +172,14 @@ $(document).ready(function(){
 			result_dict[i] = text_list;
 		}
 		var result_json = JSON.stringify(result_dict);
+		alert(result_json)
 		sql_modify_call(result_json,owner);
 	});
 
 	var sql_modify_call = function(data,owner){
 		$.ajax({
 			method: "POST",
-			url: "../cgi-bin/QA_train_connect.py",
+			url: "../cgi-bin/QA_speech_train_connect.py",
 			async: true, //非同步化
 			// dataType:"json",
 			data: {
@@ -217,31 +194,6 @@ $(document).ready(function(){
 			},
 			complete:function(){
 				// window.location.reload();
-			}
-		});
-	}
-	$("#remove_qa_rule").on('click',function() {
-		remove_qa_rule(owner,p_name)
-	});
-	var remove_qa_rule = function(owner,p_name){
-		$.ajax({
-			method: "POST",
-			url: "../cgi-bin/QA_remove_qa_rule.py",
-			async: true, //非同步化
-			// dataType:"json",
-			data: {
-				"owner" : owner,
-				"p_name" : p_name
-			},
-			beforeSend:function(){
-			},
-			success: function(text){
-				alert("規則刪除完成!")
-				window.location.reload();
-			},
-			complete:function(){
-				
-				// console.log("rule generate complete")
 			}
 		});
 	}
