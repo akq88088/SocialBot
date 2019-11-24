@@ -12,7 +12,18 @@ class QA_train:
         def __init__(self,word,flag):
             self.flag = flag
             self.word = word
+    
+    class SPEECH:
+        def __init__(self,verb,ner):
+            self.verb = verb
+            self.ner = ner
 
+    class SPEECH_INDEX:
+        def __init__(self,word,verb,ner,start_index):
+            self.word = word
+            self.verb = verb
+            self.ner = ner
+            self.start_index = start_index
     def __init__(self,owner,p_name):
         self.add_remain_dict = {}
         self.ner_eng_ch_dict = {'per':'人','obj':'物','time':'時','place':'地','人':'per','物':'obj','時':'time','地':'place'}
@@ -34,6 +45,7 @@ class QA_train:
             self.project_dir = ""
         self.NER_class = NER(self.project_dir)
         self.remain_transfer_dict = self.load_remain_transfer_dict()
+        self.speech_dict = self.load_speech_dict()
         self.QA_test = QA_test(p_name)
 
     def get_p_id(self,p_name):
@@ -122,6 +134,38 @@ class QA_train:
                         pass
         return segment,ner
 
+    def speech_transfer(self,segment,flag_list,ner):
+        for i in range(len(segment)):
+            sentence_origin = "".join(segment[i])
+            sentence = sentence_origin
+            speech_index_list = []
+            word_list = []
+            verb_list = []
+            ner_list = []
+            for key in self.speech_dict.keys():
+                find_index = sentence.find(key)
+                if find_index != -1:
+                    sentence = sentence.replace(key,"")
+                    speech_index_list.append(self.SPEECH_INDEX(key,self.speech_dict[key].verb,self.speech_dict[key].ner,find_index))
+            for j in range(len(segment[i])):
+                word = segment[i][j]
+                flag = flag_list[i][j]
+                n = ner[i][j]
+                find_index = sentence.find(word)
+                if find_index != -1:
+                    find_index = sentence_origin.find(word)
+                    speech_index_list.append(self.SPEECH_INDEX(word,flag,n,find_index))
+            speech_index_list = sorted(speech_index_list,key = lambda ele:ele.start_index)
+            for j in range(len(speech_index_list)):
+                word_list.append(speech_index_list[j].word)
+                verb_list.append(speech_index_list[j].verb)
+                ner_list.append(speech_index_list[j].ner)
+            segment[i] = word_list
+            flag_list[i] = verb_list
+            ner[i] = ner_list
+        return segment,flag_list,ner
+            
+                    
     def call_NER(self,text):
         # print(text)
         # NER_class = NER(self.project_dir)
@@ -132,7 +176,14 @@ class QA_train:
         not_success = True
         error_run = 1
         segment,flag_list,ner = self.NER_class.predict_qa_train(text)
+        segment,flag_list,ner = self.speech_transfer(segment,flag_list,ner)
         segment,ner = self.remain_transfer(segment,ner)
+        # with open("D:\\dektop\\QA_test_demo\\test_before_word_cut.txt",'w',encoding='utf_8_sig') as fout:
+        #     for i in range(len(segment)):
+        #         fout.write(" ".join(segment[i]) + '\n')
+        #         fout.write(" ".join(flag_list[i]) + '\n')
+        #         fout.write(" ".join(ner[i]) + '\n')
+        #         fout.write("---")
         # while not_success:
         #     try:
         #         segment,flag_list,ner = self.NER_class.predict_qa_train(text)
@@ -149,6 +200,8 @@ class QA_train:
                 word_cut = ""
             word_cut_list.append(word_cut)
         # print('----')
+        # with open('D:\\dektop\\QA_test_demo\\test.txt','w',encoding='utf_8_sig') as fout:
+        #     fout.write("\n".join(word_cut_list))
         return word_cut_list
 
     def read_data_generate_rule_main(self):
@@ -227,7 +280,6 @@ class QA_train:
         #     sentence = self.call_NER(sentence)
         #     df.iloc[i,0] = sentence
         # df = self.train(df)
-        df_ln = len(df)
         sentence_list = df.iloc[:,0]
         sentence_list = self.call_NER(sentence_list)
         df.iloc[:,0] = sentence_list
@@ -272,6 +324,15 @@ class QA_train:
             cursor.execute(sql_order,(df["字詞"].iloc[i],df["實體"].iloc[i],int(df["ID"].iloc[i]),self.p_id))
         db.commit()
     
+    def remove_all_remain_transfer_dict(self):
+        db = pymysql.connect(self.db_information["IP"],self.db_information["user"],self.db_information["password"])
+        # db = pymysql.connect(self.db_information["IP"],self.db_information["user"])
+        cursor = db.cursor()
+        cursor.execute("use socialbot")
+        sql_order = "delete from qa_remain_transfer_dict where p_id = %s;"
+        cursor.execute(sql_order,(self.p_id))
+        db.commit()
+
     def remove_remain_transfer_dict(self,df):
         db = pymysql.connect(self.db_information["IP"],self.db_information["user"],self.db_information["password"])
         # db = pymysql.connect(self.db_information["IP"],self.db_information["user"])
@@ -338,21 +399,161 @@ class QA_train:
         cursor.execute(sql_order,(self.p_id))
         db.commit()
 
-    def word_cut2word_flag():#!
-        pass
+    def speech_call_NER_sub(self,segment,flag_list,ner):
+        word_list = []
+        verb_list = []
+        for i in range(len(segment)):
+            word = segment[i]
+            n = ner[i]
+            flag = flag_list[i]
+            if n in self.boson_remain_list:
+                n = self.ner_eng_ch_dict.get(ner[i])
+            word_list.append(word)
+            verb_list.append([flag,n])
+        return word_list,verb_list
 
-    def speech_train_main(self,df):#!
+    def speech_call_NER(self,text):
+        segment,flag_list,ner = self.NER_class.predict_qa_train(text)
+        ner_word_list_list = []
+        ner_verb_list_list = []
+        for i in range(len(segment)):
+            word_list,verb_list = self.speech_call_NER_sub(segment[i],flag_list[i],ner[i])
+            ner_word_list_list.append(word_list)
+            ner_verb_list_list.append(verb_list)
+        return ner_word_list_list,ner_verb_list_list
+    
+    def get_speech_max_id(self):
+        db = pymysql.connect(self.db_information["IP"],self.db_information["user"],self.db_information["password"])
+        cursor = db.cursor()
+        cursor.execute("use socialbot")
+        sql_order = "select max(ID) from qa_speech where p_id = %s"
+        cursor.execute(sql_order,(self.p_id))
+        result = cursor.fetchone()[0]
+        # with open("D:\\dektop\\QA_test_demo\\tt.txt",'a',encoding='utf_8_sig') as fout:
+        #     fout.write("Test")
+        #     fout.write(str(result))
+        return result
+
+    def speech_train_main(self,df):
+        word_list_list = []
+        flag_list_list = []
+        sentence_list = []
+        result_speech_list = []
+        result_speech_sentence_list = []
         for i in range(len(df)):
-            word_after = df["斷詞修改"].iloc[i]
-            word_list = word_after.split(' ')
-            for j in range(len(word_list)):
-                word_list[j] = word_list[j].lstrip().rstrip()
-                temp = word_list[j].split('_')
+            temp = df["斷詞修改"].iloc[i]
+            temp = temp.split(' ')
+            word_list = []
+            flag_list = []
+            for j in range(len(temp)):
+                temp[j] = temp[j].lstrip().rstrip()
+                sto = temp[j].split('_')
                 try:
-                    word,flag = temp[0],temp[1]
+                    word,flag = sto[0],sto[1]
                 except:
                     continue
-                
+                word_list.append(word)
+                flag_list.append(flag)
+            flag_list = self.flag_remove_num(flag_list)
+            sentence = ''.join(word_list)
+            word_list_list.append(word_list)
+            flag_list_list.append(flag_list)
+            sentence_list.append(sentence)
+            result_speech_sentence_list.append([df["原文斷詞"].iloc[i],df["斷詞修改"].iloc[i]])
+
+        ner_word_list_list,ner_verb_list_list = self.speech_call_NER(sentence_list)
+        try:
+            max_id = (self.get_speech_max_id()) + 1
+        except:
+            max_id = 1
+        for i in range(len(word_list_list)):
+            word_list,flag_list = word_list_list[i],flag_list_list[i]
+            ner_word_list,ner_verb_list = ner_word_list_list[i],ner_verb_list_list[i]
+            ner_word_bool_list = [True] * len(ner_word_list)
+            id_set_list = []
+            for j in range(len(word_list)):
+                word = word_list[j]
+                bFind = False
+                for k in range(len(ner_word_list)):
+                    if word == ner_word_list[k] and ner_word_bool_list[k]:
+                        result_speech_list.append([max_id,word,ner_verb_list[k][0],ner_verb_list[k][1]])
+                        id_set_list.append(str(max_id))
+                        max_id += 1
+                        bFind = True
+                        ner_word_bool_list[k] = False
+                        continue
+                if not bFind:
+                    if flag_list[j][0] in self.boson_remain_list:
+                        result_speech_list.append([max_id,word,'x',flag_list[j]])
+                        id_set_list.append(str(max_id))
+                        max_id += 1
+                    else:
+                        result_speech_list.append([max_id,word,flag_list[j],'x'])
+                        id_set_list.append(str(max_id))
+                        max_id += 1
+            id_set_str = ",".join(id_set_list)
+            result_speech_sentence_list[i].append(id_set_str)
+        # with open("D:\\dektop\\QA_test_demo\\test.txt",'w',encoding='utf_8_sig') as fout:
+        #     for row in result_speech_sentence_list:
+        #         fout.write(str(row[0]) + str(row[1]) + str(row[2]) + str(row[3]) + '\n')
+        self.insert_speech(result_speech_list)
+        self.insert_speech_sentence(result_speech_sentence_list)
+
+    def delete_speech(self,ass_id_set_str):
+        db = pymysql.connect(self.db_information["IP"],self.db_information["user"],self.db_information["password"])
+        cursor = db.cursor()
+        cursor.execute("use socialbot")
+        sql_order = "delete from qa_speech where p_id = %s and ID in {}".format(ass_id_set_str)
+        cursor.execute(sql_order,(self.p_id))
+        db.commit()
+
+    def speech_sentence_train_main(self,df):
+        db = pymysql.connect(self.db_information["IP"],self.db_information["user"],self.db_information["password"])
+        cursor = db.cursor()
+        cursor.execute("use socialbot")
+        id_list = list(df["ID"])
+        id_list.append("-1")
+        id_str = ",".join(id_list)
+        id_str = "(" + id_str + ")"
+        sql_order = "select ass_id from qa_speech_sentence where p_id = %s and ID in {}".format(id_str)
+        cursor.execute(sql_order,(self.p_id))
+        temp = cursor.fetchall()
+        ass_id_list = []
+        for i in range(len(temp)):
+            ass_id_list.append(temp[i][0])
+        ass_id_list.append("-1")
+        ass_id_set_str = ",".join(ass_id_list)
+        ass_id_set_str = "(" + ass_id_set_str + ")"
+        sql_order ="delete from qa_speech_sentence where p_id = %s and ID in {}".format(id_str)
+        cursor.execute(sql_order,(self.p_id))
+        db.commit()
+        self.delete_speech(ass_id_set_str)
+        
+            
+    def insert_speech(self,data):
+        db = pymysql.connect(self.db_information["IP"],self.db_information["user"],self.db_information["password"])
+        # db = pymysql.connect(self.db_information["IP"],self.db_information["user"])
+        # with open("C:\\Users\\student\\Desktop\\json_test.txt",'w') as fout:
+        #     fout.write(str(df.head()))
+        cursor = db.cursor()
+        cursor.execute("use socialbot")
+        sql_order = "insert into qa_speech(ID,p_id,字詞,詞性,實體)values(%s,%s,%s,%s,%s);"
+        for i in range(len(data)):
+            cursor.execute(sql_order,(data[i][0],self.p_id,data[i][1],data[i][2],data[i][3]))
+        db.commit()
+    
+    def insert_speech_sentence(self,data):
+        db = pymysql.connect(self.db_information["IP"],self.db_information["user"],self.db_information["password"])
+        # db = pymysql.connect(self.db_information["IP"],self.db_information["user"])
+        # with open("C:\\Users\\student\\Desktop\\json_test.txt",'w') as fout:
+        #     fout.write(str(df.head()))
+        cursor = db.cursor()
+        cursor.execute("use socialbot")
+        sql_order = "insert into qa_speech_sentence(p_id,斷詞修改前,斷詞修改後,ass_id)values(%s,%s,%s,%s);"
+        for i in range(len(data)):
+            cursor.execute(sql_order,(self.p_id,data[i][0],data[i][1],data[i][2]))
+        db.commit()
+
     def QA_train_main(self,data):
         data = data.fillna(value="")
         df_insert = data[data["datatype"] == "insert"]
@@ -420,6 +621,26 @@ class QA_train:
                     continue
                 row = row.lstrip().rstrip()
                 self.boson_flag_list.append(row)
+
+    def load_speech_dict(self):
+        db = pymysql.connect(self.db_information["IP"],self.db_information["user"],self.db_information["password"])
+        cursor = db.cursor()
+        cursor.execute("use socialbot")
+        sql_order = "SELECT 字詞,詞性,實體 FROM qa_speech WHERE p_id = %s"
+        cursor.execute(sql_order,(self.p_id))
+        result = cursor.fetchall()
+        result_dict = {}
+        for row in result:
+            try:
+                word,verb,ner = row[0],row[1],row[2]
+                word = word.lstrip().rstrip()
+                verb = verb.lstrip().rstrip()
+                ner = ner.lstrip().rstrip()
+            except:
+                continue         
+            speech = self.SPEECH(verb,ner)
+            result_dict.update({word:speech})
+        return result_dict
 
     def load_remain_transfer_dict(self):
         db = pymysql.connect(self.db_information["IP"],self.db_information["user"],self.db_information["password"])
@@ -669,15 +890,19 @@ class QA_train:
             err = True
         return result,err
     
-    def article_pre(self,segment,flag_list,ner):#待修正
+    def article_pre(self,segment,flag_list,ner):
         word_cut_list = []
         for i in range(len(segment)):
             word = segment[i]
-            flag = ner[i]
-            if flag in self.boson_remain_list:
-                flag = self.ner_eng_ch_dict.get(ner[i])
+            flag = flag_list[i]
+            n = ner[i]
+            if n in ["人","事","物","地","時"]:
+                flag = n
             else:
-                flag = flag_list[i][0]
+                if n in self.boson_remain_list:
+                    flag = self.ner_eng_ch_dict.get(ner[i])
+                # else:
+                #     flag = flag_list[i][0]
             word_cut_list.append(word + '_' + flag)
         word_cut = ' '.join(word_cut_list)
         word_cut = word_cut.replace('\n','')

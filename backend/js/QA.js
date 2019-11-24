@@ -30,10 +30,17 @@ $(document).ready(function(){
 	// $("#submit").on('click',function() {
 	// 	QA_upload(content);
 	// });
-	const textUploader = document.querySelector('#QA_file');
-	textUploader.addEventListener('change', function(e) {
+	const textUploader_qa = document.querySelector('#QA_file');
+	textUploader_qa.addEventListener('change', function(e) {
 		console.log(e.target.files); // get file object
 		var reader = new FileReader();
+		var file_name = (e.target.files[0].name).split(".")
+		file_name = file_name[file_name.length - 1]
+		if(file_name != "csv" && file_name != "txt"){
+			alert("請上傳csv格式的csv檔案或是txt檔案!")
+			e.target.value=null;
+			return
+		}
 		if(e.target.files[0].name.includes('.docx')){
 			reader.onload = function(){
 				var zip = new JSZip(reader.result);
@@ -288,9 +295,9 @@ $(document).ready(function(){
 						var que = "";
 						var ans = "";
 						$(this).parent().siblings("td:eq(2)").each(function() {  // 获取当前行的第二列单元格
-							obj_text = $(this).find("input:text");    // 判断单元格下是否有文本框
-							// rule = obj_text.val();
+							// obj_text = $(this).find("input:text");    // 判断单元格下是否有文本框
 							rule = $(this).text()
+							// obj_text = $(this).text()
 						});	
 						$(this).parent().siblings("td:eq(3)").each(function() {  // 获取当前行的第二列单元格
 							obj_text = $(this).find("input:text");    // 判断单元格下是否有文本框
@@ -300,6 +307,9 @@ $(document).ready(function(){
 							obj_text = $(this).find("input:text");    // 判断单元格下是否有文本框
 							ans = obj_text.val();
 						});
+						console.log(rule)
+						console.log(que)
+						console.log(ans)
 						check_flag = check_rule(rule,que,ans);
 						// check_flag = true
 						if(check_flag){
@@ -629,8 +639,13 @@ if(error){
   alert("問題規則裡必須包含出題保留字")
   return false
 }
-var temp = rule.search(ans)
-if(temp == -1){
+var bError = true
+for(var i = 0;i < rule_list.length;i ++){
+	if(rule_list[i] == ans){
+		bError = false
+	}
+}
+if(bError){
   alert("答案必須是規則裡的文章保留字")
   error = true
 }

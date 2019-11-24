@@ -24,10 +24,17 @@ $(document).ready(function(){
 
 	p_name = $("#project_name")[0].textContent
 	owner = $("table,[owner]")[0].getAttribute("owner");
-	const textUploader = document.querySelector('#file_qa_remain_transfer_dict');
-	textUploader.addEventListener('change', function(e) {
+	const textUploader_qa_remain_transfer_dict = document.querySelector('#file_qa_remain_transfer_dict');
+	textUploader_qa_remain_transfer_dict.addEventListener('change', function(e) {
 		console.log(e.target.files); // get file object
 		var reader = new FileReader();
+		var file_name = (e.target.files[0].name).split(".")
+		file_name = file_name[file_name.length - 1]
+		if(file_name != "csv" && file_name != "txt"){
+			alert("請上傳csv格式的csv檔案或是txt檔案!")
+			e.target.value=null;
+			return
+		}
 		if(e.target.files[0].name.includes('.docx')){
 			reader.onload = function(){
 				var zip = new JSZip(reader.result);
@@ -75,17 +82,21 @@ $(document).ready(function(){
 			$('#t1_b').append(tr);//向table中追加tr
 			$(".modify_b_qa_remain_transfer_dict").off("click");
 				$(".modify_b_qa_remain_transfer_dict").on("click",function() {
+					var word = ""
+					var ner = ""
 					var button_id = $(this).attr('id');
 					var tab=document.getElementById(button_id);			
 					$('#t1_b').append(tab);//向table中追加tr
 					if($(this).text() == "確定"){
 						$(this).parent().siblings("td:eq(2)").each(function() {  // 获取当前行的第二列单元格
 							obj_text = $(this).find("input:text");    // 判断单元格下是否有文本框
+							word = obj_text.val()
 						});	
 						$(this).parent().siblings("td:eq(3)").each(function() {  // 获取当前行的第二列单元格
 							obj_text = $(this).find("input:text");    // 判断单元格下是否有文本框
+							ner = obj_text.val()
 						});	
-						check_flag = check_remain()
+						check_flag = check_remain_transfer_dict(word,ner)
 						if(check_flag){
 							str = $(this).text()=="修改"?"確定":"修改";  
 							$(this).text(str);   // 按钮被点击后，在“编辑”和“确定”之间切换
@@ -177,17 +188,21 @@ $(document).ready(function(){
 			$(".modify_b_qa_remain_transfer_dict").off("click");
 				$(".modify_b_qa_remain_transfer_dict").on("click",function() {
 					var button_id = $(this).attr('id');
-					var tab=document.getElementById(button_id);			
+					var tab=document.getElementById(button_id);		
+					var word=""
+					var ner=""	
 					$('#t1_b').append(tab);//向table中追加tr
 					if($(this).text() == "確定"){
 						$(this).parent().siblings("td:eq(2)").each(function() {  // 获取当前行的第二列单元格
 							obj_text = $(this).find("input:text");    // 判断单元格下是否有文本框
+							word = obj_text.val()
 							// rule = obj_text.val();
 						});	
 						$(this).parent().siblings("td:eq(3)").each(function() {  // 获取当前行的第二列单元格
 							obj_text = $(this).find("input:text");    // 判断单元格下是否有文本框
+							ner = obj_text.val()
 						});	
-						check_flag = check_remain();
+						check_flag = check_remain_transfer_dict(word,ner);
 						// check_flag = true
 						if(check_flag){
 							str = $(this).text()=="修改"?"確定":"修改";  
@@ -286,7 +301,6 @@ $(document).ready(function(){
 			result_dict[i] = text_list;
 		}
 		var result_json = JSON.stringify(result_dict);
-		alert(result_json)
 		sql_modify_call(result_json,owner);
 	});
 
@@ -338,8 +352,22 @@ $(document).ready(function(){
 	}
 	
 });
-function check_remain(obj)
+function check_remain_transfer_dict(word,ner)
 {
+ner = ner.lTrim()
+ner = ner.rTrim()
+var ner_list = ["人","物","地","時"]
+var bError = true
+for(var i = 0;i < ner_list.length;i ++){
+	if(ner == ner_list[i]){
+		bError = false
+		break
+	}
+}
+if(bError){
+	alert("實體欄位只能填人、物、地、時!")
+	return false
+}
 return true
 }
 function cancel(obj)

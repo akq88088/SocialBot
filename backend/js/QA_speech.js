@@ -78,13 +78,14 @@ $(document).ready(function(){
 				$(".modify_b_qa_speech").on("click",function() {
 					var button_id = $(this).attr('id');
 					var tab=document.getElementById(button_id);			
+					var word_after = ""
 					$('#t2_b').append(tab);//向table中追加tr
 					if($(this).text() == "確定"){
 						$(this).parent().siblings("td:eq(3)").each(function() {  // 获取当前行的第二列单元格
 							obj_text = $(this).find("input:text");    // 判断单元格下是否有文本框
-							// rule = obj_text.val();
+							word_after = obj_text.val()
 						});	
-						check_flag = check_remain();
+						check_flag = check_remain_speech(word_after);
 						// check_flag = true
 						if(check_flag){
 							str = $(this).text()=="修改"?"確定":"修改";  
@@ -155,6 +156,50 @@ $(document).ready(function(){
 		});
 	});
 
+	$(function(){
+		$(".remove_a_qa_speech_sentence").click(function() {
+			var button_id = $(this).attr('row');
+			var b_check_id = $("#t2_d>tbody>tr")
+			var b_exist = false
+			for(i = 1;i < b_check_id.length;i ++){
+				var b_child = b_check_id[i].childNodes
+				if(b_check_id[i].getAttribute("id_qa_speech_sentence") == button_id){
+					b_exist = true
+					break
+				}
+			}
+			if(b_exist){
+				return
+			}
+			var tab = $("tr[id_qa_speech_sentence='" + button_id + "']")[0]
+			var tab_b = tab.cloneNode(true);
+			tab_b.setAttribute("class","CaseRow_qa_speech_sentence");
+			for(i = 0;i < 2;i ++){
+				var lchind = tab_b.lastChild;
+				tab_b.removeChild(lchind);
+            }
+            // var td = document.createElement("td");
+			// var t = document.createTextNode("");
+            // td.appendChild(t);
+            // tab_b.appendChild(td)
+
+			var td = document.createElement("td");
+			var t = document.createTextNode("刪除");
+			td.appendChild(t);
+			tab_b.insertBefore(td,tab_b.firstChild);
+			var td = document.createElement("td");
+			var a = document.createElement("a");
+			var t = document.createTextNode("取消");
+			a.setAttribute("row",button_id);
+			a.setAttribute("href","javascript:;");
+			a.setAttribute("onclick","cancel(this)");
+			a.appendChild(t);
+			td.appendChild(a);
+			tab_b.appendChild(td)
+			$('#t2_d').append(tab_b);
+		});
+	});
+
 	$('#determine_sql_qa_speech').on('click', function(){
 		var obj_text = $("#t2_b").find("input:text");
 		if(obj_text.length){
@@ -172,11 +217,10 @@ $(document).ready(function(){
 			result_dict[i] = text_list;
 		}
 		var result_json = JSON.stringify(result_dict);
-		alert(result_json)
-		sql_modify_call(result_json,owner);
+		sql_modify_call_speech(result_json,owner);
 	});
 
-	var sql_modify_call = function(data,owner){
+	var sql_modify_call_speech = function(data,owner){
 		$.ajax({
 			method: "POST",
 			url: "../cgi-bin/QA_speech_train_connect.py",
@@ -190,7 +234,45 @@ $(document).ready(function(){
 			beforeSend:function(){
 			},
 			success: function(text){
-				window.location.reload();
+				alert("斷詞修改完成!")
+				window.location.reload()
+			},
+			complete:function(){
+				// window.location.reload();
+			}
+		});
+	}
+	$('#determine_sql_qa_speech_sentence').on('click', function(){
+		var result_dict = Array();
+		var df = $(".CaseRow_qa_speech_sentence");
+		for(i = 0;i < df.length;i ++){
+			var td_list = df[i].childNodes;
+			var text_list = Array();
+			for(j = 0;j < td_list.length;j ++){
+				text_list.push(td_list[j].textContent);
+			}
+			result_dict[i] = text_list;
+		}
+		var result_json = JSON.stringify(result_dict);
+		sql_modify_call_speech_sentence(result_json,owner);
+	});
+
+	var sql_modify_call_speech_sentence = function(data,owner){
+		$.ajax({
+			method: "POST",
+			url: "../cgi-bin/QA_speech_sentence_train_connect.py",
+			async: true, //非同步化
+			// dataType:"json",
+			data: {
+				"data" : data,
+				"owner" : owner,
+				"p_name" : p_name
+			},
+			beforeSend:function(){
+			},
+			success: function(text){
+				alert("斷詞修改刪除完成!")
+				window.location.reload()
 			},
 			complete:function(){
 				// window.location.reload();
@@ -198,8 +280,30 @@ $(document).ready(function(){
 		});
 	}
 });
-function check_remain(obj)
+function check_remain_speech(word_after)
 {
+word_after = word_after.lTrim()
+word_after = word_after.rTrim()
+word_after_list = word_after.split(" ")
+if(word_after_list.length < 1){
+	alert("需以空白隔開每個詞!")
+	return false
+}
+var temp = ""
+var word = ""
+var flag = ""
+var bError = false
+for(var i = 0;i < word_after_list.length;i ++){
+	temp = word_after_list[i].split("_")
+	if(temp.length < 2){
+		bError = true
+		break
+	}
+}
+if(bError){
+	alert("需以_符號連接字詞與實體!")
+	return false
+}
 return true
 }
 function cancel(obj)

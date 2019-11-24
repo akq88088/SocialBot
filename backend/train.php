@@ -210,7 +210,7 @@
 						</div>
 					</div>
 					<div class="container">
-						<h6 class="my-4">保留字字典</h6>
+						<h6 class="my-4">保 留 字 字 典</h6>
 						<div class="row">
 							<div class="col-lg-12 btm-mg-1">
 								<div class="alert alert-light radius-border project yellow-block" style="height:550px;overflow-y:auto" >
@@ -301,7 +301,7 @@
 									    </div>
 									</div>
 								</div>
-								<h6 class="my-4">修 改 規 則</h6>
+								<h6 class="my-4">修 改 字 典</h6>
 								<div class="alert alert-light radius-border project yellow-block">
 									<?php
 										echo "<table border='1' align='center' id='t1_b' class='table table-dark tabel-responsive'><tr class='CaseRow_qa_remain_transfer_dict' align='center' >";
@@ -330,7 +330,7 @@
 				</div>
 				<div id="QA_speech" class="collapse">
 					<div class="container">
-						<h6 class="my-4">保留字字典</h6>
+						<h6 class="my-4">原 文 斷 句</h6>
 						<div class="row">
 							<div class="col-lg-12 btm-mg-1">
 								<div class="alert alert-light radius-border project yellow-block" style="height:550px;overflow-y:auto" >
@@ -412,7 +412,7 @@
 									    </div>
 									</div>
 								</div>
-								<h6 class="my-4">修 改 規 則</h6>
+								<h6 class="my-4">修 改 斷 詞</h6>
 								<div class="alert alert-light radius-border project yellow-block">
 									<?php
 										echo "<table border='1' align='center' id='t2_b' class='table table-dark tabel-responsive'><tr class='CaseRow_qa_speech' align='center' >";
@@ -429,10 +429,119 @@
 										echo "</table>";
 									?>
 								</div>
+
+								
 							</div>
 						</div>
 					</div>
 					<a href='javascript:;' id='determine_sql_qa_speech'>
+					確定修改
+					</a>
+					<div class="container">
+						<h6 class="my-4">斷 詞 修 改 結 果</h6>
+						<div class="row">
+							<div class="col-lg-12 btm-mg-1">
+								<div class="alert alert-light radius-border project yellow-block" style="height:550px;overflow-y:auto" >
+								    <div class="row">
+									    <div class="col-lg-6" style="height:600px;overflow:auto;">
+											<?php
+							
+												//表格內容
+												echo "<table owner=$email_1 border='1' align='center' id='t2_1_c' class='table table-dark'><tr align='center'>";
+												$link = create_connection();
+												$sql = "SELECT ID,斷詞修改前,斷詞修改後 FROM `qa_speech_sentence` where `p_id` = '$p_id'";
+												$mysql_class = execute_sql($link, "socialbot", $sql);
+												$remain_transfer_dict = $mysql_class->fetch_all();
+												if(!empty($remain_transfer_dict)){
+													if(count($remain_transfer_dict) % 2 == 0){
+														$remain_transfer_dict = array_chunk($remain_transfer_dict,count($remain_transfer_dict) / 2);
+													}
+													else{
+														$remain_transfer_dict = array_chunk($remain_transfer_dict,count($remain_transfer_dict) / 2 + 1);
+													}
+													$result = $remain_transfer_dict[0];
+												}
+												else{
+													$result = array();
+												}
+												while ($field = $mysql_class->fetch_field())   // 顯示欄位名稱
+													{
+													echo "<td>" . $field->name . "</td>";
+													}
+												echo "</tr>";
+												$k=-1;
+												for($i = 0;$i < count($result);$i ++)
+												{
+													$k++;
+													echo "<tr id_qa_speech_sentence='$k'>";
+													for ($j = 0; $j < count($result[$i]); $j++)
+													{
+														echo "<td>" . $result[$i][$j] . "</td>";
+													}
+											?>
+												<td><a class="remove_a_qa_speech_sentence" row=<?php echo $k;?> href="javascript:;">刪除</a></td>
+											<?php		
+													echo "</tr>";
+												}
+												echo "</table>";
+											?>
+									    </div>
+										<div class="col-lg-6" style="height:600px;overflow:auto;">
+											<?php
+												$mysql_class = execute_sql($link, "socialbot", $sql);
+												//表格內容
+												echo "<table owner=$email_1 border='1' align='center' id='t2_2_c' class='table table-dark'><tr align='center'>";
+												if(empty($remain_transfer_dict) || count($remain_transfer_dict) < 2){
+													$result = array();
+												}
+												else{
+													$result = $remain_transfer_dict[1];
+												}
+												while ($field = $mysql_class->fetch_field())   // 顯示欄位名稱
+													{
+													echo "<td>" . $field->name . "</td>";
+													}
+												echo "</tr>";
+												for($i = 0;$i < count($result);$i ++)
+												{
+													$k++;
+													echo "<tr id_qa_speech_sentence='$k'>";
+													for ($j = 0; $j < count($result[$i]); $j++)
+													{
+														echo "<td>" . $result[$i][$j] . "</td>";
+													}
+											?>
+												<td><a class="remove_a_qa_speech_sentence" row=<?php echo $k;?> href="javascript:;">刪除</a></td>
+											<?php		
+													echo "</tr>";
+												}
+												echo "</table>";
+											?>
+									    </div>
+									</div>
+								</div>
+								<h6 class="my-4">刪 除 修 改 的 斷 詞</h6>
+								<div class="alert alert-light radius-border project yellow-block">
+									<?php
+										echo "<table border='1' align='center' id='t2_d' class='table table-dark tabel-responsive'><tr class='CaseRow_qa_speech' align='center' >";
+										$link = create_connection();
+										$sql = "SELECT ID,斷詞修改前,斷詞修改後 FROM `qa_speech_sentence` where `p_id` = '$p_id'";
+										$mysql_class = execute_sql($link, "socialbot", $sql);
+										echo "<td>datatype</td>";
+										while ($field = $mysql_class->fetch_field())   // 顯示欄位名稱
+											{
+											echo "<td>" . $field->name . "</td>";
+											}
+										echo "</tr>";
+										echo "</table>";
+									?>
+								</div>
+
+								
+							</div>
+						</div>
+					</div>
+					<a href='javascript:;' id='determine_sql_qa_speech_sentence'>
 					確定修改
 					</a>
 					<br><br><br><br><br>

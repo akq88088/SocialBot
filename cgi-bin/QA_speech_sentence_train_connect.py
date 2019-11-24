@@ -12,8 +12,7 @@ def json2df(data):
     result = []
     for i in range(0,len(data)):
         try:
-            data[i][3] = data[i][4]
-            data[i] = data[i][:4]
+            data[i] = data[i][:2]
             data_type = data[i][0].lstrip().rstrip()
             # with open("C:\\Users\\student\\Desktop\\json_test.txt",'a') as fout:    
             #     fout.write(data_type + '\n')
@@ -31,26 +30,24 @@ def json2df(data):
         else:
             pass
         data[i][0] = data_type
-        # with open("D:\\dektop\\QA_test_demo\\test.txt",'a',encoding='utf_8_sig') as fout:
+        # with open("C:\\Users\\student\\Desktop\\json_test.txt",'a') as fout:
         #     for row in data[i]:
         #         fout.write(str(row) + '\n')
-        
         result.append(data[i])
     df = pd.DataFrame(np.array(result))
     # df["owner"] = owner
-    df.columns = ["datatype","ID","原文斷詞","斷詞修改"]
+    df.columns = ["datatype","ID"]
     # with open("C:\\Users\\student\\Desktop\\json_test.txt",'a') as fout:
     #     fout.write(str(df.head()))
     return df
-# with open("D:\\dektop\\QA_test_demo\\tt.txt",'a',encoding='utf_8_sig') as fout:
-#     fout.write("start!")
+
 parameter = cgi.FieldStorage()
 data = parameter.getvalue('data')
 owner = parameter.getvalue('owner')
 p_name = parameter.getvalue('p_name')
 df = json2df(data)
 QA_train = QA_train(owner,p_name)
-QA_train.speech_train_main(df)
+QA_train.speech_sentence_train_main(df)
 print("Content-type:texspeech_train_maint/html") #必須
 print('') #必須
 print('QA train finish')
