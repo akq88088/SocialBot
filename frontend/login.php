@@ -1,6 +1,8 @@
 <?php
 	//啟動session
 	session_start();
+	$csrftoken = substr(hash("md5", rand()),0, 16); 
+	$_SESSION['csrf'] = $csrftoken;
 ?>
 <!DOCTYPE html>
 <html lang="zh-Hant-TW">
@@ -51,6 +53,7 @@
 			<div class="col-8 offset-2">
 				<div class="radius-border" id="panel">
 					<form action="checkpassword.php" method="post">
+						<input type="hidden" name="csrftoken" value=<?php echo $csrftoken;?>/>
 						<div class="form-group">
 							<input type="email" class="form-control radius-border" placeholder="Email" name="email"></input>
 							<input type="password" class="form-control radius-border" placeholder="密碼" name="password"></input>

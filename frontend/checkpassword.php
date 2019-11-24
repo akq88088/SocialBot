@@ -12,14 +12,21 @@
 	header("charset=utf-8");
 	
 	//取得表單資料
-	$email = $_POST["email"];
-	$password = $_POST["password"];
+	if(isset($_POST["email"]) && isset($_POST["password"]) && isset($_POST["csrftoken"])){
+		$email = $_POST["email"];
+		$password = $_POST["password"];
+	}
+	if($_POST["csrftoken"] != $_SESSION['csrf']){
+		header("location:login_false.php");
+	}
 	
 	//建立資料連接
 	$link = create_connection();
 	
 	//將Email與密碼和資料庫的紀錄作比對
-	$sql = "SELECT * FROM `member` Where `email` = '$email' AND `password` = '".md5($password)."'";
+	$email = mysqli_real_escape_string($link, $email);
+	$password = mysqli_real_escape_string($link, $password);
+	$sql = "SELECT * FROM `member` WHERE `email` = '$email' AND `password` = '".md5($password)."'";
 	$result = execute_sql($link, "socialbot", $sql);
 	
 	//若Email與密碼錯誤，就顯示對話方塊要求查明後再登入

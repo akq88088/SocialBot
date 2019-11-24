@@ -1,57 +1,84 @@
+<?php
+	//啟動session
+	session_start();
+	$csrftoken = substr(hash("md5", rand()),0, 16); 
+	$_SESSION['csrf'] = $csrftoken;
+?>
 <!DOCTYPE html>
-<html lang="zh">
+<html>
 <head>
-	<meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-
-	<!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" crossorigin="anonymous">
-	<!-- CustomScrollbar CSS -->
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
-	<title>語料專案</title>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>語料應用與分析工具</title>
+	<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<meta name="viewport" content="width=device-width">
+	<style>
+	h1{
+		text-align: center;
+		font-family:"標楷體";
+		font-size: 36px;
+		font-weight: bold;
+		font-style: normal;
+		font-stretch: normal;
+		line-height: normal;
+		letter-spacing: 15px;
+		color: white;
+	}
+	.Rectangle1{
+		width: 1300px;
+		height: 792px;
+		background-color: #e49d38;
+		text-align: center;
+	}
+	.Rectangle2{
+		width: 556px;
+		height: 338px;
+		border-radius: 38px;
+		background-color: white;
+		margin:0 auto;
+		text-align:center;
+		display:flex;
+		align-items:center;
+		justify-content:center;
+	}
+	#button{
+		width:100px;
+		height: 25px;
+		font-family: NotoSansCJKtc;
+		font-size: 16px;
+		font-weight: bold;
+		font-style: normal;
+		font-stretch: normal;
+		line-height: normal;
+		letter-spacing: normal;
+		background-color: #e49d38;
+		color:white;
+		border-style: none;
+		border-radius: 40px;
+	}	
+	</style>
 </head>
 <body>
-<?php
-	
-	/* 引入檔案 */
-	require_once("dbtools.inc.php");
-	
-	/* 取得表單資料 */
-	$email = $_POST['email'];
-	$password = $_POST['password'];
-	$name = $_POST['name'];
-
-	/* 建立資料連接 */
-	$link = create_connection();
-	
-	/* 將使用者的email 和 資料庫的email 欄位做比對 */
-	$sql = "SELECT * FROM `member` Where `email` = '$email'" ;
-	$result = execute_sql($link, "socialbot", $sql);
-	
-	if(mysqli_num_rows($result) != 0 || $email == NULL || $password == NULL)
-	{
-		/* 釋放記憶體空間 */
-		mysqli_free_result($result);
-		
-		header('location: register_false.php');
-	}
-	else
-	{
-		/* 釋放記憶體空間 */
-		mysqli_free_result($result);
-		
-		/* 將資料寫入資料庫 */
-		$sql = "INSERT INTO `member` (member_id, email, password, name)
-			VALUES ('".hash('md5',$email)."','$email','".md5($password)."', '$name')";
-	
-		$result = execute_sql($link, "socialbot", $sql);
-	
-		/* 關閉資料連結 */
-		mysqli_close($link);
-		
-		header('location: register_finish.php');
-	}
-?>
+	<div class="Rectangle1">
+		<br>
+		<h1>語料應用與分析工具</h1>
+		<br><br>
+		<div class="Rectangle2">
+			<div id="center">
+				<form action="regist.php" method="post">
+					<input type="hidden" name="csrftoken" value=<?php echo $csrftoken;?>/>
+					<p> Email： <input type="text" name="email"/><br></p>
+					<p>Password：<input type="password" name="password"/><br></p>
+					<p> Name： <input type="text" name="name"/><br></p>
+					<br>
+					<p align="right">
+						<input id="button" type="submit" class="btn btn-default" value="註冊">
+					</p>
+				</form>	
+			</div>
+		</div>
+	</div>
 </body>
 </html>

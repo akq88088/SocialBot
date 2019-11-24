@@ -44,8 +44,8 @@
 		$email = $_SESSION['email'];
 		$email_1 = hash('md5',$email);
 		$link = create_connection();
-		$sql = "SELECT * FROM `project` where `owner` = '$email_1'";
-		$sql_1 = "SELECT `authority` FROM `member` where `member_id` = '$email_1'";
+		$sql = "SELECT * FROM `project` where `owner` = '$email'";
+		$sql_1 = "SELECT `authority` FROM `member` where `member_id` = '$email'";
 		$result = execute_sql($link, "socialbot", $sql);
 		$result_1 = execute_sql($link, "socialbot", $sql_1);
 		
@@ -58,6 +58,7 @@
 		}
 		
 		//權限
+		$authority=0;
 		while ($row_1 = $result_1->fetch_row()) {
 			for ($i = 0; $i < $result_1->field_count; $i++)
 				$authority = $row_1[$i];
