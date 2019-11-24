@@ -45,7 +45,7 @@
 		$email_1 = hash('md5',$email);
 		$link = create_connection();
 		$sql = "SELECT * FROM `project` where `owner` = '$email'";
-		$sql_1 = "SELECT `authority` FROM `member` where `member_id` = '$email'";
+		$sql_1 = "SELECT `authority` FROM `member` where `member_id` = '$email_1'";
 		$result = execute_sql($link, "socialbot", $sql);
 		$result_1 = execute_sql($link, "socialbot", $sql_1);
 		
