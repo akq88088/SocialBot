@@ -102,7 +102,8 @@ $(document).ready(function(){
 			},
 			success: function(text){
 				$("#summary").val(text);
-				getQA_test(text,p_name)
+				var summary_text = text
+				getQA_test(summary_text,p_name)
 			},
 			complete:function(){
 			}
@@ -283,7 +284,7 @@ $(document).ready(function(){
 			}
 		});
 	}
-	var getQA_test = function(text,p_name){
+	var getQA_test = function(summary_text,p_name){
 
 		$.ajax({
 			method: "POST",
@@ -291,7 +292,7 @@ $(document).ready(function(){
 			async: true, //非同步化
 			// dataType:"json",
 			data: {
-				"text":text,
+				"text":summary_text,
 				"p_name":p_name
 				// data
 			},
