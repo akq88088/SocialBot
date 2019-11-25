@@ -592,21 +592,21 @@ var rule_list = rule.split("+");
 var que_list = que.split("+");
 for(i = 0;i < rule_list.length;i ++){
   rule_list[i] = rule_list[i].lTrim().rTrim()
-  var temp = rule_list[i]
-  temp = remove_number(temp)
-  if(!is_boson_flag(temp) && !is_article_remain(temp)){
-	alert("規則只能填入boson的詞性標記或是文章保留字");
-	return false
-  }
+//   var temp = rule_list[i]
+//   temp = remove_number(temp)
+//   if(!is_boson_flag(temp) && !is_article_remain(temp)){
+// 	alert("規則只能填入boson的詞性標記或是文章保留字");
+// 	return false
+//   }
 }
 for(i = 0;i < que_list.length;i ++){
   que_list[i] = que_list[i].lTrim().rTrim()
-  var temp = que_list[i]
-  temp = remove_number(temp)
-  if(!is_boson_flag(temp) && !is_que_remain(temp)){
-	alert("規則只能填入boson的詞性標記或是出題保留字");
-	return false
-  }
+//   var temp = que_list[i]
+//   temp = remove_number(temp)
+//   if(!is_boson_flag(temp) && !is_que_remain(temp)){
+// 	alert("規則只能填入boson的詞性標記或是出題保留字");
+// 	return false
+//   }
 }
 if(rule_list.length <= 1 || que_list.length <= 1){
   alert("請以加號隔開字詞");
