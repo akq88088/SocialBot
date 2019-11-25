@@ -373,11 +373,13 @@ def getSummary(text,algorithm="textsim",percentage=0.4):
 
 def txt2text_list(data_dir='D:\\dektop\\QA_test_demo\\泰北課文'):
     result_list = []
+    title_list = []
     text_list = glob.glob(os.path.join(data_dir,'*.txt'))
     for txt in text_list:
         with open(txt,'r',encoding='utf_8_sig') as fin:
             result_list.append(fin.read())
-    return result_list
+        title_list.append(txt)
+    return result_list,title_list
 
 parameter = cgi.FieldStorage()
 text = parameter.getvalue('text')
@@ -391,7 +393,10 @@ iRun = 0
 insert_id = 0
 result_list = []
 que_ans_dict = {}
-df_result = QA_test.predict(text)
+try:
+    df_result = QA_test.predict(text)
+except:
+    df_result = []
 if len(df_result.columns) == 10:
     que_ans_dict = {}
     for i in range(len(df_result)):
@@ -402,7 +407,7 @@ else:
 print("Content-type:text/html") #必須
 print('') #必須
 print(json.dumps(que_ans_dict))
-# text_list = txt2text_list()
+# text_list,title_list = txt2text_list()
 # iRun = 0
 # result_list = []
 # while True:
@@ -419,7 +424,7 @@ print(json.dumps(que_ans_dict))
 #         try:
 #             text = text_list[iRun]
 #             text = getSummary(text)
-#             df_result = QA_test.predict_rule_scan(text)
+#             df_result = QA_test.predict(text)
 #             not_success = False
 #         # break
 #         except:
@@ -427,10 +432,11 @@ print(json.dumps(que_ans_dict))
 #             continue
 #     if len(df_result) > 0:
 #         df_result["n_article"] = text
+#         df_result["title"] = title_list[iRun]
 #         result_list.append(df_result)
 #     iRun += 1
 
 # df = pd.concat(result_list,axis=0)
-# df.to_csv(os.path.join('D:\\dektop\\QA_test_demo','QA_test_1116.csv'),index=0,encoding='utf_8_sig')
+# df.to_csv(os.path.join('D:\\dektop\\QA_test_demo','QA_泰北_1124.csv'),index=0,encoding='utf_8_sig')
 # print('finish')
 

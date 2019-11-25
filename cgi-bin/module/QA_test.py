@@ -116,9 +116,12 @@ class QA_test:
                     sentence = sentence.replace(key,"")
                     speech_index_list.append(self.SPEECH_INDEX(key,self.speech_dict[key].verb,self.speech_dict[key].ner,find_index))
             for j in range(len(segment[i])):
-                word = segment[i][j]
-                flag = flag_list[i][j]
-                n = ner[i][j]
+                try:
+                    word = segment[i][j]
+                    flag = flag_list[i][j]
+                    n = ner[i][j]
+                except:
+                    continue
                 find_index = sentence.find(word)
                 if find_index != -1:
                     find_index = sentence_origin.find(word)
