@@ -399,6 +399,7 @@ except:
     df_result = []
 if len(df_result.columns) == 10:
     que_ans_dict = {}
+    df_result = df_result.drop_duplicates(["輸入出題","輸入答案"])
     for i in range(len(df_result)):
         que_ans_dict.update({insert_id:[df_result["輸入出題"][i],df_result["輸入答案"][i]]})
         insert_id += 1
