@@ -32,7 +32,7 @@ $(document).ready(function(){
 	// });
 	const textUploader_qa = document.querySelector('#QA_file');
 	textUploader_qa.addEventListener('change', function(e) {
-		console.log(e.target.files); // get file object
+		// console.log(e.target.files); // get file object
 		var reader = new FileReader();
 		var file_name = (e.target.files[0].name).split(".")
 		file_name = file_name[file_name.length - 1]
@@ -101,7 +101,8 @@ $(document).ready(function(){
 			},
 			success: function(text){
 				alert("檔案上傳完成!")
-				window.location.reload();
+				qa_reload(owner,p_name)
+				// window.location.reload();
 				// 成功回傳後要做甚麼
 			},
 			complete:function(){
@@ -126,7 +127,8 @@ $(document).ready(function(){
 			},
 			success: function(text){
 				alert("規則產生完成!")
-				window.location.reload();
+				qa_reload(owner,p_name)
+				// window.location.reload();
 			},
 			complete:function(){
 				
@@ -155,206 +157,202 @@ $(document).ready(function(){
 			}
 		});
 	}
-		$(".add_a").on('click',function() {
-			var tr = "<tr class='CaseRow'><td>新增</td><td>-1</td><td></td><td></td><td></td><td>X</td><td>X</td><td>X</td><td><a class='modify_b' href='javascript:;'>修改</a></td><td><a href='javascript:;' onclick='cancel(this)'>取消</a></td></tr>";
-			$('#t_b').append(tr);//向table中追加tr
-			$(".modify_b").off("click");
-				$(".modify_b").on("click",function() {
-					var button_id = $(this).attr('id');
-					var tab=document.getElementById(button_id);			
-					$('#t_b').append(tab);//向table中追加tr
-					if($(this).text() == "確定"){
-						var rule = "";
-						var que = "";
-						var ans = "";
-						$(this).parent().siblings("td:eq(2)").each(function() {  // 获取当前行的第二列单元格
-							obj_text = $(this).find("input:text");    // 判断单元格下是否有文本框
-							rule = obj_text.val();
-						});	
-						$(this).parent().siblings("td:eq(3)").each(function() {  // 获取当前行的第二列单元格
-							obj_text = $(this).find("input:text");    // 判断单元格下是否有文本框
-							que = obj_text.val();
-						});	
-						$(this).parent().siblings("td:eq(4)").each(function() {  // 获取当前行的第二列单元格
-							obj_text = $(this).find("input:text");    // 判断单元格下是否有文本框
-							ans = obj_text.val();
-						});
-						check_flag = check_rule(rule,que,ans);
-						// check_flag = true
-						if(check_flag){
-							str = $(this).text()=="修改"?"確定":"修改";  
-							$(this).text(str);   // 按钮被点击后，在“编辑”和“确定”之间切换
-							$(this).parent().siblings("td:eq(2)").each(function() {  // 获取当前行的第二列单元格
-								obj_text = $(this).find("input:text");    // 判断单元格下是否有文本框
-								if(!obj_text.length)   // 如果没有文本框，则添加文本框使之可以编辑
-									$(this).html("<input type='text' value='"+$(this).text()+"'>");
-								else   // 如果已经存在文本框，则将其显示为文本框修改的值
-									$(this).html(obj_text.val()); 
-							});
-							$(this).parent().siblings("td:eq(3)").each(function() {  // 获取当前行的第二列单元格
-								obj_text = $(this).find("input:text");    // 判断单元格下是否有文本框
-								if(!obj_text.length)   // 如果没有文本框，则添加文本框使之可以编辑
-									$(this).html("<input type='text' value='"+$(this).text()+"'>");
-								else   // 如果已经存在文本框，则将其显示为文本框修改的值
-									$(this).html(obj_text.val()); 
-							});
-							$(this).parent().siblings("td:eq(4)").each(function() {  // 获取当前行的第二列单元格
-								obj_text = $(this).find("input:text");    // 判断单元格下是否有文本框
-								if(!obj_text.length)   // 如果没有文本框，则添加文本框使之可以编辑
-									$(this).html("<input type='text' value='"+$(this).text()+"'>");
-								else   // 如果已经存在文本框，则将其显示为文本框修改的值
-									$(this).html(obj_text.val()); 
-							
-							});
-						}
-					}
-					else{
-					str = $(this).text()=="修改"?"確定":"修改";  
-					$(this).text(str);   // 按钮被点击后，在“编辑”和“确定”之间切换
+	var add_a = function() {
+		var tr = "<tr class='CaseRow'><td>新增</td><td>-1</td><td></td><td></td><td></td><td>X</td><td>X</td><td>X</td><td><a class='modify_b' href='javascript:;'>修改</a></td><td><a href='javascript:;' onclick='cancel(this)'>取消</a></td></tr>";
+		$('#t_b').append(tr);//向table中追加tr
+		$(".modify_b").off("click");
+			$(".modify_b").on("click",function() {
+				var button_id = $(this).attr('id');
+				var tab=document.getElementById(button_id);			
+				$('#t_b').append(tab);//向table中追加tr
+				if($(this).text() == "確定"){
+					var rule = "";
+					var que = "";
+					var ans = "";
 					$(this).parent().siblings("td:eq(2)").each(function() {  // 获取当前行的第二列单元格
 						obj_text = $(this).find("input:text");    // 判断单元格下是否有文本框
-						if(!obj_text.length)   // 如果没有文本框，则添加文本框使之可以编辑
-							$(this).html("<input type='text' value='"+$(this).text()+"'>");
-						else   // 如果已经存在文本框，则将其显示为文本框修改的值
-							$(this).html(obj_text.val()); 
-					});
+						rule = obj_text.val();
+					});	
 					$(this).parent().siblings("td:eq(3)").each(function() {  // 获取当前行的第二列单元格
 						obj_text = $(this).find("input:text");    // 判断单元格下是否有文本框
-						if(!obj_text.length)   // 如果没有文本框，则添加文本框使之可以编辑
-							$(this).html("<input type='text' value='"+$(this).text()+"'>");
-						else   // 如果已经存在文本框，则将其显示为文本框修改的值
-							$(this).html(obj_text.val()); 
-					});
+						que = obj_text.val();
+					});	
 					$(this).parent().siblings("td:eq(4)").each(function() {  // 获取当前行的第二列单元格
 						obj_text = $(this).find("input:text");    // 判断单元格下是否有文本框
-						if(!obj_text.length)   // 如果没有文本框，则添加文本框使之可以编辑
-							$(this).html("<input type='text' value='"+$(this).text()+"'>");
-						else   // 如果已经存在文本框，则将其显示为文本框修改的值
-							$(this).html(obj_text.val()); 
-					
-					});}
-				});
-		});
-	
-
-	
-		$(".modify_a").on("click",function() {
-			var button_id = $(this).attr('row')
-			var b_check_id = $("#t_b>tbody>tr")
-			var b_exist = false
-			for(i = 1;i < b_check_id.length;i ++){
-				var b_child = b_check_id[i].childNodes
-				if(b_check_id[i].id == button_id){
-					b_exist = true
-					break
-				}
-			}
-			if(b_exist){
-				return
-			}
-			var tab=document.getElementById(button_id);
-			var tab_b = tab.cloneNode(true);
-			tab_b.setAttribute("class","CaseRow");
-			for(i = 0;i < 4;i ++){
-				var lchind = tab_b.lastChild;
-				tab_b.removeChild(lchind);
-			}
-			var td = document.createElement("td");
-			var t = document.createTextNode("修改");
-			td.appendChild(t);
-			tab_b.insertBefore(td,tab_b.firstChild);
-
-			var td = document.createElement("td");
-			var a = document.createElement("a");
-			var t = document.createTextNode("修改");
-			a.setAttribute("class","modify_b");
-			a.setAttribute("row",button_id);
-			a.setAttribute("href","javascript:;")
-			a.appendChild(t);
-			td.appendChild(a);
-			tab_b.appendChild(td)
-
-			var td = document.createElement("td");
-			var a = document.createElement("a");
-			var t = document.createTextNode("取消");
-			a.setAttribute("class","cancel");
-			a.setAttribute("row",button_id);
-			a.setAttribute("href","javascript:;")
-			a.setAttribute("onclick","cancel(this)")
-			a.appendChild(t);
-			td.appendChild(a);
-			tab_b.appendChild(td)
-			$('#t_b').append(tab_b);
-			$(".modify_b").off("click");
-				$(".modify_b").on("click",function() {
-					var button_id = $(this).attr('id');
-					var tab=document.getElementById(button_id);			
-					$('#t_b').append(tab);//向table中追加tr
-					if($(this).text() == "確定"){
-						var rule = "";
-						var que = "";
-						var ans = "";
+						ans = obj_text.val();
+					});
+					check_flag = check_rule(rule,que,ans);
+					// check_flag = true
+					if(check_flag){
+						str = $(this).text()=="修改"?"確定":"修改";  
+						$(this).text(str);   // 按钮被点击后，在“编辑”和“确定”之间切换
 						$(this).parent().siblings("td:eq(2)").each(function() {  // 获取当前行的第二列单元格
-							// obj_text = $(this).find("input:text");    // 判断单元格下是否有文本框
-							rule = $(this).text()
-							// obj_text = $(this).text()
-						});	
+							obj_text = $(this).find("input:text");    // 判断单元格下是否有文本框
+							if(!obj_text.length)   // 如果没有文本框，则添加文本框使之可以编辑
+								$(this).html("<input type='text' value='"+$(this).text()+"'>");
+							else   // 如果已经存在文本框，则将其显示为文本框修改的值
+								$(this).html(obj_text.val()); 
+						});
 						$(this).parent().siblings("td:eq(3)").each(function() {  // 获取当前行的第二列单元格
 							obj_text = $(this).find("input:text");    // 判断单元格下是否有文本框
-							que = obj_text.val();
-						});	
+							if(!obj_text.length)   // 如果没有文本框，则添加文本框使之可以编辑
+								$(this).html("<input type='text' value='"+$(this).text()+"'>");
+							else   // 如果已经存在文本框，则将其显示为文本框修改的值
+								$(this).html(obj_text.val()); 
+						});
 						$(this).parent().siblings("td:eq(4)").each(function() {  // 获取当前行的第二列单元格
 							obj_text = $(this).find("input:text");    // 判断单元格下是否有文本框
-							ans = obj_text.val();
+							if(!obj_text.length)   // 如果没有文本框，则添加文本框使之可以编辑
+								$(this).html("<input type='text' value='"+$(this).text()+"'>");
+							else   // 如果已经存在文本框，则将其显示为文本框修改的值
+								$(this).html(obj_text.val()); 
+						
 						});
-						console.log(rule)
-						console.log(que)
-						console.log(ans)
-						check_flag = check_rule(rule,que,ans);
-						// check_flag = true
-						if(check_flag){
-							str = $(this).text()=="修改"?"確定":"修改";  
-							$(this).text(str);   // 按钮被点击后，在“编辑”和“确定”之间切换
-							$(this).parent().siblings("td:eq(3)").each(function() {  // 获取当前行的第二列单元格
-								obj_text = $(this).find("input:text");    // 判断单元格下是否有文本框
-								if(!obj_text.length)   // 如果没有文本框，则添加文本框使之可以编辑
-									$(this).html("<input type='text' value='"+$(this).text()+"'>");
-								else   // 如果已经存在文本框，则将其显示为文本框修改的值
-									$(this).html(obj_text.val()); 
-							});
-							$(this).parent().siblings("td:eq(4)").each(function() {  // 获取当前行的第二列单元格
-								obj_text = $(this).find("input:text");    // 判断单元格下是否有文本框
-								if(!obj_text.length)   // 如果没有文本框，则添加文本框使之可以编辑
-									$(this).html("<input type='text' value='"+$(this).text()+"'>");
-								else   // 如果已经存在文本框，则将其显示为文本框修改的值
-									$(this).html(obj_text.val()); 
-							
-							});
-						}
 					}
-					else{
-					str = $(this).text()=="修改"?"確定":"修改";  
-					$(this).text(str);   // 按钮被点击后，在“编辑”和“确定”之间切换
+				}
+				else{
+				str = $(this).text()=="修改"?"確定":"修改";  
+				$(this).text(str);   // 按钮被点击后，在“编辑”和“确定”之间切换
+				$(this).parent().siblings("td:eq(2)").each(function() {  // 获取当前行的第二列单元格
+					obj_text = $(this).find("input:text");    // 判断单元格下是否有文本框
+					if(!obj_text.length)   // 如果没有文本框，则添加文本框使之可以编辑
+						$(this).html("<input type='text' value='"+$(this).text()+"'>");
+					else   // 如果已经存在文本框，则将其显示为文本框修改的值
+						$(this).html(obj_text.val()); 
+				});
+				$(this).parent().siblings("td:eq(3)").each(function() {  // 获取当前行的第二列单元格
+					obj_text = $(this).find("input:text");    // 判断单元格下是否有文本框
+					if(!obj_text.length)   // 如果没有文本框，则添加文本框使之可以编辑
+						$(this).html("<input type='text' value='"+$(this).text()+"'>");
+					else   // 如果已经存在文本框，则将其显示为文本框修改的值
+						$(this).html(obj_text.val()); 
+				});
+				$(this).parent().siblings("td:eq(4)").each(function() {  // 获取当前行的第二列单元格
+					obj_text = $(this).find("input:text");    // 判断单元格下是否有文本框
+					if(!obj_text.length)   // 如果没有文本框，则添加文本框使之可以编辑
+						$(this).html("<input type='text' value='"+$(this).text()+"'>");
+					else   // 如果已经存在文本框，则将其显示为文本框修改的值
+						$(this).html(obj_text.val()); 
+				
+				});}
+			});
+	}
+		$(".add_a").on('click',add_a);
+	
+
+	var modify_a = function() {
+		var button_id = $(this).attr('row')
+		var b_check_id = $("#t_b>tbody>tr")
+		var b_exist = false
+		for(i = 1;i < b_check_id.length;i ++){
+			var b_child = b_check_id[i].childNodes
+			if(b_check_id[i].id == button_id){
+				b_exist = true
+				break
+			}
+		}
+		if(b_exist){
+			return
+		}
+		var tab=document.getElementById(button_id);
+		var tab_b = tab.cloneNode(true);
+		tab_b.setAttribute("class","CaseRow");
+		for(i = 0;i < 4;i ++){
+			var lchind = tab_b.lastChild;
+			tab_b.removeChild(lchind);
+		}
+		var td = document.createElement("td");
+		var t = document.createTextNode("修改");
+		td.appendChild(t);
+		tab_b.insertBefore(td,tab_b.firstChild);
+
+		var td = document.createElement("td");
+		var a = document.createElement("a");
+		var t = document.createTextNode("修改");
+		a.setAttribute("class","modify_b");
+		a.setAttribute("row",button_id);
+		a.setAttribute("href","javascript:;")
+		a.appendChild(t);
+		td.appendChild(a);
+		tab_b.appendChild(td)
+
+		var td = document.createElement("td");
+		var a = document.createElement("a");
+		var t = document.createTextNode("取消");
+		a.setAttribute("class","cancel");
+		a.setAttribute("row",button_id);
+		a.setAttribute("href","javascript:;")
+		a.setAttribute("onclick","cancel(this)")
+		a.appendChild(t);
+		td.appendChild(a);
+		tab_b.appendChild(td)
+		$('#t_b').append(tab_b);
+		$(".modify_b").off("click");
+			$(".modify_b").on("click",function() {
+				var button_id = $(this).attr('id');
+				var tab=document.getElementById(button_id);			
+				$('#t_b').append(tab);//向table中追加tr
+				if($(this).text() == "確定"){
+					var rule = "";
+					var que = "";
+					var ans = "";
+					$(this).parent().siblings("td:eq(2)").each(function() {  // 获取当前行的第二列单元格
+						// obj_text = $(this).find("input:text");    // 判断单元格下是否有文本框
+						rule = $(this).text()
+						// obj_text = $(this).text()
+					});	
 					$(this).parent().siblings("td:eq(3)").each(function() {  // 获取当前行的第二列单元格
 						obj_text = $(this).find("input:text");    // 判断单元格下是否有文本框
-						if(!obj_text.length)   // 如果没有文本框，则添加文本框使之可以编辑
-							$(this).html("<input type='text' value='"+$(this).text()+"'>");
-						else   // 如果已经存在文本框，则将其显示为文本框修改的值
-							$(this).html(obj_text.val()); 
-					});
+						que = obj_text.val();
+					});	
 					$(this).parent().siblings("td:eq(4)").each(function() {  // 获取当前行的第二列单元格
 						obj_text = $(this).find("input:text");    // 判断单元格下是否有文本框
-						if(!obj_text.length)   // 如果没有文本框，则添加文本框使之可以编辑
-							$(this).html("<input type='text' value='"+$(this).text()+"'>");
-						else   // 如果已经存在文本框，则将其显示为文本框修改的值
-							$(this).html(obj_text.val()); 
-					
-					});}
+						ans = obj_text.val();
+					});
+					check_flag = check_rule(rule,que,ans);
+					// check_flag = true
+					if(check_flag){
+						str = $(this).text()=="修改"?"確定":"修改";  
+						$(this).text(str);   // 按钮被点击后，在“编辑”和“确定”之间切换
+						$(this).parent().siblings("td:eq(3)").each(function() {  // 获取当前行的第二列单元格
+							obj_text = $(this).find("input:text");    // 判断单元格下是否有文本框
+							if(!obj_text.length)   // 如果没有文本框，则添加文本框使之可以编辑
+								$(this).html("<input type='text' value='"+$(this).text()+"'>");
+							else   // 如果已经存在文本框，则将其显示为文本框修改的值
+								$(this).html(obj_text.val()); 
+						});
+						$(this).parent().siblings("td:eq(4)").each(function() {  // 获取当前行的第二列单元格
+							obj_text = $(this).find("input:text");    // 判断单元格下是否有文本框
+							if(!obj_text.length)   // 如果没有文本框，则添加文本框使之可以编辑
+								$(this).html("<input type='text' value='"+$(this).text()+"'>");
+							else   // 如果已经存在文本框，则将其显示为文本框修改的值
+								$(this).html(obj_text.val()); 
+						
+						});
+					}
+				}
+				else{
+				str = $(this).text()=="修改"?"確定":"修改";  
+				$(this).text(str);   // 按钮被点击后，在“编辑”和“确定”之间切换
+				$(this).parent().siblings("td:eq(3)").each(function() {  // 获取当前行的第二列单元格
+					obj_text = $(this).find("input:text");    // 判断单元格下是否有文本框
+					if(!obj_text.length)   // 如果没有文本框，则添加文本框使之可以编辑
+						$(this).html("<input type='text' value='"+$(this).text()+"'>");
+					else   // 如果已经存在文本框，则将其显示为文本框修改的值
+						$(this).html(obj_text.val()); 
 				});
-		});
-
-	$(function(){
-		$(".remove_a").click(function() {
+				$(this).parent().siblings("td:eq(4)").each(function() {  // 获取当前行的第二列单元格
+					obj_text = $(this).find("input:text");    // 判断单元格下是否有文本框
+					if(!obj_text.length)   // 如果没有文本框，则添加文本框使之可以编辑
+						$(this).html("<input type='text' value='"+$(this).text()+"'>");
+					else   // 如果已经存在文本框，则将其显示为文本框修改的值
+						$(this).html(obj_text.val()); 
+				
+				});}
+			});
+	}
+		$(".modify_a").on("click",modify_a);
+		var remove_a = function() {
 			var button_id = $(this).attr('row');
 			var b_check_id = $("#t_b>tbody>tr")
 			var b_exist = false
@@ -389,8 +387,8 @@ $(document).ready(function(){
 			td.appendChild(a);
 			tab_b.appendChild(td)
 			$('#t_b').append(tab_b);
-		});
-	});
+		}
+		$(".remove_a").on("click",remove_a);
 
 	$('#determine_sql').on('click', function(){
 		var obj_text = $("#t1").find("input:text");
@@ -427,7 +425,8 @@ $(document).ready(function(){
 			},
 			success: function(text){
 				alert("規則修改完成!")
-				window.location.reload();
+				qa_reload(owner,p_name)
+				// window.location.reload();
 			},
 			complete:function(){
 				// window.location.reload();
@@ -451,7 +450,8 @@ $(document).ready(function(){
 			},
 			success: function(text){
 				alert("訓練資料刪除完成!")
-				window.location.reload();
+				qa_reload(owner,p_name)
+				// window.location.reload();
 			},
 			complete:function(){
 				
@@ -476,7 +476,33 @@ $(document).ready(function(){
 			},
 			success: function(text){
 				alert("規則刪除完成!")
-				window.location.reload();
+				qa_reload(owner,p_name)
+				// window.location.reload();
+			},
+			complete:function(){
+				
+				// console.log("rule generate complete")
+			}
+		});
+	}
+	var qa_reload = function(owner,p_name){
+		$.ajax({
+			method: "GET",
+			url: "../backend/qa_reload.php",
+			async: true, //非同步化
+			// dataType:"json",
+			data: {
+				"owner" : owner,
+				"name" : p_name
+			},
+			beforeSend:function(){
+			},
+			success: function(res){
+				// alert("規則刪除完成!")
+				// $("#qa_reload").html(res)
+				$("#qa_reload").html(res)
+				$(".modify_a").on("click",modify_a);
+				$(".remove_a").on("click",remove_a);
 			},
 			complete:function(){
 				

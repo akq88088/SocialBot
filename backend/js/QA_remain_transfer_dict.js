@@ -69,8 +69,8 @@ $(document).ready(function(){
 			},
 			success: function(text){
 				alert("檔案上傳完成!");
-				window.location.reload();
-				$("div[target='#QA_remain_transfer_dict']").click()
+				qa_remain_transfer_dict_reload(owner,p_name)
+				// window.location.reload();
 			},
 			complete:function(){
 				// window.location.reload();
@@ -138,8 +138,7 @@ $(document).ready(function(){
 		});
 	
 
-	
-		$(".modify_a_qa_remain_transfer_dict").on("click",function() {
+		var modify_a_qa_remain_transfer_dict = function() {
 			var button_id = $(this).attr('row')
 			var b_check_id = $("#t1_b>tbody>tr")
 			var b_exist = false
@@ -243,10 +242,10 @@ $(document).ready(function(){
 					
 					});}
 				});
-		});
+		}
+		$(".modify_a_qa_remain_transfer_dict").on("click",modify_a_qa_remain_transfer_dict);
 
-	$(function(){
-		$(".remove_a_qa_remain_transfer_dict").click(function() {
+		var remove_a_qa_remain_transfer_dict = function() {
 			var button_id = $(this).attr('row');
 			var b_check_id = $("#t1_b>tbody>tr")
 			var b_exist = false
@@ -281,8 +280,8 @@ $(document).ready(function(){
 			td.appendChild(a);
 			tab_b.appendChild(td)
 			$('#t1_b').append(tab_b);
-		});
-	});
+		}
+		$(".remove_a_qa_remain_transfer_dict").on("click",remove_a_qa_remain_transfer_dict);
 
 	$('#determine_sql_qa_remain_transfer_dict').on('click', function(){
 		var obj_text = $("#t1_b").find("input:text");
@@ -318,7 +317,9 @@ $(document).ready(function(){
 			beforeSend:function(){
 			},
 			success: function(text){
-				window.location.reload();
+				qa_remain_transfer_dict_reload(owner,p_name)
+				alert("修改完成!")
+				// window.location.reload();
 			},
 			complete:function(){
 				// window.location.reload();
@@ -342,7 +343,33 @@ $(document).ready(function(){
 			},
 			success: function(text){
 				alert("規則刪除完成!")
-				window.location.reload();
+				qa_remain_transfer_dict_reload(owner,p_name)
+				// window.location.reload();
+			},
+			complete:function(){
+				
+				// console.log("rule generate complete")
+			}
+		});
+	}
+	var qa_remain_transfer_dict_reload = function(owner,p_name){
+		$.ajax({
+			method: "GET",
+			url: "../backend/qa_remain_transfer_dict_reload.php",
+			async: true, //非同步化
+			// dataType:"json",
+			data: {
+				"owner" : owner,
+				"name" : p_name
+			},
+			beforeSend:function(){
+			},
+			success: function(res){
+				// alert("規則刪除完成!")
+				// $("#qa_reload").html(res)
+				$("#qa_remain_transfer_dict_reload").html(res)
+				$(".modify_a_qa_remain_transfer_dict").on("click",modify_a_qa_remain_transfer_dict);
+				$(".remove_a_qa_remain_transfer_dict").on("click",remove_a_qa_remain_transfer_dict);
 			},
 			complete:function(){
 				

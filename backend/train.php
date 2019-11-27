@@ -118,7 +118,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="container">
+					<div class="container" id="qa_reload">
 						<h6 class="my-4">出 題 規 則</h6>
 						<div class="row">
 							<div class="col-lg-12 btm-mg-1">
@@ -209,7 +209,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="container">
+					<div class="container" id="qa_remain_transfer_dict_reload">
 						<h6 class="my-4">保 留 字 字 典</h6>
 						<div class="row">
 							<div class="col-lg-12 btm-mg-1">
@@ -329,7 +329,7 @@
 					<br><br><br><br><br>
 				</div>
 				<div id="QA_speech" class="collapse">
-					<div class="container">
+					<div class="container" id="qa_speech_reload_modify">
 						<h6 class="my-4">原 文 斷 句</h6>
 						<div class="row">
 							<div class="col-lg-12 btm-mg-1">
@@ -437,7 +437,7 @@
 					<a href='javascript:;' id='determine_sql_qa_speech'>
 					確定修改
 					</a>
-					<div class="container">
+					<div class="container" id="qa_speech_reload_remove">
 						<h6 class="my-4">斷 詞 修 改 結 果</h6>
 						<div class="row">
 							<div class="col-lg-12 btm-mg-1">

@@ -24,6 +24,7 @@ class QA_train:
             self.verb = verb
             self.ner = ner
             self.start_index = start_index
+
     def __init__(self,owner,p_name):
         self.add_remain_dict = {}
         self.ner_eng_ch_dict = {'per':'人','obj':'物','time':'時','place':'地','人':'per','物':'obj','時':'time','地':'place'}
