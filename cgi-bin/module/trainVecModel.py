@@ -1,6 +1,7 @@
 #coding=utf-8
 import numpy as np
 import json,re,random,heapq,os
+import gensim
 from keras.layers import Dense
 from keras.models import Sequential
 from keras.models import load_model
@@ -129,15 +130,18 @@ class Dictionary():
 			fileTexts = ''.join(file.readlines())
 		wv = json.loads(fileTexts)
 		for word in wv:
-			self.dictionary[word].vector = np.array(wv[word])
+			if word in self.dictionary:
+				self.dictionary[word].vector = np.array(wv[word])
 		
 class VectorModel():
 	def __init__(self,folder):
 		self.folder = folder
 		self.dic = Dictionary(folder=folder)
 		if os.path.isfile(self.folder+'/def2vec.h5'):
-			# print('有model可以load')
+		# 	# print('有model可以load')
 			self.model = load_model(folder+'/def2vec.h5')
+		if os.path.isfile(self.folder+'/govDict_w2v.model'):
+			self.w2v_model = gensim.models.Word2Vec.load(self.folder+'/govDict_w2v.model')
 		
 	def trainWordVec(self,vectorLen=100):
 		self.model = Sequential()
@@ -149,11 +153,14 @@ class VectorModel():
 			# self.dic.dictionary[self.intToWord[i]].vector = vec
 		
 	def getSimilar(self,text):
-		distanceResult = cosine_distance([self.model.get_weights()[0][self.dic.wordToInt[text]]],self.model.get_weights()[0])
-		topIndex = map(distanceResult[0].index, heapq.nlargest(20, distanceResult[0]))
-		for i in topIndex:
-			if distanceResult[0][i]>0.5:
-	#			print(distanceResult[0][i],self.intToWord[i])
+	# 	distanceResult = cosine_distance([self.model.get_weights()[0][self.dic.wordToInt[text]]],self.model.get_weights()[0])
+	# 	topIndex = map(distanceResult[0].index, heapq.nlargest(20, distanceResult[0]))
+	# 	for i in topIndex:
+	# 		if distanceResult[0][i]>0.5:
+	# #			print(distanceResult[0][i],self.intToWord[i])
+	# 			yield self.dic.intToWord[i]
+		for sim in w2v_model.wv.most_similar(word,topn=1000):
+			if sim[1]>0.6:
 				yield self.dic.intToWord[i]
 		
 	def saveAll(self):

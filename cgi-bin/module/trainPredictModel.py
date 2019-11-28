@@ -2,7 +2,8 @@
 import pandas as pd
 import numpy as np
 import json
-from keras.layers import Dense
+from keras.layers import Dense,Dropout
+from keras import initializers
 from keras.models import Sequential
 from keras.models import load_model
 from keras.utils import to_categorical
@@ -28,6 +29,9 @@ class DataSet():
 		self.sentence = data.values[1:,0]
 		self.sentiment = data.values[1:,1:].astype(int)
 		self.sentimentSum = np.sum(self.sentiment, axis = 0)
+		with open(self.folder+'/sentimentWord.json', encoding='utf8') as file:
+			fileTexts = ''.join(file.readlines())
+			self.sentimentWord = json.loads(fileTexts)
 	def generStmWord(self):
 		global mmseg
 		VM = VectorModel(self.folder)
@@ -118,8 +122,9 @@ class ClassifierModel():
 	def trainClsModel(self):
 		X,Y = self.DS.getTrainData(self.DT)
 		self.model.add(Dense(50, input_dim=len(X[0]), activation='relu'))
-		self.model.add(Dense(100, activation='relu'))
-		self.model.add(Dense(50, activation='relu'))
+		self.model.add(Dense(100, activation='relu', kernel_regularizer=l2(0.01), bias_regularizer=l2(0.01)))
+		model.add(Dropout(0.3))
+		self.model.add(Dense(50, activation='relu', kernel_regularizer=l2(0.01), bias_regularizer=l2(0.01)))
 		self.model.add(Dense(len(Y[0]), activation='softmax'))
 		self.model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 		self.model.fit(X,Y, epochs=100, batch_size=100, verbose=2)
