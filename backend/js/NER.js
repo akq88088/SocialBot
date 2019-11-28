@@ -61,7 +61,7 @@ var getNER = function(text, pid){
 			},
 			success: function(res){
 				$("#context").val(text);
-				console.log(res);
+				console.log(pid);
 				res  = JSON.parse(res);
 				for(i=0; i<res.segment.length; i++){
 					for(j=0; j<res.segment[i].length; j++){

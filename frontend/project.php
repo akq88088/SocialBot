@@ -109,9 +109,9 @@
 						<?php while($j--){?>
 							<div class="col-lg-3 btm-mg-1">
 								<div class="radius-border c-project old-project">
-									<div class="c-time"><?php echo $a[$j][8];?></div>
-									<div class="project-name"><?php echo $a[$j][2];?></div>
-									<div class="model"><?php echo $a[$j][3];?></div>
+									<div class="c-time"><?php echo $a[$j][9];?></div>
+									<div class="project-name"><?php echo $a[$j][3];?></div>
+									<div class="model"><?php echo $a[$j][4];?></div>
 								</div>
 							</div>
 						<?php }?>

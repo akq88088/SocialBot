@@ -1,4 +1,5 @@
 <?php 
+	session_start();
 	require_once("dbtools.inc.php");
 
 	$link = create_connection();
@@ -7,8 +8,9 @@
 		echo "0";
 	}else{
 		$p_name = $_POST['p_name'];
-		//$p_id = substr(md5(hash('md5', $p_name)),0,8);
-		$sql = "INSERT INTO `project`(`project-name`) VALUES('$p_name')";
+		$p_id = substr(md5(hash('md5', rand())), 0, 8);
+		$email = $_SESSION['email'];
+		$sql = "INSERT INTO `project`(`p_id`, `owner`, `project-name`) VALUES('$p_id', '$email','$p_name')";
 		if(execute_sql($link, "socialbot", $sql) == 1){
 			echo "1";
 			if(!is_dir("../cgi-bin/module/model/$p_id")){

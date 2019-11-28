@@ -191,7 +191,8 @@ class data_trans():
         return X_ner
 
 if __name__ == '__main__':
-    ner = NER(maxlen=30)
+    ner = NER(maxlen=30,model_path='./model/ner_init/')
+    
     # dt =  data_trans()
     # data = dt.load_data_csv('data_alex/seg2000_prepare2.csv')
     # pos, tags = [], []
@@ -212,7 +213,7 @@ if __name__ == '__main__':
     # ner.build_model(ner.maxlen, len(ner.pos_dict), len(ner.ner_dict), 32, 16)
     # ner.train(pos_pad, tags_onehot, batch_size=10, epochs=5, validation_split=0.2)
 
-    text = '明天是小方的生日，小方打電話給小亮。小方說：「小亮，明天是我生日，請你來我家好嗎？」小亮說：「好啊！我會唱歌給你聽。」小方說：「你要唱什麼歌？」小亮說：「我明天再告訴你。」小方說：「好啊！你明天一定要來！」'
+    text = '從前有一個人，種了許多漆樹。他每年割樹皮取樹汁，把樹汁裝在木桶裡，運到大城市去賣。這種漆樹的汁叫做「生漆」，是做油漆的原料。大城市裡的商人都知道他賣的漆最純了，所以都樂意向他買。幾年以後，他的生意越做越大，一個人沒法子分身，只得專心在家鄉種漆樹，不再做零賣的事了。有一天，有一個收買生漆的人來他家，對他說：「我告訴你一個發大財的好法子。只要把漆樹的葉子煮成膏，加到生漆裡，就可以讓漆汁變得更多，那就可以多賣些錢了。」接著收買生漆的人又說：「你的信用很好，人人都相信你。我們一定可以賺錢的。」這個人聽了非常生氣，就說：「人家相信我，我就不應該欺騙人家。如果我賣假漆，我就是騙子，以後誰還相信我呢？」那個收買生漆的人聽了，滿臉通紅的走了。'
 
     segment, pos, text_ner = ner.predict(text)
     print("原文:", text)
