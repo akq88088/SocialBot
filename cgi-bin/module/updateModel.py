@@ -11,19 +11,24 @@ from module.mmsegTest import Tokenizer
 mmseg = Tokenizer('module/data_kenlee/userDict.txt')
 
 def updateData(sentence_dict,segment_dict,path=""):
-	originData = pd.read_csv('module/data_kenlee/SentenceLabel.csv',header=None)
+	originData = pd.read_csv('module/data_kenlee/member_id/project_id/SentenceLabel.csv',header=None)
 	senToInt = {'喜歡':0,'憤怒':1,'難過':2,'驚訝':3,'害怕':4,'無表情':5}
 	title = originData.values[0][1:]
 	sentence = list(originData.values[1:,0])
 	sentiment = list(originData.values[1:,1:].astype(int))
 	print(sentence_dict)
 	for sen in sentence_dict:
-		sentence.append(sen)
-		temp = [0,0,0,0,0,0]
-		print(sen)
-		print(sentence_dict[sen])
-		temp[senToInt[sentence_dict[sen]]] = 1
-		sentiment.append(temp)
+		if sen not in sentence:
+			sentence.append(sen)
+			temp = [0,0,0,0,0,0]
+			print(sen)
+			print(sentence_dict[sen])
+			temp[senToInt[sentence_dict[sen]]] = 1
+			sentiment.append(temp)
+		else:
+			temp = [0,0,0,0,0,0]
+			temp[senToInt[sentence_dict[sen]]] = 1
+			sentiment[sentence.index(sen)] = temp
 	with open('module/data_kenlee/member_id/project_id/SentenceLabel.csv', 'w', encoding='utf8') as file:
 		file.write('\ufeff')
 		file.write('句子,喜歡,憤怒,難過,驚訝,害怕,無表情\n')

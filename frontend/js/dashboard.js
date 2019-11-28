@@ -210,7 +210,7 @@ $(document).ready(function(){
 				var labels=[],data=[];
 				Object.keys(senRatio).forEach(function(key) {
 					labels.push(key);
-					data.push(senRatio[key]);
+					data.push(senRatio[key].toFixed(2));
 				});
 				// console.log(senRatio);
 				var barData = {
@@ -227,6 +227,13 @@ $(document).ready(function(){
 					"maintainAspectRatio": false,
 					"legend": {
 						"display": false
+					},
+					"tooltips": {
+					    callbacks: {
+					        label: function(tooltipItem) {
+					            return Number(tooltipItem.xLabel)+'%';
+					        }
+					    }
 					},
 					"scales": {
 						"xAxes": [{

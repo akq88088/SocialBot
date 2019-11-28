@@ -122,9 +122,10 @@ class ClassifierModel():
 	def trainClsModel(self):
 		X,Y = self.DS.getTrainData(self.DT)
 		self.model.add(Dense(50, input_dim=len(X[0]), activation='relu'))
-		self.model.add(Dense(100, activation='relu', kernel_regularizer=l2(0.01), bias_regularizer=l2(0.01)))
-		model.add(Dropout(0.3))
-		self.model.add(Dense(50, activation='relu', kernel_regularizer=l2(0.01), bias_regularizer=l2(0.01)))
+		self.model.add(Dense(100, activation='relu'))
+		# , kernel_regularizer=l2(0.01), bias_regularizer=l2(0.01)
+		# model.add(Dropout(0.3))
+		self.model.add(Dense(50, activation='relu'))
 		self.model.add(Dense(len(Y[0]), activation='softmax'))
 		self.model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 		self.model.fit(X,Y, epochs=100, batch_size=100, verbose=2)
