@@ -38,6 +38,9 @@ def updateData(sentence_dict,segment_dict,path=""):
 	for seg in segment_dict:
 		if segment_dict[seg]!='無表情':
 			originSentimentWord[seg] = segment_dict[seg]
+		else:
+			if seg in originSentimentWord:
+				originSentimentWord.pop(seg)
 	with open('module/data_kenlee/member_id/project_id/sentimentWord.json', 'w', encoding='utf8') as fp:
 		json.dump(originSentimentWord, fp, ensure_ascii=False)
 	model = ClassifierModel('module/data_kenlee')

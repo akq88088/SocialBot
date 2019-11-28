@@ -27,6 +27,11 @@ class PredictModel():
 			self.intToSen[int(key)]=intToSen[key]
 		
 	def makeVector(self,content):
+		content = content.replace(' ','')
+		content = content.replace('\r\n','')
+		content = content.replace('\n','')
+		content = content.replace('"','')
+		content = content.replace("'",'')
 		testSen = re.split('!|\?|。|，|！|？|；',content)
 		if not testSen[-1]:
 			testSen = testSen[:-1]
