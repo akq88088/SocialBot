@@ -51,11 +51,11 @@
 			$link = create_connection();
 			$p_name = mysqli_real_escape_string($link, $_GET['name']);
 			$sql = "SELECT `project-name` FROM `member` INNER JOIN `project` WHERE `member_id` = `ID` and `project-name` = '$p_name'";
-			$result = execute_sql($link, "socialbot", $sql);
+			$result = execute_sql($link, "social_bot", $sql);
 			//$_SESSION['p_id'] = $result->fetch_assoc()['p_id'];
 			
 			$sql_model = "SELECT `p_name` FROM `model`";
-			$result_model = execute_sql($link, "socialbot", $sql_model);
+			$result_model = execute_sql($link, "social_bot", $sql_model);
 			
 			$j=0;
 			while ($row = $result_model->fetch_row()) 
@@ -83,7 +83,7 @@
 					<h5 class="my-5" id='project_name'><?php echo $_GET['name'];?></h1>
 				</div>
 				<div class="col-md-1 offset-md-9">
-					<button class="btn my-5" id="report" name=<?php echo $_GET['name'];?>>問題回報</button>
+					<button class="btn my-5" id="report" name=<?php echo $_GET['name'] ?>>問題回報</button>
 				</div>
 			</div>
 		

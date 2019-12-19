@@ -30,7 +30,7 @@ $(document).ready(function(){
 			success:function(data){
 				alert("成功");
 				console.log(data);
-				window.location.href = 'dashboard.php';
+				window.location.href = 'dashboard.php?name='+$('#submit').attr("name");
 			}
 		});
 	});

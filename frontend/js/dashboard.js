@@ -70,7 +70,7 @@ $(document).ready(function(){
 	// 問題回報
 	$('#report').on('click', function(){
 		history.replaceState(null, "report page", window.location.href);
-		window.location.href = 'report.php';
+		window.location.href = 'report.php?name='+$('#report').attr("name");
 	});
 
 
@@ -103,35 +103,13 @@ $(document).ready(function(){
 			success: function(text){
 				$("#summary").val(text);
 				var summary_text = text
+				console.log('summary done!')
 				getQA_test(summary_text,p_name)
 			},
 			complete:function(){
 			}
 		});
 	}
-
-	// var getNER = function(text){
-	// 	// stopAjax(sum_currAjax);
-
-	// 	ner_currAjax = $.ajax({
-	// 		method: "POST",
-	// 		url: "../cgi-bin/test_NER.py",
-	// 		async: true, //非同步化
-	// 		// dataType:"json",
-	// 		data: {
-	// 			"text" : text,
-	// 		},
-	// 		beforeSend:function(){
-	// 			$("#summary").val("計算摘要中...");
-	// 		},
-	// 		success: function(text){
-	// 			$("#summary").val(text);
-	// 			console.log('summary done!');
-	// 		},
-	// 		complete:function(){
-	// 		}
-	// 	});
-	// }
 
 	var test = function(text){
 
@@ -360,11 +338,14 @@ $(document).ready(function(){
 				});
 				var node = document.getElementsByClassName("alert alert-light radius-border orange-block")[0]
 				node.innerHTML = que_ans_row;
-				console.log('ner done')
+				console.log('ner done');
 				// 成功回傳後要做甚麼
 			},
+			error:function(E){
+				console.log(E);
+			},
 			complete:function(){
-				// 全部執行完要做什麼
+				console.log('QA done!');
 				
 			}
 		});
