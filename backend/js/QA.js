@@ -13,6 +13,7 @@ var p_name = ""
 var owner = ""
 var content = "" 
 var call_progress = ""
+var upload_e = ""
 $(document).ready(function(){
 	p_name = $("#project_name")[0].textContent
 	owner = $("table,[owner]")[0].getAttribute("owner");
@@ -33,6 +34,7 @@ $(document).ready(function(){
 	const textUploader_qa = document.querySelector('#QA_file');
 	textUploader_qa.addEventListener('change', function(e) {
 		// console.log(e.target.files); // get file object
+		upload_e = e
 		var reader = new FileReader();
 		var file_name = (e.target.files[0].name).split(".")
 		file_name = file_name[file_name.length - 1]
@@ -55,7 +57,6 @@ $(document).ready(function(){
 			};
 			reader.readAsText(e.target.files[0]);
 		}
-		// e.target.value=null;
 	});
 	$("#submit").on('click',function() {
 		// alert(content)
@@ -101,7 +102,9 @@ $(document).ready(function(){
 			},
 			success: function(text){
 				alert("檔案上傳完成!")
+				upload_e.target.value=null;
 				qa_reload(owner,p_name)
+
 				// window.location.reload();
 				// 成功回傳後要做甚麼
 			},

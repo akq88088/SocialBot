@@ -20,12 +20,14 @@ var p_name = ""
 var owner = ""
 var content = "" 
 var call_progress = ""
+var upload_e = ""
 $(document).ready(function(){
 
 	p_name = $("#project_name")[0].textContent
 	owner = $("table,[owner]")[0].getAttribute("owner");
 	const textUploader_qa_remain_transfer_dict = document.querySelector('#file_qa_remain_transfer_dict');
 	textUploader_qa_remain_transfer_dict.addEventListener('change', function(e) {
+		upload_e = e
 		console.log(e.target.files); // get file object
 		var reader = new FileReader();
 		var file_name = (e.target.files[0].name).split(".")
@@ -69,6 +71,7 @@ $(document).ready(function(){
 			},
 			success: function(text){
 				alert("檔案上傳完成!");
+				upload_e.target.value=null;
 				qa_remain_transfer_dict_reload(owner,p_name)
 				// window.location.reload();
 			},
