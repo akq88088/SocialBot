@@ -146,7 +146,19 @@ class QA_test:
         p_id = cursor.fetchone()
         return p_id
 
+    def save_csv(self):
+        db = pymysql.connect(self.db_information["IP"],self.db_information["user"],self.db_information["password"])
+        # db = pymysql.connect(self.db_information["IP"],self.db_information["user"])
+        cursor = db.cursor()
+        cursor.execute("use socialbot")
+        sql_order = "SELECT * from qa_training"
+        cursor.execute(sql_order)
+        result = cursor.fetchall()
+        result = pd.DataFrame(np.array(result))
+        result.to_csv("D:\\dektop\\QA_test_demo\\qa_rule.csv",encoding='utf_8_sig')
+
     def predict(self,text):
+        self.save_csv()
         result = self.call_NER(text)
         result = pd.DataFrame(np.array(result))
         if len(result.columns) == 10:
@@ -608,11 +620,32 @@ class QA_test:
                 #----
         return df_result
 
+    def remove_w(self,word,flag,ner):
+        result_word = []
+        result_flag = []
+        result_ner = []
+        for i in range(len(word)):
+            if flag[i] == "w":
+                continue
+            result_word.append(word[i])
+            result_flag.append(flag[i])
+            result_ner.append(ner[i])
+        return result_word,result_flag,result_ner
+
     def call_NER(self,text):
+        # with open('D:\\dektop\\QA_test_demo\\test.txt','a') as fout:
+        #     fout.write(text)
         text = text.replace('\r','')
         text = text.replace('\n','')
         text = text.replace(' ','')
         words,flags,ners = self.NER_class.predict_qa_test(text)
+        for i in range(len(words)):
+            words[i],flags[i],ners[i] = self.remove_w(words[i],flags[i],ners[i])
+            # with open('D:\\dektop\\QA_test_demo\\test.txt','a') as fout:
+            #     fout.write(" ".join(words[i]) + '\n')
+            #     fout.write(" ".join(flags[i]) + '\n')
+            #     fout.write(" ".join(ners[i]))
+
         words,flags,ners = self.speech_transfer(words,flags,ners)
         words,ners = self.remain_transfer(words,ners)
         df_result = []
@@ -620,7 +653,7 @@ class QA_test:
             segment = words[i]
             flag_list = flags[i]
             ner = ners[i]
-            try:
+            try:    
                 word_cut = self.article_pre(segment,flag_list,ner)
             except:
                 word_cut = ""

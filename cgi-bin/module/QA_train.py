@@ -49,6 +49,18 @@ class QA_train:
         self.speech_dict = self.load_speech_dict()
         self.QA_test = QA_test(p_name)
 
+    def remove_w(self,word,flag,ner):
+        result_word = []
+        result_flag = []
+        result_ner = []
+        for i in range(len(word)):
+            if flag[i] == "w":
+                continue
+            result_word.append(word[i])
+            result_flag.append(flag[i])
+            result_ner.append(ner[i])
+        return result_word,result_flag,result_ner
+
     def get_p_id(self,p_name):
         db = pymysql.connect(self.db_information["IP"],self.db_information["user"],self.db_information["password"])
         # db = pymysql.connect(self.db_information["IP"],self.db_information["user"])
@@ -177,6 +189,13 @@ class QA_train:
         not_success = True
         error_run = 1
         segment,flag_list,ner = self.NER_class.predict_qa_train(text)
+        for i in range(len(segment)):
+            segment[i],flag_list[i],ner[i] = self.remove_w(segment[i],flag_list[i],ner[i])
+            # with open("D:\\dektop\\QA_test_demo\\test_remove_w.txt",'a') as fout:
+            #     fout.write(" ".join(segment[i]))
+            #     fout.write(" ".join(flag_list[i]))
+            #     fout.write(" ".join(ner[i]))
+            #     fout.write("---")
         segment,flag_list,ner = self.speech_transfer(segment,flag_list,ner)
         segment,ner = self.remain_transfer(segment,ner)
         # with open("D:\\dektop\\QA_test_demo\\test_before_word_cut.txt",'w',encoding='utf_8_sig') as fout:
@@ -195,6 +214,7 @@ class QA_train:
         #             # print("error_run : " + str(error_run))
         #         error_run += 1
         for i in range(len(flag_list)):
+            # segment[i],flag_list[i],ner[i] = self.remove_w(segment[i],flag_list[i],ner[i])
             try:
                 word_cut = self.article_pre(segment[i],flag_list[i],ner[i])
             except:
@@ -208,7 +228,10 @@ class QA_train:
     def read_data_generate_rule_main(self):
         df = self.get_training_data()
         df = self.training_data2rule(df)
-        df = df.dropna(subset=["原文規則","原文出題規則"])
+        try:
+            df = df.dropna(subset=["原文規則","原文出題規則"])
+        except:
+            pass
         # df.to_csv("D:\\dektop\\QA_test_demo\\rule.csv",index=0,encoding='utf_8_sig')
         self.remove_qa_rule()#maybe remove?
         self.insert_rule(df)
@@ -286,6 +309,7 @@ class QA_train:
         df.iloc[:,0] = sentence_list
         df = self.train(df)
         return df
+
     def remain_transfer_dict_train_main(self,df):
         data = df.fillna(value="")
         df_insert = data[data["datatype"] == "insert"]
@@ -300,17 +324,22 @@ class QA_train:
         
         if not df_remove.empty:
             self.remove_remain_transfer_dict(df_remove)
-        
+
     def insert_remain_transfer_dict(self,df):
         db = pymysql.connect(self.db_information["IP"],self.db_information["user"],self.db_information["password"])
         # db = pymysql.connect(self.db_information["IP"],self.db_information["user"])
         cursor = db.cursor()
         cursor.execute("use socialbot")
         sql_order = "insert into qa_remain_transfer_dict(p_id,字詞,實體) values(%s,%s,%s)"
+        sql_duplicate_order = "select * from qa_remain_transfer_dict where p_id = %s and 字詞 = %s and 實體 = %s"
         for i in range(len(df)):
             if df.iloc[i,0] != df.iloc[i,0]:
                 continue
             if df.iloc[i,1] != df.iloc[i,1]:
+                continue
+            cursor.execute(sql_duplicate_order,(self.p_id,df["字詞"].iloc[i],df["實體"].iloc[i]))
+            temp = cursor.fetchone()
+            if temp != None:
                 continue
             cursor.execute(sql_order,(self.p_id,df["字詞"].iloc[i],df["實體"].iloc[i]))
         db.commit()
@@ -350,10 +379,15 @@ class QA_train:
         cursor = db.cursor()
         cursor.execute("use socialbot")
         sql_order = "insert into qa_training(owner,p_id,課文,題目) values(%s,%s,%s,%s)"
+        sql_duplicate_order = "select * from qa_training where p_id = %s and 課文 = %s and 題目 = %s"
         for i in range(len(df)):
             if df.iloc[i,0] != df.iloc[i,0]:
                 continue
             if df.iloc[i,1] != df.iloc[i,1]:
+                continue
+            cursor.execute(sql_duplicate_order,(self.p_id,df["課文"].iloc[i],df["題目"].iloc[i]))
+            temp = cursor.fetchone()
+            if temp != None:
                 continue
             cursor.execute(sql_order,(self.owner,self.p_id,df["課文"].iloc[i],df["題目"].iloc[i]))
         db.commit()
@@ -365,8 +399,13 @@ class QA_train:
         #     fout.write(str(df.head()))
         cursor = db.cursor()
         cursor.execute("use socialbot")
+        sql_duplicate_order = "select * from qa_rule where p_id = %s and 原文規則 = %s and 原文出題規則 = %s and 原文出題規則答案 = %s"
         sql_order = "insert into qa_rule(owner,p_id,原文規則,原文出題規則,原文出題規則答案,原文斷詞,原文出題,原文出題答案)values(%s,%s,%s,%s,%s,%s,%s,%s);"
         for i in range(len(df)):
+            cursor.execute(sql_duplicate_order,(self.p_id,df["原文規則"].iloc[i],df["原文出題規則"].iloc[i],df["原文出題規則答案"].iloc[i]))
+            temp = cursor.fetchone()
+            if temp != None:
+                continue
             cursor.execute(sql_order,(self.owner,self.p_id,df["原文規則"].iloc[i],df["原文出題規則"].iloc[i],df["原文出題規則答案"].iloc[i],df["原文斷詞"].iloc[i],df["原文出題"].iloc[i],df["原文出題答案"].iloc[i]))
 
         db.commit()
@@ -484,7 +523,8 @@ class QA_train:
                         ner_word_bool_list[k] = False
                         continue
                 if not bFind:
-                    if flag_list[j][0] in self.boson_remain_list:
+                    # if flag_list[j][0] in self.boson_remain_list:
+                    if flag_list[j][0] in ["人","物","地","時"]:
                         result_speech_list.append([max_id,word,'x',flag_list[j]])
                         id_set_list.append(str(max_id))
                         max_id += 1
@@ -530,7 +570,6 @@ class QA_train:
         db.commit()
         self.delete_speech(ass_id_set_str)
         
-            
     def insert_speech(self,data):
         db = pymysql.connect(self.db_information["IP"],self.db_information["user"],self.db_information["password"])
         # db = pymysql.connect(self.db_information["IP"],self.db_information["user"])
@@ -538,11 +577,16 @@ class QA_train:
         #     fout.write(str(df.head()))
         cursor = db.cursor()
         cursor.execute("use socialbot")
+        sql_duplicate_order = "select * from qa_speech where p_id = %s and 字詞 = %s and 詞性 = %s and 實體 = %s"
         sql_order = "insert into qa_speech(ID,p_id,字詞,詞性,實體)values(%s,%s,%s,%s,%s);"
         for i in range(len(data)):
+            cursor.execute(sql_duplicate_order,(self.p_id,data[i][1],data[i][2],data[i][3]))
+            temp = cursor.fetchone()
+            if temp != None:
+                continue
             cursor.execute(sql_order,(data[i][0],self.p_id,data[i][1],data[i][2],data[i][3]))
         db.commit()
-    
+
     def insert_speech_sentence(self,data):
         db = pymysql.connect(self.db_information["IP"],self.db_information["user"],self.db_information["password"])
         # db = pymysql.connect(self.db_information["IP"],self.db_information["user"])
@@ -550,8 +594,13 @@ class QA_train:
         #     fout.write(str(df.head()))
         cursor = db.cursor()
         cursor.execute("use socialbot")
+        sql_duplicate_order = "select * from qa_speech_sentence where p_id = %s and 斷詞修改前 = %s"
         sql_order = "insert into qa_speech_sentence(p_id,斷詞修改前,斷詞修改後,ass_id)values(%s,%s,%s,%s);"
         for i in range(len(data)):
+            cursor.execute(sql_duplicate_order,(self.p_id,data[i][0]))
+            temp = cursor.fetchone()
+            if temp != None:
+                continue
             cursor.execute(sql_order,(self.p_id,data[i][0],data[i][1],data[i][2]))
         db.commit()
 
