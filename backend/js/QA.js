@@ -103,9 +103,9 @@ $(document).ready(function(){
 			success: function(text){
 				alert("檔案上傳完成!")
 				upload_e.target.value=null;
-				qa_reload(owner,p_name)
+				// qa_reload(owner,p_name)
 
-				// window.location.reload();
+				window.location.reload();
 				// 成功回傳後要做甚麼
 			},
 			complete:function(){
@@ -130,8 +130,8 @@ $(document).ready(function(){
 			},
 			success: function(text){
 				alert("規則產生完成!")
-				qa_reload(owner,p_name)
-				// window.location.reload();
+				// qa_reload(owner,p_name)
+				window.location.reload();
 			},
 			complete:function(){
 				
@@ -428,8 +428,8 @@ $(document).ready(function(){
 			},
 			success: function(text){
 				alert("規則修改完成!")
-				qa_reload(owner,p_name)
-				// window.location.reload();
+				// qa_reload(owner,p_name)
+				window.location.reload();
 			},
 			complete:function(){
 				// window.location.reload();
@@ -453,8 +453,8 @@ $(document).ready(function(){
 			},
 			success: function(text){
 				alert("訓練資料刪除完成!")
-				qa_reload(owner,p_name)
-				// window.location.reload();
+				// qa_reload(owner,p_name)
+				window.location.reload();
 			},
 			complete:function(){
 				
@@ -479,8 +479,8 @@ $(document).ready(function(){
 			},
 			success: function(text){
 				alert("規則刪除完成!")
-				qa_reload(owner,p_name)
-				// window.location.reload();
+				// qa_reload(owner,p_name)
+				window.location.reload();
 			},
 			complete:function(){
 				
