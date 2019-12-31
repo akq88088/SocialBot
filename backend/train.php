@@ -19,6 +19,7 @@
 	<link rel="stylesheet" href="./css/button.css">
 	<link rel="stylesheet" href="./css/emotion_recognition.css">
 	<link rel="stylesheet" href="./css/NER.css">
+	<link rel="stylesheet" href="./css/report.css">
 	<!-- JQuery -->
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" crossorigin="anonymous"></script>
 	<script src="http://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
@@ -101,6 +102,10 @@
 					</div>
 				</div>
 				<div id="QA" class="collapse show">
+				<nobr class="col-md-1 offset-md-9">
+					<button id="report" class="btn my-5" onclick="location.href='sample_download.php'">範例檔案下載</button>
+					<button id="report" class="btn my-5" onclick="location.href='document.php'">上傳檔案格式</button>
+				</nobr>
 					<div class="container">
 						<h6 class="my-4">匯 入 資 料</h6>
 						<div class="row">
@@ -194,6 +199,10 @@
 					<br><br><br><br><br>
 				</div>
 				<div id="QA_remain_transfer_dict" class="collapse">
+				<nobr class="col-md-1 offset-md-9">
+					<button id="report" class="btn my-5" onclick="location.href='sample_download.php'">範例檔案下載</button>
+					<button id="report" class="btn my-5" onclick="location.href='document.php'">上傳檔案格式</button>
+				</nobr>
 					<div class="container">
 						<h6 class="my-4">匯 入 資 料</h6>
 						<div class="row">
@@ -329,6 +338,10 @@
 					<br><br><br><br><br>
 				</div>
 				<div id="QA_speech" class="collapse">
+				<nobr class="col-md-1 offset-md-9">
+					<button id="report" class="btn my-5" onclick="location.href='sample_download.php'">範例檔案下載</button>
+					<button id="report" class="btn my-5" onclick="location.href='document.php'">上傳檔案格式</button>
+				</nobr>
 					<div class="container" id="qa_speech_reload_modify">
 						<h6 class="my-4">原 文 斷 句</h6>
 						<div class="row">
@@ -547,6 +560,10 @@
 					<br><br><br><br><br>
 				</div>
 				<div id="NER" class="collapse">
+				<nobr class="col-md-1 offset-md-9">
+					<button id="report" class="btn my-5" onclick="location.href='sample_download.php'">範例檔案下載</button>
+					<button id="report" class="btn my-5" onclick="location.href='document.php'">上傳檔案格式</button>
+				</nobr>
 					<div class="container">
 						<h6 class="my-4">匯 入 資 料</h6>
 						<div class="row">
@@ -598,6 +615,10 @@
 					</div>
 				</div>
 				<div id="emotion_recognition" class="collapse">
+				<nobr class="col-md-1 offset-md-9">
+					<button id="report" class="btn my-5" onclick="location.href='sample_download.php'">範例檔案下載</button>
+					<button id="report" class="btn my-5" onclick="location.href='document.php'">上傳檔案格式</button>
+				</nobr>
 					<div class="container">
 						<h6 class="my-4">匯 入 資 料</h6>
 						<div class="row">
