@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 <!DOCTYPE html>
 <html lang="zh">
 <head>
@@ -187,4 +188,195 @@
 	</div>
 	
 </body>
+=======
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+	<!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" crossorigin="anonymous">
+    <!-- CustomScrollbar CSS -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+	<!-- Customer CSS -->
+	<link rel="stylesheet" href="css/global.css">
+	<link rel="stylesheet" href="css/dashboard.css">
+	<!-- JQuery -->
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" crossorigin="anonymous"></script>
+	<script src="http://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+	<!-- Bootstrap JS -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" crossorigin="anonymous"></script>
+	
+	<!-- Chart JS -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
+	
+	<!-- Customer JS -->
+	<script src="./js/global.js" crossorigin="anonymous"></script>	
+	<script src="./js/dashboard.js" crossorigin="anonymous"></script>
+
+	<title>語料專案</title>
+</head>
+<body>
+	<!-- header -->
+	<div class="container-fluid header">
+		<div class="row">
+			<div class="col-md-1 ta-c" id="back" role="button">< 返回</div>
+			<div class="col-md-4 offset-md-3 ta-c" id="title"><h5>語 料 應 用 與 分 析 工 具</h5></div>
+			<div class="col-md-2 offset-md-1 ta-c">account@gmail.com</div>
+			<div class="col-md-1 ta-c" id="logout" role="button">登出</div>
+		</div>	
+	</div>
+
+	<!-- Page Content -->
+	<div class="container">
+		<div>
+			<div class="row">
+				<div class="col-md-2">
+					<h5 class="my-5">無專案標題</h1>
+				</div>
+				<div class="col-md-1 offset-md-9">
+					<button class="btn my-5" id="report">問題回報</button>
+				</div>
+			</div>
+		</div>
+
+		
+		<!-- 匯入資料 -->
+		<div class="container">
+			<div>
+				<h6 class="my-4">匯 入 資 料</h6>
+			</div>
+			<div class="alert alert-light radius-border blue-block" id="import">
+				<div class="row">
+					<div class="col-lg-6">
+						<p>選擇文字模型</p>
+						<div>
+							<select class="form-control blue-border" id="model_select" >
+								<option disabled selected hidden>請選擇模型</option>
+								<option>兒童讀本</option>
+								<option>國小讀本</option>
+								<option>國中讀本</option>
+								<option>高中讀本</option>
+								<option>新聞媒體</option>
+							</select>
+						</div>
+					</div>
+					<div class="col-lg-6">
+						<p>貼上文字內容</p>
+						
+						<div class="form-group">
+							<textarea class="form-control blue-border radius-border" id="paste_text" rows="12" placeholder='請以 ! ? 。作為一句話結尾&#13&#10例如 : "今天天氣很好，所以我想出去玩。"'></textarea>
+						</div>
+						
+						<p>上傳檔案</p>
+						<div class="form-group">
+							<input type="file" class="form-control-file" id="upload_text">
+						</div>
+						
+						<div class="row">
+							<div class="col-md-12 ta-r">
+								<button class="btn radius-border" id="analyze">分析</button>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+
+		<!-- 文本摘要與情感分析 -->
+		<div class="container" id="TextSum_and_SA">
+			<div>
+				<h6 class="my-4">摘 要 與 情 緒 分 析</h6>	
+			</div>
+			<div class="alert alert-light radius-border red-block" >
+				<div class="row">
+					<div class="col-lg-6">
+						<div class="btm-mg">
+							<label>摘要演算法模型</label><br>
+							<div class="btn-group" role="group"">
+								<button class="btn red-border active" id="textsim">相似度</button>
+								<button class="btn red-border" id="textrank">TextRank</button>
+								<button class="btn red-border" id="textmap">主題地圖</button>
+							</div>
+						</div>
+
+						<div class="btm-mg">
+							<label>摘要比例</label><br>
+							<div class="btn-group" role="group">
+								<button class="btn red-border" percentage="0.2">20%</button>
+								<button class="btn red-border" percentage="0.3">30%</button>
+								<button class="btn red-border active" percentage="0.4">40%</button>
+								<button class="btn red-border" percentage="0.5">50%</button>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<textarea class="form-control radius-border red-border" id="summary" rows="12">
+								
+							</textarea>
+						</div>
+					</div>
+					<div id="sentimentResult" class='col-lg-6 btm-mg'>
+						<canvas id="sentimentBar">
+						</canvas>
+						<div id="pics"></div>
+						<img src="../img/情緒圖.png" alt="情緒">
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<!-- 出題答案 -->
+		<div class="container" id="QA">
+			<div>
+				<h6 class="my-4">出 題 答 案</h6>	
+			</div>
+			<div class="alert alert-light radius-border orange-block">
+				<div class="row">
+					<div class="col-md-6 btm-mg">
+						<label>問題 : </label>
+						<span>孔子重視什麼?</span>
+						<br>
+						<label>答案 : </label>
+						<span>孝道</span>
+					</div>
+					<div class="col-md-6 btm-mg">
+						<label>問題 : </label>
+						<span>誰喜歡小美?</span>
+						<br>
+						<label>答案 : </label>
+						<span>小明</span>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-6 btm-mg">
+						<label>問題 : </label>
+						<span>什麼物品可以遮雨?</span>
+						<br>
+						<label>答案 : </label>
+						<span>雨傘</span>
+					</div>
+					<div class="col-md-6 btm-mg">
+						<label>問題 : </label>
+						<span>誰會說話?</span>
+						<br>
+						<label>答案 : </label>
+						<span>大自然</span>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+
+	</div>
+	
+</body>
+>>>>>>> Stashed changes
 </html>
